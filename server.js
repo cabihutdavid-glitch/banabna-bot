@@ -7,13 +7,17 @@ const app = express();
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
 app.use(express.json());
-app.use(express.static('public'));
+app.use(express.static(path.join(__dirname, 'public')));
+
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
 
 app.post('/chat', async (req, res) => {
   const { messages } = req.body;
   try {
     const completion = await groq.chat.completions.create({
-     model: 'llama-3.3-70b-versatile',
+      model: 'llama-3.3-70b-versatile',
       messages: [
         {
           role: 'system',
@@ -31,5 +35,9 @@ app.post('/chat', async (req, res) => {
   }
 });
 
+module.exports = app;
+
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Banana corriendo en http://localhost:${PORT}`));
+if (require.main === module) {
+  app.listen(PORT, () => console.log(`Banana corriendo en http://localhost:${PORT}`));
+}
