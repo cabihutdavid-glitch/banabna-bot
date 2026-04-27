@@ -1,0 +1,16 @@
+{
+  "name": "Banana",
+  "short_name": "Banana",
+  "description": "Tu asistente personal con IA",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0e0e10",
+  "theme_color": "#f5c842",
+  "icons": [
+    {
+      "src": "icon.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ]
+}

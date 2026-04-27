@@ -142,6 +142,13 @@
     #send-btn:hover  { background: var(--accent2); }
     #send-btn:active { transform: scale(0.95); }
   </style>
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#f5c842">
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/sw.js');
+  }
+</script>
 </head>
 <body>
 <div class="chat-container">
@@ -235,3 +242,4 @@
 </script>
 </body>
 </html>
+1
