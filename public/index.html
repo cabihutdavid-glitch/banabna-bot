@@ -2,150 +2,149 @@
 <html lang="es" data-theme="dark">
 <head>
   <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+  <meta name="theme-color" content="#f5c842"/>
   <title>Banabna — Tu asistente personal</title>
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet"/>
   <link rel="manifest" href="/manifest.json">
-  <meta name="theme-color" content="#f5c842">
   <script>if('serviceWorker' in navigator)navigator.serviceWorker.register('/sw.js');</script>
   <style>
-    :root[data-theme="dark"]{--bg:#0e0e10;--surface:#1a1a1e;--surface2:#242428;--accent:#f5c842;--accent2:#f0a500;--text:#f0ede8;--muted:#888;--border:#2e2e34;--danger:#e74c3c;}
-    :root[data-theme="light"]{--bg:#f5f5f0;--surface:#fff;--surface2:#f0ede8;--accent:#f0a500;--accent2:#d4900a;--text:#1a1a1e;--muted:#666;--border:#ddd;--danger:#e74c3c;}
-    *{box-sizing:border-box;margin:0;padding:0;}
-    body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:16px;transition:background .3s,color .3s;}
-    .app{width:100%;max-width:680px;height:92vh;max-height:820px;display:flex;flex-direction:column;background:var(--surface);border-radius:24px;border:1px solid var(--border);overflow:hidden;position:relative;}
+    :root{--bg:#0e0e10;--surface:#1a1a1e;--surface2:#242428;--accent:#f5c842;--accent2:#f0a500;--text:#f0ede8;--muted:#888;--border:#2e2e34;--danger:#e74c3c;}
+    [data-theme="light"]{--bg:#f5f5f0;--surface:#fff;--surface2:#f0ede8;--accent:#f0a500;--accent2:#d4900a;--text:#1a1a1e;--muted:#666;--border:#ddd;--danger:#e74c3c;}
+    *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+    html,body{height:100%;overflow:hidden;touch-action:manipulation}
+    body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:0;transition:background .3s,color .3s}
+    .app{width:100%;height:100%;height:100vh;max-height:100vh;display:flex;flex-direction:column;background:var(--surface);overflow:hidden;position:relative}
+    @media(min-width:680px){body{padding:16px}.app{height:92vh;max-height:820px;border-radius:24px;border:1px solid var(--border)}}
 
-    .header{padding:12px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;flex-shrink:0;}
-    .avatar{width:38px;height:38px;background:var(--accent);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
-    .hinfo{flex:1;min-width:0;}
-    .hinfo h1{font-family:'Syne',sans-serif;font-size:15px;font-weight:700;}
-    .hinfo small{font-size:11px;color:var(--muted);}
-    .hbtns{display:flex;gap:5px;flex-shrink:0;}
-    .ib{width:30px;height:30px;border-radius:8px;border:1px solid var(--border);background:var(--surface2);color:var(--text);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:13px;transition:background .15s;flex-shrink:0;}
-    .ib:hover{background:var(--border);}
+    .header{padding:14px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;flex-shrink:0}
+    .avatar{width:48px;height:48px;background:var(--accent);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}
+    .hinfo{flex:1;min-width:0}
+    .hinfo h1{font-family:'Syne',sans-serif;font-size:18px;font-weight:700}
+    .hinfo small{font-size:12px;color:var(--muted)}
+    .hbtns{display:flex;gap:6px;flex-shrink:0}
+    .ib{width:44px;height:44px;border-radius:12px;border:1px solid var(--border);background:var(--surface2);color:var(--text);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:18px;transition:all .15s;flex-shrink:0}
+    .ib:hover,.ib:active{background:var(--border)}
+    .ib:active{transform:scale(.95)}
 
-    .wbar{padding:6px 16px;background:var(--surface2);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;font-size:11px;color:var(--muted);flex-wrap:wrap;flex-shrink:0;}
-    .wi{display:flex;align-items:center;gap:3px;}
-    .wsep{opacity:.3;}
+    .wbar{padding:10px 18px;background:var(--surface2);border-bottom:1px solid(var(--border);display:flex;align-items:center;gap:10px;font-size:12px;color:var(--muted);flex-wrap:wrap;flex-shrink:0;overflow-x:auto}
+    .wi{display:flex;align-items:center;gap:4px;white-space:nowrap}
+    .wsep{opacity:.3}
 
-    .tabs{display:flex;gap:2px;padding:8px 12px 0;flex-shrink:0;overflow-x:auto;}
-    .tab{padding:6px 12px;border-radius:8px 8px 0 0;border:1px solid transparent;font-size:12px;cursor:pointer;color:var(--muted);background:transparent;white-space:nowrap;}
-    .tab.active{background:var(--surface2);border-color:var(--border);color:var(--text);font-weight:500;}
+    .tabs{display:flex;gap:4px;padding:12px 16px 0;flex-shrink:0;overflow-x:auto;-webkit-overflow-scrolling:touch}
+    .tab{padding:12px 16px;border-radius:12px 12px 0 0;border:1px solid transparent;font-size:13px;cursor:pointer;color:var(--muted);background:transparent;white-space:nowrap;min-height:44px}
+    .tab.active{background:var(--surface2);border-color:var(--border);color:var(--text);font-weight:500}
 
-    .msgs{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px;scrollbar-width:thin;scrollbar-color:var(--border) transparent;}
-    .msg{max-width:82%;padding:10px 14px;border-radius:14px;font-size:14px;line-height:1.6;animation:fu .2s ease;}
-    @keyframes fu{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
-    .msg.bot{align-self:flex-start;background:var(--surface2);border:1px solid var(--border);border-bottom-left-radius:3px;}
-    .msg.user{align-self:flex-end;background:var(--accent);color:#0e0e10;border-bottom-right-radius:3px;font-weight:500;}
-    .msg.typing{color:var(--muted);font-style:italic;}
-    .msg img{max-width:100%;border-radius:8px;margin-top:8px;display:block;}
+    .msgs{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;scrollbar-width:thin;scrollbar-color:var(--border) transparent;-webkit-overflow-scrolling:touch}
+    .msg{max-width:85%;padding:14px 18px;border-radius:18px;font-size:16px;line-height:1.5;animation:fu .2s ease;word-wrap:break-word}
+    @keyframes fu{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+    .msg.bot{align-self:flex-start;background:var(--surface2);border:1px solid var(--border);border-bottom-left-radius:4px}
+    .msg.user{align-self:flex-end;background:var(--accent);color:#0e0e10;border-bottom-right-radius:4px;font-weight:500}
+    .msg.typing{color:var(--muted);font-style:italic}
+    .msg img{max-width:100%;border-radius:12px;margin-top:10px;display:block}
 
-    .sugs{padding:0 12px 8px;display:flex;gap:6px;flex-wrap:wrap;flex-shrink:0;}
-    .sug{font-size:11.5px;padding:4px 10px;background:transparent;border:1px solid var(--border);border-radius:20px;color:var(--muted);cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .15s;white-space:nowrap;}
-    .sug:hover{border-color:var(--accent);color:var(--accent);}
+    .sugs{padding:0 16px 12px;display:flex;gap:8px;flex-wrap:wrap;flex-shrink:0}
+    .sug{font-size:13px;padding:10px 16px;background:transparent;border:1px solid var(--border);border-radius:24px;color:var(--muted);cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .15s;white-space:nowrap;min-height:40px}
+    .sug:hover,.sug:active{border-color:var(--accent);color:var(--accent)}
+    .sug:active{transform:scale(.97)}
 
-    .iarea{padding:10px 12px;border-top:1px solid var(--border);display:flex;gap:6px;align-items:flex-end;flex-shrink:0;}
-    #ui{flex:1;background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:9px 12px;font-size:14px;color:var(--text);font-family:'DM Sans',sans-serif;resize:none;min-height:38px;max-height:100px;outline:none;transition:border-color .15s;}
-    #ui:focus{border-color:var(--accent);}
-    #ui::placeholder{color:var(--muted);}
-    .sbtn{width:38px;height:38px;border-radius:10px;border:none;background:var(--accent);color:#0e0e10;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;flex-shrink:0;}
-    .sbtn:hover{background:var(--accent2);}
+    .iarea{padding:14px 18px;border-top:1px solid var(--border);display:flex;gap:10px;align-items:flex-end;flex-shrink:0}
+    #ui{flex:1;background:var(--surface2);border:1px solid var(--border);border-radius:16px;padding:14px 16px;font-size:17px;color:var(--text);font-family:'DM Sans',sans-serif;resize:none;min-height:52px;max-height:120px;outline:none;transition:border-color .15s;-webkit-appearance:none;border-radius:16px !important}
+    #ui:focus{border-color:var(--accent)}
+    #ui::placeholder{color:var(--muted)}
+    .sbtn{width:56px;height:56px;border-radius:16px;border:none;background:var(--accent);color:#0e0e10;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;flex-shrink:0}
+    .sbtn:hover,.sbtn:active{background:var(--accent2)}
+    .sbtn:active{transform:scale(.95)}
 
-    .attach-row{padding:0 12px 6px;display:flex;gap:6px;flex-shrink:0;}
-    .abtn{font-size:11px;padding:4px 10px;background:transparent;border:1px solid var(--border);border-radius:8px;color:var(--muted);cursor:pointer;font-family:'DM Sans',sans-serif;display:flex;align-items:center;gap:4px;transition:all .15s;}
-    .abtn:hover{border-color:var(--accent);color:var(--accent);}
+    .attach-row{padding:0 16px 10px;display:flex;gap:8px;flex-shrink:0}
+    .abtn{font-size:13px;padding:10px 16px;background:transparent;border:1px solid var(--border);border-radius:12px;color:var(--muted);cursor:pointer;font-family:'DM Sans',sans-serif;display:flex;align-items:center;gap:6px;transition:all .15s;min-height:40px}
 
-    .panel{position:absolute;inset:0;background:var(--surface);z-index:20;display:none;flex-direction:column;border-radius:24px;overflow:hidden;}
-    .panel.open{display:flex;}
-    .ph{padding:12px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;}
-    .ph h2{font-family:'Syne',sans-serif;font-size:15px;flex:1;}
-    .pb{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px;}
+    .panel{position:absolute;inset:0;background:var(--surface);z-index:20;display:none;flex-direction:column;overflow:hidden}
+    .panel.open{display:flex}
+    .ph{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px}
+    .ph h2{font-family:'Syne',sans-serif;font-size:17px;flex:1}
+    .pb{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px}
 
-    .auth-card{display:flex;flex-direction:column;align-items:center;text-align:center;gap:14px;padding:28px 20px;}
-    .auth-card .emoji{font-size:48px;}
-    .auth-card h2{font-family:'Syne',sans-serif;font-size:20px;}
-    .auth-card p{font-size:13px;color:var(--muted);line-height:1.6;}
-    .sinput{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:10px 13px;font-size:14px;color:var(--text);font-family:'DM Sans',sans-serif;outline:none;text-align:center;}
-    .sinput:focus{border-color:var(--accent);}
-    .sinput::placeholder{color:var(--muted);}
-    .setup-btn{width:100%;padding:11px;background:var(--accent);color:#0e0e10;border:none;border-radius:10px;font-size:14px;font-weight:500;font-family:'DM Sans',sans-serif;cursor:pointer;}
-    .auth-switch{font-size:12px;color:var(--muted);cursor:pointer;}
-    .auth-switch span{color:var(--accent);text-decoration:underline;}
+    .auth-card{display:flex;flex-direction:column;align-items:center;text-align:center;gap:18px;padding:40px 24px}
+    .auth-card .emoji{font-size:56px}
+    .auth-card h2{font-family:'Syne',sans-serif;font-size:24px}
+    .auth-card p{font-size:14px;color:var(--muted);line-height:1.6}
+    .sinput{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:14px;padding:14px 16px;font-size:16px;color:var(--text);font-family:'DM Sans',sans-serif;outline:none;text-align:center}
+    .sinput:focus{border-color:var(--accent)}
+    .sinput::placeholder{color:var(--muted)}
+    .setup-btn{width:100%;padding:14px;background:var(--accent);color:#0e0e10;border:none;border-radius:14px;font-size:16px;font-weight:600;font-family:'DM Sans',sans-serif;cursor:pointer}
+    .auth-switch{font-size:13px;color:var(--muted);cursor:pointer}
+    .auth-switch span{color:var(--accent);text-decoration:underline}
 
-    .hi{padding:10px 13px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;cursor:pointer;transition:border-color .15s;}
-    .hi:hover{border-color:var(--accent);}
-    .hi .hd{font-size:10px;color:var(--muted);margin-bottom:3px;}
-    .hi .hp{font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-    .clrbtn{margin:10px;padding:9px;background:transparent;border:1px solid var(--danger);border-radius:10px;color:var(--danger);cursor:pointer;font-family:'DM Sans',sans-serif;font-size:13px;}
-    .empty-msg{text-align:center;color:var(--muted);font-size:13px;padding:30px;}
+    .hi{padding:14px 16px;background:var(--surface2);border:1px solid var(--border);border-radius:14px;cursor:pointer;transition:border-color .15s}
+    .hi:hover{border-color:var(--accent)}
+    .hi .hd{font-size:11px;color:var(--muted);margin-bottom:4px}
+    .hi .hp{font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .clrbtn{margin:12px;padding:12px;background:transparent;border:1px solid var(--danger);border-radius:14px;color:var(--danger);cursor:pointer;font-size:14px}
+    .empty-msg{text-align:center;color:var(--muted);font-size:14px;padding:40px}
 
-    .stimer{background:var(--surface2);border:1px solid var(--border);border-radius:14px;padding:18px;text-align:center;}
-    .tdisplay{font-family:'Syne',sans-serif;font-size:46px;font-weight:700;color:var(--accent);margin:8px 0;}
-    .tlabel{font-size:12px;color:var(--muted);margin-bottom:12px;}
-    .tbtns{display:flex;gap:7px;justify-content:center;flex-wrap:wrap;}
-    .tbtn{padding:7px 14px;border-radius:9px;border:1px solid var(--border);background:var(--surface);color:var(--text);cursor:pointer;font-family:'DM Sans',sans-serif;font-size:12px;transition:all .15s;}
-    .tbtn:hover{border-color:var(--accent);color:var(--accent);}
-    .tbtn.active{background:var(--accent);color:#0e0e10;border-color:var(--accent);}
-    .notes-ta{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:12px;font-size:13px;color:var(--text);font-family:'DM Sans',sans-serif;resize:none;outline:none;min-height:140px;}
-    .notes-ta:focus{border-color:var(--accent);}
+    .stimer{background:var(--surface2);border:1px solid var(--border);border-radius:18px;padding:24px;text-align:center}
+    .tdisplay{font-family:'Syne',sans-serif;font-size:56px;font-weight:700;color:var(--accent);margin:12px 0}
+    .tlabel{font-size:13px;color:var(--muted);margin-bottom:16px}
+    .tbtns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+    .tbtn{padding:12px 20px;border-radius:12px;border:1px solid var(--border);background:var(--surface);color:var(--text);cursor:pointer;font-size:14px;transition:all .15s;min-height:44px}
+    .tbtn:hover{border-color:var(--accent);color:var(--accent)}
+    .tbtn.active{background:var(--accent);color:#0e0e10;border-color:var(--accent)}
+    .notes-ta{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:16px;padding:16px;font-size:15px;resize:none;outline:none;min-height:160px}
 
-    .conv-card{background:var(--surface2);border:1px solid var(--border);border-radius:14px;padding:16px;}
-    .conv-card label{font-size:12px;color:var(--muted);display:block;margin-bottom:4px;}
-    .conv-card input,.conv-card select{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:9px 12px;font-size:14px;color:var(--text);font-family:'DM Sans',sans-serif;outline:none;margin-bottom:10px;}
-    .conv-card input:focus,.conv-card select:focus{border-color:var(--accent);}
-    .conv-result{font-family:'Syne',sans-serif;font-size:28px;font-weight:700;color:var(--accent);text-align:center;padding:10px 0;}
-    .conv-rate{font-size:11px;color:var(--muted);text-align:center;}
+    .conv-card{background:var(--surface2);border:1px solid var(--border);border-radius:18px;padding:20px}
+    .conv-card label{font-size:13px;color:var(--muted);display:block;margin-bottom:6px}
+    .conv-card input,.conv-card select{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:12px 16px;font-size:16px;outline:none;margin-bottom:12px}
+    .conv-result{font-family:'Syne',sans-serif;font-size:32px;font-weight:700;color:var(--accent);text-align:center;padding:14px 0}
+    .conv-rate{font-size:12px;color:var(--muted);text-align:center}
 
-    .rem-item{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:10px 13px;display:flex;align-items:center;gap:10px;}
-    .rem-item .rt{flex:1;}
-    .rem-item .rt .rname{font-size:13px;font-weight:500;}
-    .rem-item .rt .rtime{font-size:11px;color:var(--muted);}
-    .rem-del{background:transparent;border:none;color:var(--danger);cursor:pointer;font-size:16px;}
+    .player-bar{position:absolute;bottom:80px;left:0;right:0;background:var(--surface2);border-top:1px solid var(--border);padding:12px 20px;display:none;align-items:center;gap:12px;z-index:15}
+    .player-bar.open{display:flex}
+    .player-info{flex:1;min-width:0}
+    .player-title{font-size:14px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .player-artist{font-size:11px;color:var(--muted)}
+    .player-ctrl{font-size:22px;cursor:pointer;padding:6px;background:transparent;border:none}
 
-    .player-bar{position:absolute;bottom:60px;left:0;right:0;background:var(--surface2);border-top:1px solid var(--border);padding:8px 16px;display:none;align-items:center;gap:10px;z-index:15;}
-    .player-bar.open{display:flex;}
-    .player-info{flex:1;min-width:0;}
-    .player-title{font-size:12px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-    .player-artist{font-size:10px;color:var(--muted);}
-    .player-ctrl{font-size:18px;cursor:pointer;padding:4px;background:transparent;border:none;}
+    .rem-item{background:var(--surface2);border:1px solid var(--border);border-radius:14px;padding:14px 16px;display:flex;align-items:center;gap:12px}
+    .rem-item .rt{flex:1}
+    .rem-item .rt .rname{font-size:14px;font-weight:500}
+    .rem-item .rt .rtime{font-size:12px;color:var(--muted)}
 
-    .trans-pairs{display:flex;gap:6px;margin-bottom:10px;}
-    .trans-pair{display:flex;align-items:center;gap:6px;flex:1;}
-    .trans-pair select,.trans-pair input{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:8px;font-size:13px;color:var(--text);}
-    .trans-arrow{font-size:16px;cursor:pointer;}
-    .trans-output{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px;font-size:14px;color:var(--text);min-height:100px;resize:none;outline:none;}
-    .trans-output:focus{border-color:var(--accent);}
+    .trans-pairs{display:flex;gap:8px;margin-bottom:12px}
+    .trans-pair{display:flex;align-items:center;gap:8px;flex:1}
+    .trans-pair select,.trans-pair input{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:10px;font-size:14px}
+    .trans-arrow{font-size:18px;cursor:pointer}
+    .trans-output{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px;font-size:16px;min-height:120px;resize:none;outline:none}
 
-    .calc-display{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px;font-size:24px;text-align:right;font-family:'Syne',sans-serif;font-weight:700;margin-bottom:10px;}
-    .calc-btns{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;}
-    .calc-btn{padding:12px;font-size:15px;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--text);cursor:pointer;font-family:'DM Sans',sans-serif;}
-    .calc-btn:hover{border-color:var(--accent);}
-    .calc-btn.op{background:var(--accent);color:#0e0e10;border-color:var(--accent);}
-    .calc-btn.eq{grid-column:span 2;background:var(--accent2);border-color:var(--accent2);}
+    .calc-display{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:18px;font-size:28px;text-align:right;font-family:'Syne',sans-serif;font-weight:700;margin-bottom:12px}
+    .calc-btns{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+    .calc-btn{padding:16px;font-size:18px;border-radius:12px;border:1px solid var(--border);background:var(--surface);color:var(--text);cursor:pointer}
+    .calc-btn:hover{border-color:var(--accent)}
+    .calc-btn.op{background:var(--accent);color:#0e0e10;border-color:var(--accent)}
+    .calc-btn.eq{grid-column:span 2;background:var(--accent2);border-color:var(--accent2)}
 
-    #cam-video{width:100%;border-radius:12px;background:#000;}
-    #cam-canvas{display:none;}
-    .cam-btns{display:flex;gap:8px;justify-content:center;margin-top:10px;}
+    #cam-video{width:100%;border-radius:16px;background:#000;object-fit:cover}
+    #cam-canvas{display:none}
+    .cam-btns{display:flex;gap:10px;justify-content:center;margin-top:14px}
 
-    .admin-card{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:12px;margin-bottom:8px;}
-    .admin-card .admintitle{font-size:12px;color:var(--muted);margin-bottom:4px;}
-    .admin-card .adminval{font-size:14px;font-weight:500;}
-
-    .logout-btn{width:100%;padding:11px;background:var(--danger);color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:500;font-family:'DM Sans',sans-serif;cursor:pointer;margin-top:10px;}
+    .admin-card{background:var(--surface2);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:10px}
+    .admin-card .admintitle{font-size:13px;color:var(--muted);margin-bottom:6px}
+    .admin-card .adminval{font-size:16px;font-weight:500}
   </style>
 </head>
 <body>
 <div class="app">
 
-  <!-- AUTH PANEL -->
   <div class="panel open" id="auth-panel">
     <div class="pb" style="justify-content:center;">
       <div class="auth-card">
         <div class="emoji">🍌</div>
         <h2 id="auth-title">¡Bienvenido a Banabna!</h2>
         <p id="auth-subtitle">Inicia sesión o crea una cuenta</p>
-        <input class="sinput" id="auth-user" type="text" placeholder="Usuario..." maxlength="30"/>
-        <input class="sinput" id="auth-pass" type="password" placeholder="Contraseña..." maxlength="50"/>
+        <input class="sinput" id="auth-user" type="text" placeholder="Usuario..." maxlength="30" autocomplete="username"/>
+        <input class="sinput" id="auth-pass" type="password" placeholder="Contraseña..." maxlength="50" autocomplete="current-password"/>
         <input class="sinput" id="auth-name" type="text" placeholder="Tu nombre (opcional)" maxlength="30" style="display:none;"/>
         <button class="setup-btn" id="auth-btn" onclick="doAuth()">Iniciar sesión</button>
         <p class="auth-switch"><span onclick="toggleAuthMode()" id="auth-switch">¿No tienes cuenta? Regístrate</span></p>
@@ -153,17 +152,15 @@
     </div>
   </div>
 
-  <!-- HISTORY PANEL -->
   <div class="panel" id="history-panel">
     <div class="ph">
       <button class="ib" onclick="closePanel('history-panel')">←</button>
       <h2>🕐 Historial</h2>
     </div>
     <div class="pb" id="history-list"></div>
-    <button class="clrbtn" onclick="doLogout()">🚪 Cerrar sesi��n</button>
+    <button class="clrbtn" onclick="doLogout()">🚪 Cerrar sesión</button>
   </div>
 
-  <!-- STUDY PANEL -->
   <div class="panel" id="study-panel">
     <div class="ph">
       <button class="ib" onclick="closePanel('study-panel')">←</button>
@@ -180,17 +177,16 @@
           <button class="tbtn" id="startbtn" onclick="toggleTimer()">▶ Iniciar</button>
         </div>
       </div>
-      <div style="font-size:12px;color:var(--muted);">📝 Notas de estudio</div>
+      <div style="font-size:13px;color:var(--muted);">📝 Notas de estudio</div>
       <textarea class="notes-ta" id="study-notes" placeholder="Escribe tus apuntes aquí..."></textarea>
       <button class="tbtn" onclick="saveNotes()" style="align-self:flex-end;">💾 Guardar notas</button>
     </div>
   </div>
 
-  <!-- CONVERTER PANEL -->
   <div class="panel" id="conv-panel">
     <div class="ph">
       <button class="ib" onclick="closePanel('conv-panel')">←</button>
-      <h2>💱 Conversor de Monedas</h2>
+      <h2>💱 Conversor</h2>
     </div>
     <div class="pb">
       <div class="conv-card">
@@ -198,23 +194,23 @@
         <input type="number" id="conv-amount" value="1" oninput="convertCurrency()"/>
         <label>De</label>
         <select id="conv-from" onchange="convertCurrency()">
-          <option value="USD">🇺🇸 USD — Dólar</option>
-          <option value="COP" selected>🇨🇴 COP — Peso colombiano</option>
-          <option value="EUR">🇪🇺 EUR — Euro</option>
-          <option value="MXN">🇲🇽 MXN — Peso mexicano</option>
-          <option value="BRL">🇧🇷 BRL — Real</option>
-          <option value="GBP">🇬🇧 GBP — Libra</option>
-          <option value="ARS">🇦🇷 ARS — Peso argentino</option>
+          <option value="USD">🇺🇸 USD</option>
+          <option value="COP" selected>🇨🇴 COP</option>
+          <option value="EUR">🇪🇺 EUR</option>
+          <option value="MXN">🇲🇽 MXN</option>
+          <option value="BRL">🇧🇷 BRL</option>
+          <option value="GBP">🇬🇧 GBP</option>
+          <option value="ARS">🇦🇷 ARS</option>
         </select>
         <label>A</label>
         <select id="conv-to" onchange="convertCurrency()">
-          <option value="USD" selected>🇺🇸 USD — Dólar</option>
-          <option value="COP">🇨🇴 COP — Peso colombiano</option>
-          <option value="EUR">🇪🇺 EUR — Euro</option>
-          <option value="MXN">🇲🇽 MXN — Peso mexicano</option>
-          <option value="BRL">🇧🇷 BRL — Real</option>
-          <option value="GBP">🇬🇧 GBP — Libra</option>
-          <option value="ARS">🇦🇷 ARS — Peso argentino</option>
+          <option value="USD" selected>🇺🇸 USD</option>
+          <option value="COP">🇨🇴 COP</option>
+          <option value="EUR">🇪🇺 EUR</option>
+          <option value="MXN">🇲🇽 MXN</option>
+          <option value="BRL">🇧🇷 BRL</option>
+          <option value="GBP">🇬🇧 GBP</option>
+          <option value="ARS">🇦🇷 ARS</option>
         </select>
         <div class="conv-result" id="conv-result">Cargando...</div>
         <div class="conv-rate" id="conv-rate"></div>
@@ -222,7 +218,6 @@
     </div>
   </div>
 
-  <!-- REMINDERS PANEL -->
   <div class="panel" id="rem-panel">
     <div class="ph">
       <button class="ib" onclick="closePanel('rem-panel')">←</button>
@@ -230,17 +225,16 @@
     </div>
     <div class="pb">
       <div class="conv-card">
-        <label>¿Qué quieres recordar?</label>
-        <input type="text" id="rem-name" placeholder="Ej: Tomar agua..." style="background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:9px 12px;font-size:14px;color:var(--text);font-family:'DM Sans',sans-serif;outline:none;width:100%;margin-bottom:10px;"/>
+        <label>¿Qué recordar?</label>
+        <input type="text" id="rem-name" placeholder="Ej: Tomar agua..." style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:12px 16px;font-size:16px;width:100%;margin-bottom:12px;"/>
         <label>¿Cuándo?</label>
-        <input type="datetime-local" id="rem-time" style="background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:9px 12px;font-size:14px;color:var(--text);font-family:'DM Sans',sans-serif;outline:none;width:100%;margin-bottom:10px;"/>
-        <button class="setup-btn" onclick="addReminder()">➕ Agregar recordatorio</button>
+        <input type="datetime-local" id="rem-time" style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:12px 16px;font-size:16px;width:100%;margin-bottom:12px;"/>
+        <button class="setup-btn" onclick="addReminder()">➕ Agregar</button>
       </div>
       <div id="rem-list"></div>
     </div>
   </div>
 
-  <!-- TRANSLATOR PANEL -->
   <div class="panel" id="trans-panel">
     <div class="ph">
       <button class="ib" onclick="closePanel('trans-panel')">←</button>
@@ -254,11 +248,7 @@
             <option value="en">English</option>
             <option value="fr">Français</option>
             <option value="de">Deutsch</option>
-            <option value="it">Italiano</option>
             <option value="pt">Português</option>
-            <option value="ja">日本語</option>
-            <option value="zh">中文</option>
-            <option value="ko">한국어</option>
           </select>
           <span class="trans-arrow" onclick="swapLangs()">⇄</span>
           <select id="trans-to">
@@ -266,29 +256,23 @@
             <option value="es">Español</option>
             <option value="fr">Français</option>
             <option value="de">Deutsch</option>
-            <option value="it">Italiano</option>
             <option value="pt">Português</option>
-            <option value="ja">日本語</option>
-            <option value="zh">中文</option>
-            <option value="ko">한국어</option>
           </select>
         </div>
       </div>
-      <textarea class="trans-output" id="trans-input" placeholder="Escribe texto para traducir..."></textarea>
-      <button class="sug" onclick="doTranslate()" style="margin-top:8px;">🔄 Traducir</button>
-      <div style="font-size:12px;color:var(--muted);margin:14px 0 6px;">Traducción:</div>
-      <div class="trans-output" id="trans-output" style="min-height:100px;background:var(--surface2);"></div>
-      <button class="tbtn" onclick="speakTrans()" style="margin-top:8px;">🔊 Escuchar</button>
+      <textarea class="trans-output" id="trans-input" placeholder="Escribe texto..."></textarea>
+      <button class="sug" onclick="doTranslate()" style="margin-top:10px;">🔄 Traducir</button>
+      <div style="font-size:13px;color:var(--muted);margin:16px 0 8px;">Traducción:</div>
+      <div class="trans-output" id="trans-output" style="min-height:120px;background:var(--surface2);"></div>
     </div>
   </div>
 
-  <!-- CALCULATOR PANEL -->
   <div class="panel" id="calc-panel">
     <div class="ph">
       <button class="ib" onclick="closePanel('calc-panel')">←</button>
       <h2>🧮 Calculadora</h2>
     </div>
-    <div class="pb" style="max-width:320px;margin:0 auto;">
+    <div class="pb" style="max-width:340px;margin:0 auto;">
       <div class="calc-display" id="calc-display">0</div>
       <div class="calc-btns">
         <button class="calc-btn" onclick="calcInput('C')">C</button>
@@ -315,7 +299,6 @@
     </div>
   </div>
 
-  <!-- CAMERA PANEL -->
   <div class="panel" id="cam-panel">
     <div class="ph">
       <button class="ib" onclick="closePanel('cam-panel')">←</button>
@@ -325,14 +308,13 @@
       <video id="cam-video" autoplay playsinline></video>
       <canvas id="cam-canvas"></canvas>
       <div class="cam-btns">
-        <button class="tbtn" onclick="openCamera()">📷 Abrir cámara</button>
+        <button class="tbtn" onclick="openCamera()">📷 Abrir</button>
         <button class="tbtn" onclick="takePhoto()">⭕ Capturar</button>
         <button class="tbtn" onclick="closeCamera()">⏹ Cerrar</button>
       </div>
     </div>
   </div>
 
-  <!-- ADMIN PANEL -->
   <div class="panel" id="admin-panel">
     <div class="ph">
       <button class="ib" onclick="closePanel('admin-panel')">←</button>
@@ -341,7 +323,6 @@
     <div class="pb" id="admin-content"></div>
   </div>
 
-  <!-- MAIN HEADER -->
   <div class="header">
     <div class="avatar">🍌</div>
     <div class="hinfo">
@@ -361,11 +342,10 @@
     </div>
   </div>
 
-  <!-- WEATHER BAR -->
   <div class="wbar">
     <div class="wi">🌡 <span id="wtemp">--°C</span></div>
     <span class="wsep">|</span>
-    <div class="wi">☁️ <span id="wdesc">Cargando...</span></div>
+    <div class="wi">☁️ <span id="wdesc">...</span></div>
     <span class="wsep">|</span>
     <div class="wi">📅 <span id="wdate">--</span></div>
     <span class="wsep">|</span>
@@ -374,53 +354,47 @@
     <div class="wi">📻 <span id="pmusic">LoFi</span></div>
   </div>
 
-  <!-- TABS -->
   <div class="tabs">
     <button class="tab active" onclick="setTab('chat',this)">💬 Chat</button>
     <button class="tab" onclick="setTab('img',this)">📷 Imagen</button>
-    <button class="tab" onclick="setTab('doc',this)">📄 Documento</button>
+    <button class="tab" onclick="setTab('doc',this)">📄 Doc</button>
     <button class="tab" onclick="setTab('music',this)">🎵 Lofi</button>
-    <button class="tab" onclick="setTab('calc',this)">🧮 Calculadora</button>
+    <button class="tab" onclick="setTab('calc',this)">🧮 Calc</button>
   </div>
 
-  <!-- MESSAGES -->
   <div class="msgs" id="msgs">
     <div class="msg bot">¡Hola! Soy <strong>Banabna</strong> 🍌 Tu asistente personal. ¿En qué te ayudo?</div>
   </div>
 
-  <!-- ATTACH ROW -->
   <div class="attach-row" id="attach-row" style="display:none;">
     <div id="img-attach" style="display:none;">
-      <button class="abtn" onclick="document.getElementById('img-input').click()">📷 Subir imagen</button>
+      <button class="abtn" onclick="document.getElementById('img-input').click()">📷 Subir</button>
       <input type="file" id="img-input" accept="image/*" style="display:none;" onchange="handleImage(event)"/>
-      <span id="img-name" style="font-size:11px;color:var(--muted);align-self:center;"></span>
+      <span id="img-name" style="font-size:12px;color:var(--muted);align-self:center;"></span>
     </div>
     <div id="doc-attach" style="display:none;">
-      <button class="abtn" onclick="document.getElementById('doc-input').click()">📄 Subir documento</button>
+      <button class="abtn" onclick="document.getElementById('doc-input').click()">📄 Subir</button>
       <input type="file" id="doc-input" accept=".txt,.md,.csv,.json" style="display:none;" onchange="handleDoc(event)"/>
-      <span id="doc-name" style="font-size:11px;color:var(--muted);align-self:center;"></span>
+      <span id="doc-name" style="font-size:12px;color:var(--muted);align-self:center;"></span>
     </div>
   </div>
 
-  <!-- SUGGESTIONS -->
   <div class="sugs" id="sugs">
-    <button class="sug" onclick="quickSend('Ayúdame a organizar mi día')">Organizar mi día</button>
-    <button class="sug" onclick="quickSend('Dame un consejo de productividad')">Consejo</button>
-    <button class="sug" onclick="quickSend('Hazme una lista de tareas')">Lista de tareas</button>
-    <button class="sug" onclick="toggleMusic()">🎵 Música lofi</button>
+    <button class="sug" onclick="quickSend('Organiza mi día')">Organizar</button>
+    <button class="sug" onclick="quickSend('Consejo de productividad')">Consejo</button>
+    <button class="sug" onclick="quickSend('Lista de tareas')">Tareas</button>
+    <button class="sug" onclick="toggleMusic()">🎵 Lofi</button>
   </div>
 
-  <!-- INPUT -->
   <div class="iarea">
     <textarea id="ui" placeholder="Escríbele a Banabna..." rows="1"></textarea>
     <button class="sbtn" onclick="sendMessage()">➤</button>
   </div>
 
-  <!-- MUSIC PLAYER -->
   <div class="player-bar" id="player-bar">
     <div class="player-info">
       <div class="player-title" id="player-title">Lofi Chill</div>
-      <div class="player-artist">Radio • LoFi Beats</div>
+      <div class="player-artist">Radio • LoFi</div>
     </div>
     <button class="player-ctrl" id="player-toggle" onclick="togglePlayer()">▶</button>
     <button class="player-ctrl" onclick="stopPlayer()">⏹</button>
@@ -428,422 +402,391 @@
 
 </div>
 <script>
-  let chatHistory=[];
-  let userName='', userLang='es-CO', isAdmin=false;
-  let isDark=localStorage.getItem('banabna_theme')==='light';
-  let currentTab='chat', pendingImage=null, pendingDoc=null;
-  let timerSecs=25*60, timerRunning=false, timerInt=null;
-  let reminders=JSON.parse(localStorage.getItem('banabna_rems')||'[]');
-  let player=null, playerOpen=false;
-  let camStream=null;
-  let calcExpr='';
-  let authMode='login';
+let chatHistory=[];
+let userName='', userLang='es-CO', isAdmin=false;
+let isDark=localStorage.getItem('banabna_theme')==='light';
+let currentTab='chat', pendingImage=null, pendingDoc=null;
+let timerSecs=25*60, timerRunning=false, timerInt=null;
+let reminders=JSON.parse(localStorage.getItem('banabna_rems')||'[]');
+let player=null, playerOpen=false;
+let camStream=null;
+let calcExpr='';
+let authMode='login';
 
-  const API='/';
-  let token=localStorage.getItem('banabna_token');
-  if(token){token=null;localStorage.removeItem('banabna_token');}
+const API='/';
+let token=localStorage.getItem('banabna_token');
 
-  function getAuth(){return token?'Bearer '+token:'';}
+function getAuth(){return token?'Bearer '+token:'';}
 
-  applyTheme();
-  if(token)doInit();else openPanel('auth-panel');
+applyTheme();
+if(token){doInit();}else{openPanel('auth-panel');}
 
-  function applyTheme(){document.documentElement.setAttribute('data-theme',isDark?'dark':'light');document.getElementById('theme-btn').textContent=isDark?'🌙':'☀️';}
-  function toggleTheme(){isDark=!isDark;localStorage.setItem('banabna_theme',isDark?'dark':'light');applyTheme();}
+function applyTheme(){document.documentElement.setAttribute('data-theme',isDark?'dark':'light');document.getElementById('theme-btn').textContent=isDark?'🌙':'☀️';}
+function toggleTheme(){isDark=!isDark;localStorage.setItem('banabna_theme',isDark?'dark':'light');applyTheme();}
 
-  async function doInit(){
-    try{
-      const res=await fetch(API+'sessions',{headers:{'Authorization':getAuth()}});
-      if(!res.ok){closePanel('auth-panel');return openPanel('auth-panel');}
-      const h=new Date().getHours();
-      const g=h<12?'Buenos días':h<18?'Buenas tardes':'Buenas noches';
-      document.getElementById('greeting').textContent=userName?`${g}, ${userName}`:g;
-      fetchRates();
-      reminders.forEach(r=>{if(!r.done&&new Date(r.time)>Date.now())scheduleNotification(r);});
-    }catch{closePanel('auth-panel');openPanel('auth-panel');}
+async function doInit(){
+  try{
+    const res=await fetch(API+'sessions',{headers:{'Authorization':getAuth()}});
+    if(!res.ok){closePanel('auth-panel');return openPanel('auth-panel');}
+    const h=new Date().getHours();
+    const g=h<12?'Buenos días':h<18?'Buenas tardes':'Buenas noches';
+    document.getElementById('greeting').textContent=userName?g+', '+userName:g;
+    fetchRates();
+    reminders.forEach(r=>{if(!r.done&&new Date(r.time)>Date.now())scheduleNotification(r);});
+  }catch{closePanel('auth-panel');openPanel('auth-panel');}
+}
+
+function toggleAuthMode(){
+  authMode=authMode==='login'?'register':'login';
+  document.getElementById('auth-title').textContent=authMode==='login'?'¡Bienvenido a Banabna!':'¡Únete a Banabna!';
+  document.getElementById('auth-subtitle').textContent=authMode==='login'?'Inicia sesión':'Crea tu cuenta';
+  document.getElementById('auth-btn').textContent=authMode==='login'?'Iniciar sesión':'Registrarse';
+  document.getElementById('auth-switch').textContent=authMode==='login'?'¿No tienes cuenta?':'¿Ya tienes cuenta?';
+  document.getElementById('auth-name').style.display=authMode==='register'?'block':'none';
+}
+
+async function doAuth(){
+  const u=document.getElementById('auth-user').value.trim();
+  const p=document.getElementById('auth-pass').value;
+  const n=document.getElementById('auth-name').value.trim();
+  if(!u||!p)return alert('Completa todos los campos');
+  try{
+    const endpoint=authMode==='login'?'login':'register';
+    const body=authMode==='login'?{username:u,password:p}:{username:u,password:p,name:n};
+    const res=await fetch(API+endpoint,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+    const data=await res.json();
+    if(!res.ok)return alert(data.error);
+    token=data.token;userName=data.name||u;isAdmin=data.isAdmin;
+    localStorage.setItem('banabna_token',token);
+    localStorage.setItem('banabna_name',userName);
+    closePanel('auth-panel');
+    const h=new Date().getHours();
+    const g=h<12?'Buenos días':h<18?'Buenas tardes':'Buenas noches';
+    document.getElementById('greeting').textContent=userName?g+', '+userName:g;
+    if(isAdmin)document.getElementById('admin-btn').style.display='flex';
+    document.getElementById('msgs').innerHTML='';
+    addMsg('bot','¡Hola, <strong>'+userName+'</strong>! 🍌 ¿En qué te ayudo?');
+    fetchRates();
+  }catch{alert('Error de conexión');}
+}
+
+async function doLogout(){
+  if(confirm('¿Cerrar sesión?')){
+    token=null;userName='';isAdmin=false;
+    localStorage.removeItem('banabna_token');
+    localStorage.removeItem('banabna_name');
+    document.getElementById('auth-user').value='';
+    document.getElementById('auth-pass').value='';
+    chatHistory=[];
+    document.getElementById('msgs').innerHTML='<div class="msg bot">¡Hasta luego! 🍌</div>';
+    closePanel('history-panel');
+    openPanel('auth-panel');
   }
+}
 
-  function toggleAuthMode(){authMode=authMode==='login'?'register':'login';document.getElementById('auth-title').textContent=authMode==='login'?'¡Bienvenido a Banabna!':'¡Únete a Banabna!';document.getElementById('auth-subtitle').textContent=authMode==='login'?'Inicia sesión o crea una Cuenta':'Crea tu cuenta';document.getElementById('auth-btn').textContent=authMode==='login'?'Iniciar sesión':'Registrarse';document.getElementById('auth-switch').textContent=authMode==='login'?'¿No tienes cuenta? Regístrate':'¿Ya tienes cuenta? Inicia sesión';document.getElementById('auth-name').style.display=authMode==='register'?'block':'none';}
+function tick(){
+  const n=new Date();
+  document.getElementById('wtime').textContent=n.toLocaleTimeString('es-CO',{hour:'2-digit',minute:'2-digit'});
+  document.getElementById('wdate').textContent=n.toLocaleDateString('es-CO',{weekday:'short',day:'numeric',month:'short'});
+  checkReminders();
+}
+setInterval(tick,1000);tick();
 
-  async function doAuth(){
-    const u=document.getElementById('auth-user').value.trim();
-    const p=document.getElementById('auth-pass').value;
-    const n=document.getElementById('auth-name').value.trim();
-    if(!u||!p)return alert('Completa todos los campos');
-    try{
-      const endpoint=authMode==='login'?'login':'register';
-      const body=authMode==='login'?{username:u,password:p}:{username:u,password:p,name:n};
-      const res=await fetch(API+endpoint,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
-      const data=await res.json();
-      if(!res.ok)return alert(data.error);
-      token=data.token;userName=data.name||u;isAdmin=data.isAdmin;
-      localStorage.setItem('banabna_token',token);
-      localStorage.setItem('banabna_name',userName);
-      closePanel('auth-panel');
-      const h=new Date().getHours();
-      const g=h<12?'Buenos días':h<18?'Buenas tardes':'Buenas noches';
-      document.getElementById('greeting').textContent=userName?`${g}, ${userName}`:g;
-      if(isAdmin)document.getElementById('admin-btn').style.display='flex';
-      document.getElementById('msgs').innerHTML='';
-      addMsg('bot',`¡Hola, <strong>${userName}</strong>! 🍌 ¿En qué te ayudo?`);
-      fetchRates();
-    }catch{alert('Error de conexión');}
-  }
+async function fetchWeather(){
+  try{
+    const pos=await new Promise((r,j)=>navigator.geolocation.getCurrentPosition(r,j));
+    const d=await(await fetch('https://api.open-meteo.com/v1/forecast?latitude='+pos.coords.latitude+'&longitude='+pos.coords.longitude+'&current_weather=true')).json();
+    document.getElementById('wtemp').textContent=Math.round(d.current_weather.temperature)+'°C';
+    const codes={0:'☀️',1:'🌤',2:'⛅',3:'☁️',61:'🌧',80:'🌦'};
+    document.getElementById('wdesc').textContent=codes[d.current_weather.weathercode]||'Variable';
+  }catch{document.getElementById('wdesc').textContent='N/A';}
+}
+fetchWeather();
 
-  async function doLogout(){
-    if(confirm('¿Cerrar sesión?')){
-      token=null;userName='';isAdmin=false;
-      localStorage.removeItem('banabna_token');
-      localStorage.removeItem('banabna_name');
-      document.getElementById('auth-user').value='';
-      document.getElementById('auth-pass').value='';
-      document.getElementById('auth-name').value='';
-      chatHistory=[];
-      document.getElementById('msgs').innerHTML='<div class="msg bot">¡Hasta luego! 🍌</div>';
-      closePanel('history-panel');
-      openPanel('auth-panel');
-    }
-  }
+function openPanel(id){document.getElementById(id).classList.add('open');}
+function closePanel(id){document.getElementById(id).classList.remove('open');}
 
-  function tick(){
-    const n=new Date();
-    document.getElementById('wtime').textContent=n.toLocaleTimeString('es-CO',{hour:'2-digit',minute:'2-digit'});
-    document.getElementById('wdate').textContent=n.toLocaleDateString('es-CO',{weekday:'short',day:'numeric',month:'short'});
-    checkReminders();
-  }
-  setInterval(tick,1000);tick();
+function setTab(tab,el){
+  currentTab=tab;
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  const ar=document.getElementById('attach-row');
+  const ia=document.getElementById('img-attach');
+  const da=document.getElementById('doc-attach');
+  if(tab==='img'){ar.style.display='flex';ia.style.display='flex';da.style.display='none';}
+  else if(tab==='doc'){ar.style.display='flex';ia.style.display='none';da.style.display='flex';}
+  else{ar.style.display='none';}
+  const sugs=document.getElementById('sugs');
+  if(tab==='img'){sugs.innerHTML='<button class="sug" onclick="quickSend(\'Describe esta imagen\')">Describir</button><button class="sug" onclick="quickSend(\'¿Qué hay?\')">Leer texto</button>';}
+  else if(tab==='doc'){sugs.innerHTML='<button class="sug" onclick="quickSend(\'Resume este doc\')">Resumir</button><button class="sug" onclick="quickSend(\'Puntos clave\')">Puntos clave</button>';}
+  else if(tab==='music'){sugs.innerHTML='<button class="sug" onclick="togglePlayer()">▶ Play</button><button class="sug" onclick="stopPlayer()">⏹ Stop</button>';}
+  else if(tab==='calc'){sugs.innerHTML='<button class="sug" onclick="openPanel(\'calc-panel\')">🧮 Abrir</button>';}
+  else{sugs.innerHTML='<button class="sug" onclick="quickSend(\'Organiza mi día\')">Organizar</button><button class="sug" onclick="quickSend(\'Consejo\')">Consejo</button><button class="sug" onclick="quickSend(\'Tareas\')">Tareas</button><button class="sug" onclick="toggleMusic()">🎵 Lofi</button>';}
+}
 
-  async function fetchWeather(){
-    try{
-      const pos=await new Promise((r,j)=>navigator.geolocation.getCurrentPosition(r,j));
-      const {latitude:la,longitude:lo}=pos.coords;
-      const d=await(await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${la}&longitude=${lo}&current_weather=true`)).json();
-      const t=Math.round(d.current_weather.temperature);
-      const codes={0:'Despejado ☀️',1:'Casi despejado 🌤',2:'Parcialmente nublado ⛅',3:'Nublado ☁️',61:'Lluvia 🌧',80:'Chubascos 🌦'};
-      document.getElementById('wtemp').textContent=`${t}°C`;
-      document.getElementById('wdesc').textContent=codes[d.current_weather.weathercode]||'Variable';
-    }catch{document.getElementById('wdesc').textContent='No disponible';}
-  }
-  fetchWeather();
+function handleImage(e){
+  const file=e.target.files[0];
+  if(!file)return;
+  document.getElementById('img-name').textContent=file.name;
+  const reader=new FileReader();
+  reader.onload=ev=>{pendingImage={data:ev.target.result.split(',')[1],type:file.type};};
+  reader.readAsDataURL(file);
+}
 
-  function openPanel(id){document.getElementById(id).classList.add('open');}
-  function closePanel(id){document.getElementById(id).classList.remove('open');}
+function handleDoc(e){
+  const file=e.target.files[0];
+  if(!file)return;
+  document.getElementById('doc-name').textContent=file.name;
+  const reader=new FileReader();
+  reader.onload=ev=>{pendingDoc=ev.target.result;};
+  reader.readAsText(file);
+}
 
-  function setTab(tab,el){
-    currentTab=tab;
-    document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-    el.classList.add('active');
-    const ar=document.getElementById('attach-row');
-    const ia=document.getElementById('img-attach');
-    const da=document.getElementById('doc-attach');
-    if(tab==='img'){ar.style.display='flex';ia.style.display='flex';da.style.display='none';}
-    else if(tab==='doc'){ar.style.display='flex';ia.style.display='none';da.style.display='flex';}
-    else{ar.style.display='none';}
-    const sugs=document.getElementById('sugs');
-    if(tab==='img'){sugs.innerHTML='<button class="sug" onclick="quickSend(\'Describe esta imagen\')">Describir</button><button class="sug" onclick="quickSend(\'¿Qué texto hay en esta imagen?\')">Leer texto</button><button class="sug" onclick="quickSend(\'¿Qué objetos ves?\')">Identificar objetos</button>';}
-    else if(tab==='doc'){sugs.innerHTML='<button class="sug" onclick="quickSend(\'Resume este documento\')">Resumir</button><button class="sug" onclick="quickSend(\'¿Cuáles son los puntos clave?\')">Puntos clave</button><button class="sug" onclick="quickSend(\'Explícame esto\')">Explicar</button>';}
-    else if(tab==='music'){sugs.innerHTML='<button class="sug" onclick="togglePlayer()">▶ Reproducir lofi</button><button class="sug" onclick="stopPlayer()">⏹ Detener</button>';}
-    else if(tab==='calc'){sugs.innerHTML='<button class="sug" onclick="openPanel(\'calc-panel\')">🧮 Abrir calculadora</button>';}
-    else{sugs.innerHTML='<button class="sug" onclick="quickSend(\'Ayúdame a organizar mi día\')">Organizar mi día</button><button class="sug" onclick="quickSend(\'Dame un consejo de productividad\')">Consejo</button><button class="sug" onclick="quickSend(\'Hazme una lista de tareas\')">Lista de tareas</button><button class="sug" onclick="toggleMusic()">🎵 Música lofi</button>';}
-  }
+function addMsg(role,text){
+  const msgs=document.getElementById('msgs');
+  const div=document.createElement('div');
+  div.className='msg '+role;
+  div.innerHTML=text.replace(/\n/g,'<br>');
+  msgs.appendChild(div);
+  msgs.scrollTop=msgs.scrollHeight;
+  return div;
+}
 
-  function handleImage(e){
-    const file=e.target.files[0];
-    if(!file)return;
-    document.getElementById('img-name').textContent=file.name;
-    const reader=new FileReader();
-    reader.onload=ev=>{pendingImage={data:ev.target.result.split(',')[1],type:file.type};};
-    reader.readAsDataURL(file);
-  }
+function quickSend(t){document.getElementById('ui').value=t;sendMessage();}
 
-  function handleDoc(e){
-    const file=e.target.files[0];
-    if(!file)return;
-    document.getElementById('doc-name').textContent=file.name;
-    const reader=new FileReader();
-    reader.onload=ev=>{pendingDoc=ev.target.result;};
-    reader.readAsText(file);
-  }
+async function sendMessage(){
+  const input=document.getElementById('ui');
+  let text=input.value.trim();
+  if(!text&&!pendingImage&&!pendingDoc)return;
+  input.value='';input.style.height='auto';
 
-  function addMsg(role,text){
-    const msgs=document.getElementById('msgs');
-    const div=document.createElement('div');
-    div.className='msg '+role;
-    div.innerHTML=text.replace(/\n/g,'<br>');
-    msgs.appendChild(div);
-    msgs.scrollTop=msgs.scrollHeight;
-    return div;
-  }
+  let displayText=text;
+  if(pendingImage)displayText=(text||'Analiza')+' 📷';
+  if(pendingDoc)displayText=(text||'Analiza')+' 📄';
 
-  function quickSend(t){document.getElementById('ui').value=t;sendMessage();}
+  addMsg('user',displayText);
 
-  async function sendMessage(){
-    const input=document.getElementById('ui');
-    let text=input.value.trim();
-    if(!text&&!pendingImage&&!pendingDoc)return;
-    input.value='';input.style.height='auto';
+  let userContent=text||'';
+  if(pendingDoc){userContent='Analiza: '+pendingDoc+'\n'+(text||'Resume');}
+  
+  chatHistory.push({role:'user',content:userContent||displayText});
 
-    let displayText=text;
-    if(pendingImage)displayText=(text||'Analiza esta imagen')+' 📷';
-    if(pendingDoc)displayText=(text||'Analiza este documento')+' 📄';
+  const typing=addMsg('bot','Banabna procesando...');
+  typing.classList.add('typing');
 
-    addMsg('user',displayText);
-
-    let userContent=text||'';
-    if(pendingDoc){userContent=`Analiza este documento:\n\n${pendingDoc}\n\n${text||'Resume o explica el contenido.'}`;}
+  try{
+    const body={messages:chatHistory,hasImage:!!pendingImage};
+    if(pendingImage)body.image={data:pendingImage.data,type:pendingImage.type};
     
-    chatHistory.push({role:'user',content:userContent||displayText});
-
-    const typing=addMsg('bot','Banabna está procesando...');
-    typing.classList.add('typing');
-
-    try{
-      const body={messages:chatHistory,hasImage:!!pendingImage};
-      if(pendingImage)body.image={data:pendingImage.data,type:pendingImage.type};
-      
-      const res=await fetch('/chat',{method:'POST',headers:{'Content-Type':'application/json','Authorization':getAuth()},body:JSON.stringify(body)});
-      const data=await res.json();
-      if(data.error)throw new Error(data.error);
-      
-      typing.innerHTML=data.reply.replace(/\n/g,'<br>');
-      typing.classList.remove('typing');
-      
-      if(pendingImage){
-        const img=document.createElement('img');
-        img.src=`data:${pendingImage.type};base64,${pendingImage.data}`;
-        img.style.maxHeight='180px';
-        typing.appendChild(img);
-      }
-      
-      chatHistory.push({role:'assistant',content:data.reply});
-      saveSession();
-      pendingImage=null;pendingDoc=null;
-      document.getElementById('img-name').textContent='';
-      document.getElementById('doc-name').textContent='';
-    }catch(err){
-      typing.textContent='❌ Error: '+err.message;
-      typing.classList.remove('typing');
+    const res=await fetch('/chat',{method:'POST',headers:{'Content-Type':'application/json','Authorization':getAuth()},body:JSON.stringify(body)});
+    const data=await res.json();
+    if(data.error)throw new Error(data.error);
+    
+    typing.innerHTML=data.reply.replace(/\n/g,'<br>');
+    typing.classList.remove('typing');
+    
+    if(pendingImage){
+      const img=document.createElement('img');
+      img.src='data:'+pendingImage.type+';base64,'+pendingImage.data;
+      img.style.maxHeight='200px';
+      typing.appendChild(img);
     }
+    
+    chatHistory.push({role:'assistant',content:data.reply});
+    saveSession();
+    pendingImage=null;pendingDoc=null;
+    document.getElementById('img-name').textContent='';
+    document.getElementById('doc-name').textContent='';
+  }catch(err){
+    typing.textContent='❌ Error: '+err.message;
+    typing.classList.remove('typing');
   }
+}
 
-  async function saveSession(){
-    if(chatHistory.length<2)return;
-    try{
-      await fetch('/save-session',{method:'POST',headers:{'Content-Type':'application/json','Authorization':getAuth()},body:JSON.stringify({messages:chatHistory})});
-    }catch{}
-  }
+async function saveSession(){
+  if(chatHistory.length<2)return;
+  try{await fetch('/save-session',{method:'POST',headers:{'Content-Type':'application/json','Authorization':getAuth()},body:JSON.stringify({messages:chatHistory})});}catch{}
+}
 
-  async function renderHistory(){
-    const list=document.getElementById('history-list');
-    try{
-      const res=await fetch('/sessions',{headers:{'Authorization':getAuth()}});
-      const sessions=await res.json();
-      if(!sessions.length){list.innerHTML='<p class="empty-msg">No hay conversaciones guardadas.</p>';return;}
-      list.innerHTML=sessions.map(s=>`<div class="hi" onclick="loadSession('${s.id}')"><div class="hd">${new Date(s.date).toLocaleString()}</div><div class="hp">${s.preview}</div></div>`).join('');
-    }catch{list.innerHTML='<p class="empty-msg">Error al cargar.</p>';}
-  }
+async function renderHistory(){
+  const list=document.getElementById('history-list');
+  try{
+    const res=await fetch('/sessions',{headers:{'Authorization':getAuth()}});
+    const sessions=await res.json();
+    if(!sessions.length){list.innerHTML='<p class="empty-msg">Sin conversaciones.</p>';return;}
+    list.innerHTML=sessions.map(s=>'<div class="hi" onclick="loadSession('+s.id+')"><div class="hd">'+new Date(s.date).toLocaleString()+'</div><div class="hp">'+s.preview+'</div></div>').join('');
+  }catch{list.innerHTML='<p class="empty-msg">Error.</p>';}
+}
 
-  async function loadSession(id){
-    try{
-      const res=await fetch('/session/'+id,{headers:{'Authorization':getAuth()}});
-      const data=await res.json();
-      chatHistory=data.messages;
-      const msgs=document.getElementById('msgs');msgs.innerHTML='';
-      chatHistory.forEach(m=>addMsg(m.role==='user'?'user':'bot',m.content));
-      closePanel('history-panel');
-    }catch{}
-  }
+async function loadSession(id){
+  try{
+    const res=await fetch('/session/'+id,{headers:{'Authorization':getAuth()}});
+    const data=await res.json();
+    chatHistory=data.messages;
+    const msgs=document.getElementById('msgs');msgs.innerHTML='';
+    chatHistory.forEach(m=>addMsg(m.role==='user'?'user':'bot',m.content));
+    closePanel('history-panel');
+  }catch{}
+}
 
-  function setTimer(mins,label,el){
-    clearInterval(timerInt);timerRunning=false;timerSecs=mins*60;
-    document.getElementById('tlabel').textContent=`Pomodoro — ${label}`;
-    document.getElementById('tdisplay').textContent=`${String(mins).padStart(2,'0')}:00`;
-    document.getElementById('startbtn').textContent='▶ Iniciar';
-    document.querySelectorAll('.tbtn').forEach(b=>b.classList.remove('active'));
-    if(el)el.classList.add('active');
+function setTimer(mins,label,el){
+  clearInterval(timerInt);timerRunning=false;timerSecs=mins*60;
+  document.getElementById('tlabel').textContent='Pomodoro — '+label;
+  document.getElementById('tdisplay').textContent=String(mins).padStart(2,'0')+':00';
+  document.getElementById('startbtn').textContent='▶ Iniciar';
+  document.querySelectorAll('.tbtn').forEach(b=>b.classList.remove('active'));
+  if(el)el.classList.add('active');
+}
+function toggleTimer(){
+  if(timerRunning){clearInterval(timerInt);timerRunning=false;document.getElementById('startbtn').textContent='▶ Reanudar';}
+  else{
+    timerRunning=true;document.getElementById('startbtn').textContent='⏸ Pausar';
+    timerInt=setInterval(()=>{
+      timerSecs--;
+      const m=Math.floor(timerSecs/60),s=timerSecs%60;
+      document.getElementById('tdisplay').textContent=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+      if(timerSecs<=0){clearInterval(timerInt);timerRunning=false;document.getElementById('startbtn').textContent='▶ Iniciar';alert('¡Tiempo completo!');}
+    },1000);
   }
-  function toggleTimer(){
-    if(timerRunning){clearInterval(timerInt);timerRunning=false;document.getElementById('startbtn').textContent='▶ Reanudar';}
-    else{
-      timerRunning=true;document.getElementById('startbtn').textContent='⏸ Pausar';
-      timerInt=setInterval(()=>{
-        timerSecs--;
-        const m=Math.floor(timerSecs/60),s=timerSecs%60;
-        document.getElementById('tdisplay').textContent=`${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
-        if(timerSecs<=0){clearInterval(timerInt);timerRunning=false;document.getElementById('startbtn').textContent='▶ Iniciar';alert('⏰ ¡Tiempo completado!');}
-      },1000);
-    }
-  }
-  function saveNotes(){localStorage.setItem('banabna_notes',document.getElementById('study-notes').value);alert('✅ Notas guardadas');}
-  const sn=localStorage.getItem('banabna_notes');if(sn)document.getElementById('study-notes').value=sn;
+}
+function saveNotes(){localStorage.setItem('banabna_notes',document.getElementById('study-notes').value);alert('✅ Guardado');}
+const sn=localStorage.getItem('banabna_notes');if(sn)document.getElementById('study-notes').value=sn;
 
-  let rates={};
-  async function fetchRates(){
-    try{
-      const d=await(await fetch('https://api.exchangerate-api.com/v4/latest/USD')).json();
-      rates=d.rates;convertCurrency();
-    }catch{document.getElementById('conv-result').textContent='Error al cargar tasas';}
-  }
-  function convertCurrency(){
-    const amount=parseFloat(document.getElementById('conv-amount').value)||0;
-    const from=document.getElementById('conv-from').value;
-    const to=document.getElementById('conv-to').value;
-    if(!rates[from]||!rates[to]){document.getElementById('conv-result').textContent='Cargando...';return;}
-    const result=(amount/rates[from])*rates[to];
-    document.getElementById('conv-result').textContent=`${result.toLocaleString('es-CO',{maximumFractionDigits:2})} ${to}`;
-    document.getElementById('conv-rate').textContent=`1 ${from} = ${(rates[to]/rates[from]).toFixed(4)} ${to}`;
-  }
+let rates={};
+async function fetchRates(){
+  try{
+    const d=await(await fetch('https://api.exchangerate-api.com/v4/latest/USD')).json();
+    rates=d.rates;convertCurrency();
+  }catch{document.getElementById('conv-result').textContent='Error';}
+}
+function convertCurrency(){
+  const amount=parseFloat(document.getElementById('conv-amount').value)||0;
+  const from=document.getElementById('conv-from').value;
+  const to=document.getElementById('conv-to').value;
+  if(!rates[from]||!rates[to]){document.getElementById('conv-result').textContent='...';return;}
+  const result=(amount/rates[from])*rates[to];
+  document.getElementById('conv-result').textContent=result.toLocaleString('es-CO',{maximumFractionDigits:2})+' '+to;
+  document.getElementById('conv-rate').textContent='1 '+from+' = '+(rates[to]/rates[from]).toFixed(4)+' '+to;
+}
 
-  function addReminder(){
-    const name=document.getElementById('rem-name').value.trim();
-    const time=document.getElementById('rem-time').value;
-    if(!name||!time){alert('Completa el nombre y la hora');return;}
-    const rem={id:Date.now(),name,time,done:false};
-    reminders.push(rem);
-    localStorage.setItem('banabna_rems',JSON.stringify(reminders));
-    document.getElementById('rem-name').value='';
-    document.getElementById('rem-time').value='';
-    renderReminders();
-    if(Notification.permission==='granted')scheduleNotification(rem);
-    else Notification.requestPermission().then(p=>{if(p==='granted')scheduleNotification(rem);});
-  }
-  function scheduleNotification(rem){
-    const delay=new Date(rem.time)-Date.now();
-    if(delay>0)setTimeout(()=>{new Notification('🍌 Banabna',{body:rem.name,icon:'/icon.png'});},delay);
-  }
-  function renderReminders(){
-    const list=document.getElementById('rem-list');
-    if(!reminders.length){list.innerHTML='<p class="empty-msg">No hay recordatorios.</p>';return;}
-    list.innerHTML=reminders.map(r=>`
-      <div class="rem-item">
-        <div class="rt">
-          <div class="rname">${r.name}</div>
-          <div class="rtime">${new Date(r.time).toLocaleString('es-CO')}</div>
-        </div>
-        <button class="rem-del" onclick="deleteReminder(${r.id})">🗑</button>
-      </div>`).join('');
-  }
-  function deleteReminder(id){reminders=reminders.filter(r=>r.id!==id);localStorage.setItem('banabna_rems',JSON.stringify(reminders));renderReminders();}
-  function checkReminders(){
-    reminders.forEach(r=>{
-      if(!r.done&&new Date(r.time)<=Date.now()){
-        r.done=true;
-        addMsg('bot',`🔔 Recordatorio: <strong>${r.name}</strong>`);
-      }
-    });
-  }
+function addReminder(){
+  const name=document.getElementById('rem-name').value.trim();
+  const time=document.getElementById('rem-time').value;
+  if(!name||!time){alert('Completa');return;}
+  const rem={id:Date.now(),name,time,done:false};
+  reminders.push(rem);
+  localStorage.setItem('banabna_rems',JSON.stringify(reminders));
+  document.getElementById('rem-name').value='';
+  document.getElementById('rem-time').value='';
+  renderReminders();
+  if(Notification.permission==='granted')scheduleNotification(rem);
+  else Notification.requestPermission().then(p=>{if(p==='granted')scheduleNotification(rem);});
+}
+function scheduleNotification(rem){
+  const delay=new Date(rem.time)-Date.now();
+  if(delay>0)setTimeout(()=>{new Notification('🍌 Banabna',{body:rem.name});},delay);
+}
+function renderReminders(){
+  const list=document.getElementById('rem-list');
+  if(!reminders.length){list.innerHTML='<p class="empty-msg">Sin recordatorios.</p>';return;}
+  list.innerHTML=reminders.map(r=>'<div class="rem-item"><div class="rt"><div class="rname">'+r.name+'</div><div class="rtime">'+new Date(r.time).toLocaleString()+'</div></div><button class="rem-del" onclick="deleteReminder('+r.id+')">🗑</button></div>').join('');
+}
+function deleteReminder(id){reminders=reminders.filter(r=>r.id!==id);localStorage.setItem('banabna_rems',JSON.stringify(reminders));renderReminders();}
+function checkReminders(){
+  reminders.forEach(r=>{if(!r.done&&new Date(r.time)<=Date.now()){r.done=true;addMsg('bot','🔔 Recordatorio: <strong>'+r.name+'</strong>');}});
+}
 
-  const lofiStreams=[
-    {name:'Lofi Chill',url:'https://streams.ilovemusic.de/iloveradio17.mp3'},
-    {name:'Lofi Hip Hop',url:'https://streams.ilovemusic.de/iloveradio2.mp3'},
-    {name:'Chillhop',url:'https://streams.ilovemusic.de/iloveradio109.mp3'}
-  ];
-  let streamIdx=0;
-  function toggleMusic(){
-    const pb=document.getElementById('player-bar');
-    const pt=document.getElementById('player-toggle');
-    if(playerOpen){
-      if(player){player.pause();player=null;}
-      pb.classList.remove('open');
-      playerOpen=false;
-      document.getElementById('pmusic').textContent='LoFi';
-    }else{
-      player=new Audio(lofiStreams[streamIdx].url);
-      player.loop=true;
-      player.play().catch(()=>alert('Error Reproducción'));
-      pb.classList.add('open');
-      playerOpen=true;
-      pt.textContent='⏸';
-      document.getElementById('player-title').textContent=lofiStreams[streamIdx].name;
-      document.getElementById('pmusic').textContent='▶';
-    }
-  }
-  function stopPlayer(){
+const lofiStreams=[{name:'Lofi Chill',url:'https://streams.ilovemusic.de/iloveradio17.mp3'},{name:'Lofi HipHop',url:'https://streams.ilovemusic.de/iloveradio2.mp3'}];
+let streamIdx=0;
+function toggleMusic(){
+  const pb=document.getElementById('player-bar');
+  const pt=document.getElementById('player-toggle');
+  if(playerOpen){
     if(player){player.pause();player=null;}
-    document.getElementById('player-bar').classList.remove('open');
+    pb.classList.remove('open');
     playerOpen=false;
     document.getElementById('pmusic').textContent='LoFi';
+  }else{
+    player=new Audio(lofiStreams[streamIdx].url);
+    player.loop=true;
+    player.play().catch(()=>alert('Error'));
+    pb.classList.add('open');
+    playerOpen=true;
+    pt.textContent='⏸';
+    document.getElementById('player-title').textContent=lofiStreams[streamIdx].name;
+    document.getElementById('pmusic').textContent='▶';
   }
-  function togglePlayer(){toggleMusic();}
+}
+function stopPlayer(){
+  if(player){player.pause();player=null;}
+  document.getElementById('player-bar').classList.remove('open');
+  playerOpen=false;
+  document.getElementById('pmusic').textContent='LoFi';
+}
+function togglePlayer(){toggleMusic();}
 
-  async function doTranslate(){
-    const text=document.getElementById('trans-input').value.trim();
-    const from=document.getElementById('trans-from').value;
-    const to=document.getElementById('trans-to').value;
-    if(!text)return;
-    const out=document.getElementById('trans-output');
-    out.textContent='Traduciendo...';
-    try{
-      const res=await fetch('/translate',{method:'POST',headers:{'Content-Type':'application/json','Authorization':getAuth()},body:JSON.stringify({text,from,to})});
-      const data=await res.json();
-      out.textContent=data.translatedText||data.error||'Error';
-    }catch{out.textContent='Error de conexión';}
-  }
-  function swapLangs(){
-    const f=document.getElementById('trans-from');
-    const t=document.getElementById('trans-to');
-    const tmp=f.value;f.value=t.value;t.value=tmp;
-  }
-  function speakTrans(){
-    const t=document.getElementById('trans-output').textContent;
-    if(!t||t==='Traduciendo...'||t==='Error de conexión')return;
-    if(!window.speechSynthesis)return;
-    window.speechSynthesis.cancel();
-    const u=new SpeechSynthesisUtterance(t.replace(/[#*_~`]/g,'').substring(0,300));
-    u.lang=userLang;u.rate=1.05;
-    window.speechSynthesis.speak(u);
-  }
+async function doTranslate(){
+  const text=document.getElementById('trans-input').value.trim();
+  const from=document.getElementById('trans-from').value;
+  const to=document.getElementById('trans-to').value;
+  if(!text)return;
+  const out=document.getElementById('trans-output');
+  out.textContent='...';
+  try{
+    const res=await fetch('/translate',{method:'POST',headers:{'Content-Type':'application/json','Authorization':getAuth()},body:JSON.stringify({text,from,to})});
+    const data=await res.json();
+    out.textContent=data.translatedText||'Error';
+  }catch{out.textContent='Error';}
+}
+function swapLangs(){
+  const f=document.getElementById('trans-from');
+  const t=document.getElementById('trans-to');
+  const tmp=f.value;f.value=t.value;t.value=tmp;
+}
 
-  function calcInput(val){
-    const d=document.getElementById('calc-display');
-    if(val==='C'){calcExpr='';d.textContent='0';return;}
-    if(val==='='){
-      try{calcExpr=calcExpr.replace(/\^/g,'**');d.textContent=eval(calcExpr).toString();calcExpr=d.textContent;}
-      catch{d.textContent='Error';calcExpr='';}
-      return;
-    }
-    calcExpr+=val;d.textContent=calcExpr;
+function calcInput(val){
+  const d=document.getElementById('calc-display');
+  if(val==='C'){calcExpr='';d.textContent='0';return;}
+  if(val==='='){
+    try{calcExpr=calcExpr.replace(/\^/g,'**');d.textContent=eval(calcExpr).toString();calcExpr=d.textContent;}catch{d.textContent='Error';calcExpr='';}return;
   }
+  calcExpr+=val;d.textContent=calcExpr;
+}
 
-  async function openCamera(){
-    try{
-      camStream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'}});
-      document.getElementById('cam-video').srcObject=camStream;
-    }catch{alert('No se pudo abrir la cámara');}
-  }
-  function takePhoto(){
-    if(!camStream)return;
-    const v=document.getElementById('cam-video');
-    const c=document.getElementById('cam-canvas');
-    c.width=v.videoWidth;c.height=v.videoHeight;
-    c.getContext('2d').drawImage(v,0,0);
-    pendingImage={data:c.toDataURL('image/png').split(',')[1],type:'image/png'};
-    closePanel('cam-panel');
-    setTab('img',document.querySelector('.tab'));
-    document.getElementById('img-name').textContent='📷 foto-'+Date.now()+'.png';
-  }
-  function closeCamera(){
-    if(camStream){camStream.getTracks().forEach(t=>t.stop());camStream=null;}
-  }
+async function openCamera(){
+  try{
+    camStream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'}});
+    document.getElementById('cam-video').srcObject=camStream;
+  }catch{alert('No cámara');}
+}
+function takePhoto(){
+  if(!camStream)return;
+  const v=document.getElementById('cam-video');
+  const c=document.getElementById('cam-canvas');
+  c.width=v.videoWidth;c.height=v.videoHeight;
+  c.getContext('2d').drawImage(v,0,0);
+  pendingImage={data:c.toDataURL('image/png').split(',')[1],type:'image/png'};
+  closePanel('cam-panel');
+  setTab('img',document.querySelector('.tab'));
+  document.getElementById('img-name').textContent='📷 '+Date.now()+'.png';
+}
+function closeCamera(){
+  if(camStream){camStream.getTracks().forEach(t=>t.stop());camStream=null;}
+}
 
-  async function loadAdmin(){
-    const content=document.getElementById('admin-content');
-    try{
-      const res=await fetch('/admin/users',{headers:{'Authorization':getAuth()}});
-      const users=await res.json();
-      const res2=await fetch('/admin/all-sessions',{headers:{'Authorization':getAuth()}});
-      const sessions=await res2.json();
-      content.innerHTML=`
-        <div class="admin-card"><div class="admintitle">Usuarios</div><div class="adminval">${users.length}</div></div>
-        <div class="admin-card"><div class="admintitle">Sesiones totales</div><div class="adminval">${sessions.length}</div></div>
-        <div style="font-size:12px;color:var(--muted);margin-top:10px;">Últimos usuarios:</div>
-        ${users.slice(0,5).map(u=>`<div class="admin-card"><div class="admintitle">@${u.username}</div><div class="adminval">${u.name||'Sin nombre'} • ${new Date(u.created_at).toLocaleDateString()}</div></div>`).join('')}
-      `;
-    }catch{content.innerHTML='<p class="empty-msg">Error al cargar admin</p>';}
-  }
+async function loadAdmin(){
+  const content=document.getElementById('admin-content');
+  try{
+    const res=await fetch('/admin/users',{headers:{'Authorization':getAuth()}});
+    const users=await res.json();
+    const res2=await fetch('/admin/all-sessions',{headers:{'Authorization':getAuth()}});
+    const sessions=await res2.json();
+    content.innerHTML='<div class="admin-card"><div class="admintitle">Usuarios</div><div class="adminval">'+users.length+'</div></div><div class="admin-card"><div class="admintitle">Sesiones</div><div class="adminval">'+sessions.length+'</div></div>';
+  }catch{content.innerHTML='<p class="empty-msg">Error</p>';}
+}
 
-  document.getElementById('ui').addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMessage();}});
-  document.getElementById('ui').addEventListener('input',function(){this.style.height='auto';this.style.height=Math.min(this.scrollHeight,100)+'px';});
+document.getElementById('ui').addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMessage();}});
+document.getElementById('ui').addEventListener('input',function(){this.style.height='auto';this.style.height=Math.min(this.scrollHeight,120)+'px';});
 </script>
 </body>
 </html>
