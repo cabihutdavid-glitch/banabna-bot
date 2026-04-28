@@ -19,15 +19,17 @@
     @media(min-width:680px){body{padding:20px;background:var(--bg)}.app{height:92vh;max-height:820px;border-radius:24px;border:1px solid var(--border)}}
 
     .header{padding:12px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;flex-shrink:0}
-    .header-pc{padding:12px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;flex-shrink:0}
-    .avatar{width:44px;height:44px;background:var(--accent);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
-    .hinfo{flex:1;min-width:0}
-    .hinfo h1{font-family:'Syne',sans-serif;font-size:16px;font-weight:700}
-    .hinfo small{font-size:11px;color:var(--muted)}
-    .hbtns{display:flex;gap:6px;flex-shrink:0}
-    .ib{width:40px;height:40px;border-radius:10px;border:1px solid var(--border);background:var(--surface2);color:var(--text);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:16px;transition:all .15s;flex-shrink:0}
-    .ib:hover,.ib:active{background:var(--border)}
-    .ib:active{transform:scale(.95)}
+    .header-pc{padding:10px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;flex-shrink:0}
+    .avatar{width:40px;height:40px;background:var(--accent);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+    .hinfo{flex:1}
+    .hinfo h1{font-size:14px}
+    .hinfo small{font-size:10px;color:var(--muted)}
+    .hbtns{display:flex;gap:4px}
+    .menu-bar{position:relative}
+    .menu-drop{position:absolute;top:100%;right:0;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:8px;display:none;flex-direction:column;gap:4px;min-width:160px;z-index:50;box-shadow:0 4px 12px rgba(0,0,0,3)}
+    .menu-drop.show{display:flex}
+    .menu-item{width:100%;padding:10px 12px;text-align:left;font-size:13px;border-radius:8px;background:transparent;border:none;color:var(--text);cursor:pointer;display:flex;align-items:center;gap:8px}
+    .menu-item:hover{background:var(--surface2)}
 
     .wbar{padding:10px 16px;background:var(--surface2);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;font-size:12px;color:var(--muted);flex-wrap:wrap;flex-shrink:0;overflow-x:auto}
     .wi{display:flex;align-items:center;gap:4px;white-space:nowrap}
@@ -121,14 +123,12 @@
       .header-pc{display:none}
       .header{position:fixed;top:0;left:-100%;width:80%;max-width:280px;height:100vh;background:var(--surface);z-index:100;flex-direction:column;padding:16px;gap:12px;transition:left .3s;border-right:1px solid var(--border);display:flex}
       .header.open{left:0}
-      .header .hbtns{flex-direction:column;gap:6px}
-      .header .ib{width:100%;justify-content:flex-start;padding-left:14px;font-size:14px;height:44px;position:absolute;bottom:20px;left:16px;right:16px}
-      .menu-btn{position:fixed;top:10px;left:10px;z-index:26;width:40px;height:40px;display:flex !important;background:var(--surface)}
+      .menu-btn{position:fixed;top:10px;left:10px;z-index:26;width:40px;height:40px;display:flex !important;background:var(--surface);border:1px solid var(--border);border-radius:10px;}
       .wbar{display:none}
       .app{height:100vh;max-height:100vh;border-radius:0}
       .iarea{position:fixed;bottom:0;left:0;right:0;background:var(--surface);border-top:1px solid var(--border);padding:10px 8px;gap:6px;z-index:30}
       #ui{min-height:48px;padding:12px 10px;font-size:15px}
-      .sbtn{width:48px;height:48px;border-radius:12px;font-size:16px}
+      .sbtn{width:48px;height:48px;border-radius:10px;font-size:16px}
       .msgs{padding-top:60px;padding-bottom:80px}
       .tabs{position:fixed;top:0;left:0;right:0;background:var(--surface);border-bottom:1px solid var(--border);padding:8px 8px 0;z-index:25}
       .tab{padding:8px 10px;font-size:11px;min-height:36px}
@@ -297,14 +297,20 @@
       <h1>Banabna</h1>
       <small id="greeting">Hola</small>
     </div>
-    <div class="hbtns">
-      <button class="ib" onclick="openPanel('conv-panel');convertCurrency();">💱</button>
-      <button class="ib" onclick="openPanel('trans-panel')">🌐</button>
-      <button class="ib" onclick="openPanel('calc-panel')">🧮</button>
-      <button class="ib" onclick="openPanel('study-panel')">📚</button>
-      <button class="ib" onclick="openPanel('cam-panel')">📷</button>
-      <button class="ib" onclick="openPanel('history-panel');renderHistory();">🕐</button>
-      <button class="ib" onclick="toggleTheme()" id="theme-btn">🌙</button>
+    <div class="menu-bar">
+      <button class="menu-item" style="width:40px;height:40px;justify-content:center;background:var(--surface2);border:1px solid var(--border);" onclick="toggleDropdown()">☰</button>
+      <div class="menu-drop" id="menu-drop">
+        <button class="menu-item" onclick="openPanel('conv-panel');convertCurrency();toggleDropdown();">💱 Monedas</button>
+        <button class="menu-item" onclick="openPanel('trans-panel');">🌐 Traducir</button>
+        <button class="menu-item" onclick="openPanel('calc-panel');">🧮 Calc</button>
+        <button class="menu-item" onclick="openPanel('study-panel');">📚 Estudio</button>
+        <button class="menu-item" onclick="openPanel('cam-panel');">📷 Cámara</button>
+        <button class="menu-item" onclick="openPanel('history-panel');renderHistory();toggleDropdown();">🕐 Historial</button>
+        <button class="menu-item" onclick="toggleTheme();toggleDropdown();">🌙 Tema</button>
+        <button class="menu-item" onclick="toggleMusic();toggleDropdown();">🎵 Lofi</button>
+        <button class="menu-item" onclick="newChat();toggleDropdown();" style="color:var(--danger);">✏️ Nuevo chat</button>
+        <button class="menu-item" onclick="toggleDropdown();">❌ Cerrar</button>
+      </div>
     </div>
   </div>
 
@@ -397,9 +403,14 @@ function openPanel(id){document.getElementById(id).style.display='flex';}
 function closePanel(id){document.getElementById(id).style.display='none';}
 function toggleMenu(){
   document.getElementById('main-header').classList.toggle('open');
-  var b=document.getElementById('menu-backdrop');
-  if(!b){b=document.createElement('div');b.id='menu-backdrop';b.onclick=toggleMenu;b.style='position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:99';document.body.appendChild(b);}
-  b.style.display=document.getElementById('main-header').classList.contains('open')?'block':'none';
+}
+function toggleDropdown(){
+  document.getElementById('menu-drop').classList.toggle('show');
+}
+function newChat(){
+  chatHistory=[];
+  document.getElementById('msgs').innerHTML='<div class="msg bot">¡Nuevo chat! 🍌</div>';
+  localStorage.removeItem('banabna_chat');
 }
 
 function setTab(tab,el){
