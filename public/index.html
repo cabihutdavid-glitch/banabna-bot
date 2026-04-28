@@ -68,17 +68,17 @@
     .pb{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;align-items:center}
 
     #auth-panel .pb{justify-content:center;padding:20px}
-    #auth-panel .auth-card{background:var(--surface2);border:1px solid var(--border);border-radius:20px;padding:32px 24px;width:100%;max-width:300px}
+    #auth-panel .auth-card{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:28px 24px;width:100%;max-width:280px}
 
-    .auth-card{display:flex;flex-direction:column;align-items:center;text-align:center;gap:16px}
-    .auth-card .emoji{font-size:56px}
-    .auth-card h2{font-family:'Syne',sans-serif;font-size:24px;font-weight:700}
-    .auth-card p{font-size:13px;color:var(--muted)}
-    .sinput{width:100%;background:var(--surface);border:2px solid var(--border);border-radius:12px;padding:14px 16px;font-size:15px;color:var(--text);font-family:'DM Sans',sans-serif;outline:none;text-align:center;transition:border-color .2s}
+    .auth-card{display:flex;flex-direction:column;align-items:center;text-align:center;gap:14px}
+    .auth-card .emoji{font-size:48px;margin-bottom:4px}
+    .auth-card h2{font-family:'Syne',sans-serif;font-size:22px;font-weight:700;display:none}
+    .auth-card p{font-size:13px;color:var(--muted);display:none}
+    .sinput{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:12px 14px;font-size:14px;color:var(--text);font-family:'DM Sans',sans-serif;outline:none;text-align:center}
     .sinput:focus{border-color:var(--accent)}
     .sinput::placeholder{color:var(--muted)}
-    .setup-btn{width:100%;padding:16px;background:var(--accent);color:#0e0e10;border:none;border-radius:12px;font-size:15px;font-weight:700;font-family:'DM Sans',sans-serif;cursor:pointer}
-    .auth-switch{font-size:13px;color:var(--muted);cursor:pointer;padding:8px}
+    .setup-btn{width:100%;padding:14px;background:var(--accent);color:#0e0e10;border:none;border-radius:10px;font-size:14px;font-weight:700;font-family:'DM Sans',sans-serif;cursor:pointer;margin-top:4px}
+    .auth-switch{font-size:12px;color:var(--muted);cursor:pointer;padding:6px}
     .auth-switch span{color:var(--accent);font-weight:600}
 
     .hi{padding:14px 16px;background:var(--surface2);border:1px solid var(--border);border-radius:14px;cursor:pointer;transition:border-color .15s}
@@ -144,8 +144,6 @@
     <div class="pb">
       <div class="auth-card">
         <div class="emoji">🍌</div>
-        <h2 id="auth-title">Banabna</h2>
-        <p id="auth-subtitle">Tu asistente personal IA</p>
         <input class="sinput" id="auth-user" type="text" placeholder="Usuario" autocomplete="username"/>
         <input class="sinput" id="auth-pass" type="password" placeholder="Contraseña" autocomplete="current-password"/>
         <input class="sinput" id="auth-name" type="text" placeholder="Tu nombre (opcional)" style="display:none;"/>
@@ -441,8 +439,6 @@ async function doInit(){
 
 function toggleAuthMode(){
   authMode=authMode==='login'?'register':'login';
-  document.getElementById('auth-title').textContent=authMode==='login'?'Banabna':'Únete a Banabna';
-  document.getElementById('auth-subtitle').textContent=authMode==='login'?'Tu asistente personal IA':'Crea tu cuenta gratis';
   document.getElementById('auth-btn').textContent=authMode==='login'?'Continuar':'Crear cuenta';
   document.getElementById('auth-switch').querySelector('span').textContent=authMode==='login'?'¿Sin cuenta? Crear':'¿Ya tienes cuenta? Iniciar';
   document.getElementById('auth-name').style.display=authMode==='register'?'block':'none';
