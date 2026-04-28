@@ -14,17 +14,18 @@ app.get('/', (req, res) => {
 });
 
 app.post('/chat', async (req, res) => {
-  const { messages } = req.body;
+  const { messages, userName } = req.body;
   try {
     const completion = await groq.chat.completions.create({
       model: 'llama-3.3-70b-versatile',
       messages: [
         {
           role: 'system',
-          content: `Eres Banana, un asistente personal amigable y motivador.
-          Ayuda al usuario con su vida cotidiana: organización, tareas, ideas,
+          content: `Eres Banana, un asistente personal amigable, inteligente y motivador.
+          ${userName ? `El nombre del usuario es ${userName}. Úsalo ocasionalmente para personalizar tus respuestas.` : ''}
+          Tu misión es ayudar al usuario con su vida cotidiana: organización, tareas, ideas,
           redacción y consejos. Responde siempre en español, de forma clara y concisa.
-          Usa emojis con moderación.`
+          Usa emojis con moderación. Nunca seas negativo.`
         },
         ...messages
       ]

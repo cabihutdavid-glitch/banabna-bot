@@ -7,256 +7,153 @@
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet" />
   <link rel="manifest" href="/manifest.json">
   <meta name="theme-color" content="#f5c842">
-  <script>
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('/sw.js');
-    }
-  </script>
+  <script>if('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js');</script>
   <style>
-    /* ── TEMAS ── */
     :root[data-theme="dark"] {
-      --bg: #0e0e10;
-      --surface: #1a1a1e;
-      --surface2: #242428;
-      --accent: #f5c842;
-      --accent2: #f0a500;
-      --text: #f0ede8;
-      --muted: #888;
-      --border: #2e2e34;
+      --bg:#0e0e10;--surface:#1a1a1e;--surface2:#242428;--accent:#f5c842;--accent2:#f0a500;--text:#f0ede8;--muted:#888;--border:#2e2e34;--card:#1e1e22;
     }
     :root[data-theme="light"] {
-      --bg: #f5f5f0;
-      --surface: #ffffff;
-      --surface2: #f0ede8;
-      --accent: #f0a500;
-      --accent2: #d4900a;
-      --text: #1a1a1e;
-      --muted: #666;
-      --border: #ddd;
+      --bg:#f5f5f0;--surface:#fff;--surface2:#f0ede8;--accent:#f0a500;--accent2:#d4900a;--text:#1a1a1e;--muted:#666;--border:#ddd;--card:#fafafa;
     }
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;transition:background .3s,color .3s;}
+    .chat-container{width:100%;max-width:640px;height:88vh;max-height:780px;display:flex;flex-direction:column;background:var(--surface);border-radius:24px;border:1px solid var(--border);overflow:hidden;position:relative;}
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: 'DM Sans', sans-serif;
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-      transition: background 0.3s, color 0.3s;
-    }
+    /* HEADER */
+    .chat-header{padding:14px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:11px;}
+    .avatar{width:40px;height:40px;background:var(--accent);border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:19px;flex-shrink:0;}
+    .header-info{flex:1;}
+    .header-info h1{font-family:'Syne',sans-serif;font-size:16px;font-weight:700;}
+    .header-info .greeting{font-size:11px;color:var(--muted);margin-top:1px;}
+    .status{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--muted);}
+    .status-dot{width:6px;height:6px;border-radius:50%;background:#3ecf6e;}
+    .header-actions{display:flex;gap:6px;}
+    .icon-btn{width:32px;height:32px;border-radius:9px;border:1px solid var(--border);background:var(--surface2);color:var(--text);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;transition:background .15s;}
+    .icon-btn:hover{background:var(--border);}
 
-    .chat-container {
-      width: 100%;
-      max-width: 620px;
-      height: 88vh;
-      max-height: 760px;
-      display: flex;
-      flex-direction: column;
-      background: var(--surface);
-      border-radius: 24px;
-      border: 1px solid var(--border);
-      overflow: hidden;
-    }
+    /* WEATHER BAR */
+    #weather-bar{padding:8px 18px;background:var(--surface2);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;font-size:12px;color:var(--muted);}
+    #weather-bar .w-item{display:flex;align-items:center;gap:4px;}
+    #weather-bar .w-sep{opacity:0.3;}
 
-    /* ── HEADER ── */
-    .chat-header {
-      padding: 16px 20px;
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-    .avatar {
-      width: 42px; height: 42px;
-      background: var(--accent);
-      border-radius: 12px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 20px; flex-shrink: 0;
-    }
-    .header-info { flex: 1; }
-    .header-info h1 {
-      font-family: 'Syne', sans-serif;
-      font-size: 17px; font-weight: 700;
-      color: var(--text);
-    }
-    .status {
-      display: flex; align-items: center; gap: 5px;
-      font-size: 11px; color: var(--muted); margin-top: 1px;
-    }
-    .status-dot { width: 6px; height: 6px; border-radius: 50%; background: #3ecf6e; }
+    /* MENSAJES */
+    .messages{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:11px;scrollbar-width:thin;scrollbar-color:var(--border) transparent;}
+    .msg{max-width:82%;padding:10px 14px;border-radius:15px;font-size:14px;line-height:1.6;animation:fadeUp .2s ease;}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+    .msg.bot{align-self:flex-start;background:var(--surface2);border:1px solid var(--border);border-bottom-left-radius:4px;}
+    .msg.user{align-self:flex-end;background:var(--accent);color:#0e0e10;border-bottom-right-radius:4px;font-weight:500;}
+    .msg.typing{color:var(--muted);font-style:italic;}
 
-    /* ── BOTONES HEADER ── */
-    .header-actions { display: flex; gap: 8px; }
-    .icon-btn {
-      width: 34px; height: 34px;
-      border-radius: 10px;
-      border: 1px solid var(--border);
-      background: var(--surface2);
-      color: var(--text);
-      cursor: pointer;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 16px;
-      transition: background 0.15s;
-    }
-    .icon-btn:hover { background: var(--border); }
+    /* SUGERENCIAS */
+    .suggestions{padding:0 14px 9px;display:flex;gap:6px;flex-wrap:wrap;}
+    .suggestion-btn{font-size:11.5px;padding:5px 10px;background:transparent;border:1px solid var(--border);border-radius:20px;color:var(--muted);cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .15s;}
+    .suggestion-btn:hover{border-color:var(--accent);color:var(--accent);}
 
-    /* ── MENSAJES ── */
-    .messages {
-      flex: 1; overflow-y: auto;
-      padding: 16px;
-      display: flex; flex-direction: column; gap: 12px;
-      scrollbar-width: thin; scrollbar-color: var(--border) transparent;
-    }
-    .msg {
-      max-width: 80%;
-      padding: 11px 15px;
-      border-radius: 16px;
-      font-size: 14px; line-height: 1.6;
-      animation: fadeUp 0.25s ease;
-    }
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(8px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-    .msg.bot {
-      align-self: flex-start;
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      border-bottom-left-radius: 4px;
-    }
-    .msg.user {
-      align-self: flex-end;
-      background: var(--accent);
-      color: #0e0e10;
-      border-bottom-right-radius: 4px;
-      font-weight: 500;
-    }
-    .msg.typing { color: var(--muted); font-style: italic; }
+    /* INPUT */
+    .input-area{padding:11px 13px;border-top:1px solid var(--border);display:flex;gap:7px;align-items:flex-end;background:var(--surface);}
+    #user-input{flex:1;background:var(--surface2);border:1px solid var(--border);border-radius:11px;padding:9px 12px;font-size:14px;color:var(--text);font-family:'DM Sans',sans-serif;resize:none;min-height:40px;max-height:110px;outline:none;transition:border-color .15s;}
+    #user-input:focus{border-color:var(--accent);}
+    #user-input::placeholder{color:var(--muted);}
+    .send-btn{width:40px;height:40px;border-radius:11px;border:none;background:var(--accent);color:#0e0e10;font-size:16px;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:background .15s,transform .1s;}
+    .send-btn:hover{background:var(--accent2);}
+    .send-btn:active{transform:scale(0.95);}
+    .send-btn.recording{background:#e74c3c;animation:pulse 1s infinite;}
+    @keyframes pulse{0%,100%{transform:scale(1);}50%{transform:scale(1.08);}}
 
-    /* ── FECHA DEL HISTORIAL ── */
-    .date-divider {
-      text-align: center;
-      font-size: 11px;
-      color: var(--muted);
-      margin: 4px 0;
-    }
+    /* PANELES LATERALES */
+    .panel{position:absolute;top:0;left:0;right:0;bottom:0;background:var(--surface);z-index:20;display:none;flex-direction:column;border-radius:24px;overflow:hidden;}
+    .panel.open{display:flex;}
+    .panel-header{padding:14px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:11px;}
+    .panel-header h2{font-family:'Syne',sans-serif;font-size:15px;flex:1;}
+    .panel-body{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px;}
 
-    /* ── SUGERENCIAS ── */
-    .suggestions {
-      padding: 0 16px 10px;
-      display: flex; gap: 7px; flex-wrap: wrap;
-    }
-    .suggestion-btn {
-      font-size: 12px; padding: 5px 11px;
-      background: transparent;
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      color: var(--muted); cursor: pointer;
-      font-family: 'DM Sans', sans-serif;
-      transition: all 0.15s;
-    }
-    .suggestion-btn:hover { border-color: var(--accent); color: var(--accent); }
+    /* SETUP NOMBRE */
+    #setup-panel{background:var(--surface);}
+    .setup-card{display:flex;flex-direction:column;align-items:center;text-align:center;gap:14px;padding:30px 20px;}
+    .setup-card .emoji{font-size:48px;}
+    .setup-card h2{font-family:'Syne',sans-serif;font-size:20px;}
+    .setup-card p{font-size:13px;color:var(--muted);line-height:1.6;}
+    .setup-input{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:11px;padding:11px 14px;font-size:14px;color:var(--text);font-family:'DM Sans',sans-serif;outline:none;text-align:center;}
+    .setup-input:focus{border-color:var(--accent);}
+    .setup-btn{width:100%;padding:12px;background:var(--accent);color:#0e0e10;border:none;border-radius:11px;font-size:14px;font-weight:500;font-family:'DM Sans',sans-serif;cursor:pointer;}
 
-    /* ── INPUT ── */
-    .input-area {
-      padding: 12px 14px;
-      border-top: 1px solid var(--border);
-      display: flex; gap: 8px; align-items: flex-end;
-      background: var(--surface);
-    }
-    #user-input {
-      flex: 1;
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 10px 13px;
-      font-size: 14px;
-      color: var(--text);
-      font-family: 'DM Sans', sans-serif;
-      resize: none;
-      min-height: 42px; max-height: 120px;
-      transition: border-color 0.15s;
-      outline: none;
-    }
-    #user-input:focus { border-color: var(--accent); }
-    #user-input::placeholder { color: var(--muted); }
+    /* HISTORIAL */
+    .history-item{padding:11px 13px;background:var(--surface2);border:1px solid var(--border);border-radius:11px;cursor:pointer;transition:border-color .15s;}
+    .history-item:hover{border-color:var(--accent);}
+    .history-item .h-date{font-size:10px;color:var(--muted);margin-bottom:3px;}
+    .history-item .h-preview{font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .clear-btn{margin:12px;padding:10px;background:transparent;border:1px solid #e74c3c;border-radius:11px;color:#e74c3c;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:13px;}
+    .clear-btn:hover{background:#e74c3c22;}
+    .empty-msg{text-align:center;color:var(--muted);font-size:13px;padding:30px 20px;}
 
-    .send-btn {
-      width: 42px; height: 42px;
-      border-radius: 12px; border: none;
-      background: var(--accent); color: #0e0e10;
-      font-size: 17px; cursor: pointer; flex-shrink: 0;
-      display: flex; align-items: center; justify-content: center;
-      transition: background 0.15s, transform 0.1s;
-    }
-    .send-btn:hover  { background: var(--accent2); }
-    .send-btn:active { transform: scale(0.95); }
-
-    /* ── VOZ ACTIVA ── */
-    .send-btn.recording { background: #e74c3c; animation: pulse 1s infinite; }
-    @keyframes pulse {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.08); }
-    }
-
-    /* ── PANEL HISTORIAL ── */
-    #history-panel {
-      position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-      background: var(--surface);
-      z-index: 20;
-      display: none;
-      flex-direction: column;
-      border-radius: 24px;
-      overflow: hidden;
-    }
-    #history-panel.open { display: flex; }
-    .history-header {
-      padding: 16px 20px;
-      border-bottom: 1px solid var(--border);
-      display: flex; align-items: center; gap: 12px;
-    }
-    .history-header h2 { font-family: 'Syne', sans-serif; font-size: 16px; flex: 1; }
-    .history-list { flex: 1; overflow-y: auto; padding: 12px; display: flex; flex-direction: column; gap: 8px; }
-    .history-item {
-      padding: 12px 14px;
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      cursor: pointer;
-      transition: border-color 0.15s;
-    }
-    .history-item:hover { border-color: var(--accent); }
-    .history-item .h-date { font-size: 11px; color: var(--muted); margin-bottom: 4px; }
-    .history-item .h-preview { font-size: 13px; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .clear-btn {
-      margin: 12px; padding: 10px;
-      background: transparent;
-      border: 1px solid #e74c3c;
-      border-radius: 12px;
-      color: #e74c3c;
-      cursor: pointer;
-      font-family: 'DM Sans', sans-serif;
-      font-size: 13px;
-    }
-    .clear-btn:hover { background: #e74c3c22; }
-    .empty-history { text-align: center; color: var(--muted); font-size: 13px; padding: 40px 20px; }
+    /* MODO ESTUDIO */
+    .study-timer{background:var(--surface2);border:1px solid var(--border);border-radius:14px;padding:20px;text-align:center;}
+    .timer-display{font-family:'Syne',sans-serif;font-size:48px;font-weight:700;color:var(--accent);margin:10px 0;}
+    .timer-label{font-size:12px;color:var(--muted);margin-bottom:14px;}
+    .timer-btns{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;}
+    .timer-btn{padding:8px 16px;border-radius:10px;border:1px solid var(--border);background:var(--surface);color:var(--text);cursor:pointer;font-family:'DM Sans',sans-serif;font-size:13px;transition:all .15s;}
+    .timer-btn:hover{border-color:var(--accent);color:var(--accent);}
+    .timer-btn.active{background:var(--accent);color:#0e0e10;border-color:var(--accent);}
+    .notes-area{flex:1;background:var(--surface2);border:1px solid var(--border);border-radius:14px;padding:14px;font-size:13px;color:var(--text);font-family:'DM Sans',sans-serif;resize:none;outline:none;min-height:150px;}
+    .notes-area::placeholder{color:var(--muted);}
+    .notes-label{font-size:12px;color:var(--muted);margin-bottom:6px;}
   </style>
 </head>
 <body>
+<div class="chat-container">
 
-<div class="chat-container" style="position:relative;">
+  <!-- SETUP NOMBRE -->
+  <div class="panel open" id="setup-panel">
+    <div class="panel-body" style="justify-content:center;">
+      <div class="setup-card">
+        <div class="emoji">🍌</div>
+        <h2>¡Bienvenido a Banana!</h2>
+        <p>Antes de empezar, ¿cómo te llamas?<br>Así podré recordarte y personalizarme para ti.</p>
+        <input class="setup-input" id="name-input" type="text" placeholder="Tu nombre..." maxlength="30" />
+        <div style="width:100%">
+          <div style="font-size:12px;color:var(--muted);margin-bottom:6px;">¿Cuál es tu idioma preferido?</div>
+          <select id="lang-select" class="setup-input" style="text-align:left;">
+            <option value="es-CO">Español (Colombia)</option>
+            <option value="es-ES">Español (España)</option>
+            <option value="en-US">English</option>
+          </select>
+        </div>
+        <button class="setup-btn" onclick="saveProfile()">Empezar con Banana 🍌</button>
+      </div>
+    </div>
+  </div>
 
   <!-- PANEL HISTORIAL -->
-  <div id="history-panel">
-    <div class="history-header">
-      <button class="icon-btn" onclick="toggleHistory()">←</button>
-      <h2>Historial</h2>
+  <div class="panel" id="history-panel">
+    <div class="panel-header">
+      <button class="icon-btn" onclick="closePanel('history-panel')">←</button>
+      <h2>🕐 Historial</h2>
     </div>
-    <div class="history-list" id="history-list"></div>
+    <div class="panel-body" id="history-list"></div>
     <button class="clear-btn" onclick="clearHistory()">🗑 Borrar todo el historial</button>
+  </div>
+
+  <!-- PANEL ESTUDIO -->
+  <div class="panel" id="study-panel">
+    <div class="panel-header">
+      <button class="icon-btn" onclick="closePanel('study-panel')">←</button>
+      <h2>📚 Modo Estudio</h2>
+    </div>
+    <div class="panel-body">
+      <div class="study-timer">
+        <div class="timer-label" id="timer-label">Pomodoro — Enfoque</div>
+        <div class="timer-display" id="timer-display">25:00</div>
+        <div class="timer-btns">
+          <button class="timer-btn active" onclick="setTimer(25,'Enfoque')">25 min</button>
+          <button class="timer-btn" onclick="setTimer(5,'Descanso corto')">5 min</button>
+          <button class="timer-btn" onclick="setTimer(15,'Descanso largo')">15 min</button>
+          <button class="timer-btn" id="start-btn" onclick="toggleTimer()">▶ Iniciar</button>
+        </div>
+      </div>
+      <div class="notes-label">📝 Notas de estudio</div>
+      <textarea class="notes-area" id="study-notes" placeholder="Escribe tus apuntes aquí..."></textarea>
+      <button class="timer-btn" onclick="saveNotes()" style="align-self:flex-end;">💾 Guardar notas</button>
+    </div>
   </div>
 
   <!-- HEADER -->
@@ -264,24 +161,30 @@
     <div class="avatar">🍌</div>
     <div class="header-info">
       <h1>Banana</h1>
-      <div class="status">
-        <div class="status-dot"></div>
-        Asistente personal activo
-      </div>
+      <div class="greeting" id="greeting-text">Cargando...</div>
     </div>
     <div class="header-actions">
-      <button class="icon-btn" onclick="toggleHistory()" title="Historial">🕐</button>
-      <button class="icon-btn" onclick="toggleTheme()" id="theme-btn" title="Modo claro/oscuro">🌙</button>
-      <button class="icon-btn" onclick="newChat()" title="Nueva conversación">✏️</button>
+      <button class="icon-btn" onclick="openPanel('study-panel')" title="Modo estudio">📚</button>
+      <button class="icon-btn" onclick="openPanel('history-panel');renderHistory();" title="Historial">🕐</button>
+      <button class="icon-btn" onclick="toggleTheme()" id="theme-btn" title="Tema">🌙</button>
+      <button class="icon-btn" onclick="newChat()" title="Nuevo chat">✏️</button>
     </div>
+  </div>
+
+  <!-- WEATHER BAR -->
+  <div id="weather-bar">
+    <div class="w-item">🌡 <span id="w-temp">--°C</span></div>
+    <span class="w-sep">|</span>
+    <div class="w-item">☁️ <span id="w-desc">Cargando clima...</span></div>
+    <span class="w-sep">|</span>
+    <div class="w-item">📅 <span id="w-date">--</span></div>
+    <span class="w-sep">|</span>
+    <div class="w-item">🕐 <span id="w-time">--:--</span></div>
   </div>
 
   <!-- MENSAJES -->
   <div class="messages" id="messages">
-    <div class="msg bot">
-      ¡Hola! Soy <strong>Banana</strong>, tu asistente personal 🍌<br>
-      ¿En qué te ayudo hoy?
-    </div>
+    <div class="msg bot">¡Hola! Soy <strong>Banana</strong> 🍌 ¿En qué te ayudo hoy?</div>
   </div>
 
   <!-- SUGERENCIAS -->
@@ -300,27 +203,77 @@
   </div>
 
 </div>
-
 <script>
-  // ── ESTADO ──────────────────────────────────────────────
-  let history = [];
-  let isRecording = false;
-  let recognition = null;
-  let isDark = true;
+  // ── PERFIL ──────────────────────────────────────────────
+  let userName = localStorage.getItem('banana_name') || '';
+  let userLang = localStorage.getItem('banana_lang') || 'es-CO';
+  let history  = [];
+  let currentSessionId = Date.now().toString();
+  let isDark   = (localStorage.getItem('banana_theme') || 'dark') === 'dark';
 
-  // ── TEMA ────────────────────────────────────────────────
-  function toggleTheme() {
-    isDark = !isDark;
-    document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
-    document.getElementById('theme-btn').textContent = isDark ? '🌙' : '☀️';
-    localStorage.setItem('banana_theme', isDark ? 'dark' : 'light');
+  function saveProfile() {
+    const name = document.getElementById('name-input').value.trim();
+    const lang = document.getElementById('lang-select').value;
+    if (!name) { document.getElementById('name-input').focus(); return; }
+    userName = name;
+    userLang = lang;
+    localStorage.setItem('banana_name', name);
+    localStorage.setItem('banana_lang', lang);
+    closePanel('setup-panel');
+    initGreeting();
+    const msgs = document.getElementById('messages');
+    msgs.innerHTML = '';
+    addMsg('bot', `¡Hola, <strong>${userName}</strong>! Soy Banana 🍌 Ya te tengo guardado. ¿En qué te ayudo hoy?`);
   }
 
-  // Cargar tema guardado
-  const savedTheme = localStorage.getItem('banana_theme') || 'dark';
-  isDark = savedTheme === 'dark';
-  document.documentElement.setAttribute('data-theme', savedTheme);
-  document.getElementById('theme-btn') && (document.getElementById('theme-btn').textContent = isDark ? '🌙' : '☀️');
+  function initGreeting() {
+    const h = new Date().getHours();
+    const greet = h < 12 ? 'Buenos días' : h < 18 ? 'Buenas tardes' : 'Buenas noches';
+    document.getElementById('greeting-text').textContent = userName ? `${greet}, ${userName}` : greet;
+    if (userName) closePanel('setup-panel');
+  }
+
+  // ── TEMA ────────────────────────────────────────────────
+  function applyTheme() {
+    document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
+    document.getElementById('theme-btn').textContent = isDark ? '🌙' : '☀️';
+  }
+  function toggleTheme() {
+    isDark = !isDark;
+    localStorage.setItem('banana_theme', isDark ? 'dark' : 'light');
+    applyTheme();
+  }
+  applyTheme();
+
+  // ── CLIMA Y FECHA ────────────────────────────────────────
+  function updateClock() {
+    const now = new Date();
+    document.getElementById('w-time').textContent = now.toLocaleTimeString('es-CO', {hour:'2-digit',minute:'2-digit'});
+    document.getElementById('w-date').textContent = now.toLocaleDateString('es-CO', {weekday:'short',day:'numeric',month:'short'});
+  }
+  setInterval(updateClock, 1000);
+  updateClock();
+
+  async function fetchWeather() {
+    try {
+      const pos = await new Promise((res, rej) => navigator.geolocation.getCurrentPosition(res, rej));
+      const {latitude: lat, longitude: lon} = pos.coords;
+      const r = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`);
+      const d = await r.json();
+      const temp = Math.round(d.current_weather.temperature);
+      const codes = {0:'Despejado ☀️',1:'Casi despejado 🌤',2:'Parcialmente nublado ⛅',3:'Nublado ☁️',61:'Lluvia 🌧',80:'Chubascos 🌦'};
+      const desc = codes[d.current_weather.weathercode] || 'Variable';
+      document.getElementById('w-temp').textContent = `${temp}°C`;
+      document.getElementById('w-desc').textContent = desc;
+    } catch {
+      document.getElementById('w-desc').textContent = 'Clima no disponible';
+    }
+  }
+  fetchWeather();
+
+  // ── PANELES ──────────────────────────────────────────────
+  function openPanel(id)  { document.getElementById(id).classList.add('open'); }
+  function closePanel(id) { document.getElementById(id).classList.remove('open'); }
 
   // ── MENSAJES ─────────────────────────────────────────────
   function addMsg(role, text) {
@@ -338,7 +291,6 @@
     sendMessage();
   }
 
-  // ── ENVIAR MENSAJE ───────────────────────────────────────
   async function sendMessage() {
     const input = document.getElementById('user-input');
     const text  = input.value.trim();
@@ -356,73 +308,57 @@
       const res = await fetch('/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ messages: history })
+        body: JSON.stringify({ messages: history, userName })
       });
       const data = await res.json();
       if (data.error) throw new Error(data.error);
       typing.innerHTML = data.reply.replace(/\n/g, '<br>');
       typing.classList.remove('typing');
       history.push({ role: 'assistant', content: data.reply });
-
-      // Leer respuesta en voz
       speakText(data.reply);
-
-      // Guardar en historial
       saveToHistory();
-
     } catch (err) {
       typing.textContent = '❌ Error: ' + err.message;
       typing.classList.remove('typing');
     }
   }
 
-  // ── VOZ — ESCUCHAR ───────────────────────────────────────
+  // ── VOZ ──────────────────────────────────────────────────
+  let isRecording = false, recognition = null;
+
   function toggleVoice() {
-    if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
-      alert('Tu navegador no soporta reconocimiento de voz. Usa Chrome.');
+    if (!('webkitSpeechRecognition' in window || 'SpeechRecognition' in window)) {
+      alert('Usa Chrome para el reconocimiento de voz.');
       return;
     }
-
-    if (isRecording) {
-      recognition.stop();
-      return;
-    }
-
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    recognition = new SpeechRecognition();
-    recognition.lang = 'es-ES';
-    recognition.continuous = false;
-    recognition.interimResults = false;
-
+    if (isRecording) { recognition.stop(); return; }
+    const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+    recognition = new SR();
+    recognition.lang = userLang;
     recognition.onstart = () => {
       isRecording = true;
       document.getElementById('voice-btn').classList.add('recording');
       document.getElementById('voice-btn').textContent = '⏹';
     };
-
-    recognition.onresult = (e) => {
-      const transcript = e.results[0][0].transcript;
-      document.getElementById('user-input').value = transcript;
+    recognition.onresult = e => {
+      document.getElementById('user-input').value = e.results[0][0].transcript;
       sendMessage();
     };
-
     recognition.onend = () => {
       isRecording = false;
       document.getElementById('voice-btn').classList.remove('recording');
       document.getElementById('voice-btn').textContent = '🎤';
     };
-
     recognition.start();
   }
 
-  // ── VOZ — HABLAR ─────────────────────────────────────────
   function speakText(text) {
     if (!window.speechSynthesis) return;
-    const clean = text.replace(/[#*_~`]/g, '').substring(0, 300);
-    const utterance = new SpeechSynthesisUtterance(clean);
-    utterance.lang = 'es-ES';
-    utterance.rate = 1.05;
-    window.speechSynthesis.speak(utterance);
+    window.speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text.replace(/[#*_~`]/g,'').substring(0,300));
+    u.lang = userLang;
+    u.rate = 1.05;
+    window.speechSynthesis.speak(u);
   }
 
   // ── HISTORIAL ────────────────────────────────────────────
@@ -430,56 +366,37 @@
     if (history.length < 2) return;
     const sessions = JSON.parse(localStorage.getItem('banana_history') || '[]');
     const first = history.find(m => m.role === 'user')?.content || 'Conversación';
-    const existing = sessions.findIndex(s => s.id === currentSessionId);
-    const session = {
-      id: currentSessionId,
-      date: new Date().toLocaleString('es-CO'),
-      preview: first.substring(0, 60),
-      messages: [...history]
-    };
-    if (existing >= 0) sessions[existing] = session;
-    else sessions.unshift(session);
+    const idx = sessions.findIndex(s => s.id === currentSessionId);
+    const session = { id: currentSessionId, date: new Date().toLocaleString('es-CO'), preview: first.substring(0,60), messages: [...history] };
+    if (idx >= 0) sessions[idx] = session; else sessions.unshift(session);
     localStorage.setItem('banana_history', JSON.stringify(sessions.slice(0, 20)));
-  }
-
-  function toggleHistory() {
-    const panel = document.getElementById('history-panel');
-    panel.classList.toggle('open');
-    if (panel.classList.contains('open')) renderHistory();
   }
 
   function renderHistory() {
     const sessions = JSON.parse(localStorage.getItem('banana_history') || '[]');
     const list = document.getElementById('history-list');
-    if (sessions.length === 0) {
-      list.innerHTML = '<p class="empty-history">No hay conversaciones guardadas aún.</p>';
-      return;
-    }
+    if (!sessions.length) { list.innerHTML = '<p class="empty-msg">No hay conversaciones guardadas.</p>'; return; }
     list.innerHTML = sessions.map(s => `
       <div class="history-item" onclick="loadSession('${s.id}')">
         <div class="h-date">${s.date}</div>
         <div class="h-preview">${s.preview}</div>
-      </div>
-    `).join('');
+      </div>`).join('');
   }
 
   function loadSession(id) {
     const sessions = JSON.parse(localStorage.getItem('banana_history') || '[]');
-    const session = sessions.find(s => s.id === id);
-    if (!session) return;
-    history = session.messages;
+    const s = sessions.find(s => s.id === id);
+    if (!s) return;
+    history = s.messages;
     currentSessionId = id;
     const msgs = document.getElementById('messages');
     msgs.innerHTML = '';
     history.forEach(m => addMsg(m.role === 'user' ? 'user' : 'bot', m.content));
-    toggleHistory();
+    closePanel('history-panel');
   }
 
   function clearHistory() {
-    if (confirm('¿Borrar todo el historial?')) {
-      localStorage.removeItem('banana_history');
-      renderHistory();
-    }
+    if (confirm('¿Borrar todo el historial?')) { localStorage.removeItem('banana_history'); renderHistory(); }
   }
 
   function newChat() {
@@ -487,20 +404,68 @@
     currentSessionId = Date.now().toString();
     const msgs = document.getElementById('messages');
     msgs.innerHTML = '';
-    addMsg('bot', '¡Hola de nuevo! Soy <strong>Banana</strong> 🍌 ¿En qué te ayudo?');
+    addMsg('bot', `¡Nuevo chat listo${userName ? ', ' + userName : ''}! 🍌 ¿En qué te ayudo?`);
   }
 
-  let currentSessionId = Date.now().toString();
+  // ── TEMPORIZADOR ─────────────────────────────────────────
+  let timerInterval = null, timerSeconds = 25*60, timerRunning = false;
 
-  // ── INPUT AUTO-RESIZE ────────────────────────────────────
+  function setTimer(mins, label) {
+    clearInterval(timerInterval);
+    timerRunning = false;
+    timerSeconds = mins * 60;
+    document.getElementById('timer-label').textContent = `Pomodoro — ${label}`;
+    document.getElementById('timer-display').textContent = `${String(mins).padStart(2,'0')}:00`;
+    document.getElementById('start-btn').textContent = '▶ Iniciar';
+    document.querySelectorAll('.timer-btn').forEach(b => b.classList.remove('active'));
+    event.target.classList.add('active');
+  }
+
+  function toggleTimer() {
+    if (timerRunning) {
+      clearInterval(timerInterval);
+      timerRunning = false;
+      document.getElementById('start-btn').textContent = '▶ Reanudar';
+    } else {
+      timerRunning = true;
+      document.getElementById('start-btn').textContent = '⏸ Pausar';
+      timerInterval = setInterval(() => {
+        timerSeconds--;
+        const m = Math.floor(timerSeconds / 60);
+        const s = timerSeconds % 60;
+        document.getElementById('timer-display').textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+        if (timerSeconds <= 0) {
+          clearInterval(timerInterval);
+          timerRunning = false;
+          document.getElementById('start-btn').textContent = '▶ Iniciar';
+          new Audio('https://www.soundjay.com/buttons/beep-01a.mp3').play().catch(()=>{});
+          alert('⏰ ¡Tiempo completado!');
+        }
+      }, 1000);
+    }
+  }
+
+  function saveNotes() {
+    const notes = document.getElementById('study-notes').value;
+    localStorage.setItem('banana_notes', notes);
+    alert('✅ Notas guardadas');
+  }
+
+  // Cargar notas guardadas
+  const savedNotes = localStorage.getItem('banana_notes');
+  if (savedNotes) document.getElementById('study-notes').value = savedNotes;
+
+  // ── INPUT ────────────────────────────────────────────────
   document.getElementById('user-input').addEventListener('keydown', function(e) {
     if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
   });
   document.getElementById('user-input').addEventListener('input', function() {
     this.style.height = 'auto';
-    this.style.height = Math.min(this.scrollHeight, 120) + 'px';
+    this.style.height = Math.min(this.scrollHeight, 110) + 'px';
   });
-</script>
 
+  // ── INIT ─────────────────────────────────────────────────
+  initGreeting();
+</script>
 </body>
 </html>
