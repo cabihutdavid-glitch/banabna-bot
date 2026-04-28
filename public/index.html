@@ -67,19 +67,7 @@
     .ph h2{font-family:'Syne',sans-serif;font-size:15px;flex:1}
     .pb{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;align-items:center}
 
-    #auth-panel .pb{justify-content:center;padding:20px}
-    #auth-panel .auth-card{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:28px 24px;width:100%;max-width:280px}
-
-    .auth-card{display:flex;flex-direction:column;align-items:center;text-align:center;gap:14px}
-    .auth-card .emoji{font-size:48px;margin-bottom:4px}
-    .auth-card h2{font-family:'Syne',sans-serif;font-size:22px;font-weight:700;display:none}
-    .auth-card p{font-size:13px;color:var(--muted);display:none}
-    .sinput{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:12px 14px;font-size:14px;color:var(--text);font-family:'DM Sans',sans-serif;outline:none;text-align:center}
-    .sinput:focus{border-color:var(--accent)}
-    .sinput::placeholder{color:var(--muted)}
-    .setup-btn{width:100%;padding:14px;background:var(--accent);color:#0e0e10;border:none;border-radius:10px;font-size:14px;font-weight:700;font-family:'DM Sans',sans-serif;cursor:pointer;margin-top:4px}
-    .auth-switch{font-size:12px;color:var(--muted);cursor:pointer;padding:6px}
-    .auth-switch span{color:var(--accent);font-weight:600}
+    #auth-panel{display:none}
 
     .hi{padding:14px 16px;background:var(--surface2);border:1px solid var(--border);border-radius:14px;cursor:pointer;transition:border-color .15s}
     .hi:hover{border-color:var(--accent)}
@@ -140,18 +128,7 @@
 <body>
 <div class="app">
 
-  <div class="panel open" id="auth-panel">
-    <div class="pb">
-      <div class="auth-card">
-        <div class="emoji">🍌</div>
-        <input class="sinput" id="auth-user" type="text" placeholder="Usuario" autocomplete="username"/>
-        <input class="sinput" id="auth-pass" type="password" placeholder="Contraseña" autocomplete="current-password"/>
-        <input class="sinput" id="auth-name" type="text" placeholder="Tu nombre (opcional)" style="display:none;"/>
-        <button class="setup-btn" id="auth-btn" onclick="doAuth()">Continuar</button>
-        <p class="auth-switch" id="auth-switch" onClick="toggleAuthMode()"><span>¿Sin cuenta? Crear</span></p>
-      </div>
-    </div>
-  </div>
+  
 
   <div class="panel" id="history-panel">
     <div class="ph">
@@ -316,13 +293,7 @@
     </div>
   </div>
 
-  <div class="panel" id="admin-panel">
-    <div class="ph">
-      <button class="ib" onclick="closePanel('admin-panel')">←</button>
-      <h2>⚙️ Admin</h2>
-    </div>
-    <div class="pb" id="admin-content"></div>
-  </div>
+  
 
   <div class="header">
     <div class="avatar">🍌</div>
@@ -337,7 +308,7 @@
       <button class="ib" onclick="openPanel('study-panel')" title="Estudio">📚</button>
       <button class="ib" onclick="openPanel('rem-panel');renderReminders();" title="Recordatorios">🔔</button>
       <button class="ib" onclick="openPanel('cam-panel')" title="Cámara">📷</button>
-      <button class="ib" id="admin-btn" onclick="openPanel('admin-panel');loadAdmin();" style="display:none;" title="Admin">⚙️</button>
+      <button class="ib" id="admin-btn" onclick="openPanel('admin-panel');" style="display:none;" title="Admin">⚙️</button>
       <button class="ib" onclick="openPanel('history-panel');renderHistory();" title="Historial">🕐</button>
       <button class="ib" onclick="toggleTheme()" id="theme-btn" title="Tema">🌙</button>
     </div>
@@ -404,7 +375,7 @@
 </div>
 <script>
 let chatHistory=[];
-let userName='', userLang='es-CO', isAdmin=false;
+let userLang='es-CO';
 let isDark=localStorage.getItem('banabna_theme')==='light';
 let currentTab='chat', pendingImage=null, pendingDoc=null;
 let timerSecs=25*60, timerRunning=false, timerInt=null;
@@ -412,75 +383,23 @@ let reminders=JSON.parse(localStorage.getItem('banabna_rems')||'[]');
 let player=null, playerOpen=false;
 let camStream=null;
 let calcExpr='';
-let authMode='login';
 
 const API='/';
-let token=localStorage.getItem('banabna_token');
-
-function getAuth(){return token?'Bearer '+token:'';}
 
 applyTheme();
-if(token){doInit();}else{openPanel('auth-panel');}
+doInit();
 
 function applyTheme(){document.documentElement.setAttribute('data-theme',isDark?'dark':'light');document.getElementById('theme-btn').textContent=isDark?'🌙':'☀️';}
 function toggleTheme(){isDark=!isDark;localStorage.setItem('banabna_theme',isDark?'dark':'light');applyTheme();}
 
 async function doInit(){
   try{
-    const res=await fetch(API+'sessions',{headers:{'Authorization':getAuth()}});
-    if(!res.ok){closePanel('auth-panel');return openPanel('auth-panel');}
     const h=new Date().getHours();
     const g=h<12?'Buenos días':h<18?'Buenas tardes':'Buenas noches';
-    document.getElementById('greeting').textContent=userName?g+', '+userName:g;
+    document.getElementById('greeting').textContent=g;
     fetchRates();
     reminders.forEach(r=>{if(!r.done&&new Date(r.time)>Date.now())scheduleNotification(r);});
-  }catch{closePanel('auth-panel');openPanel('auth-panel');}
-}
-
-function toggleAuthMode(){
-  authMode=authMode==='login'?'register':'login';
-  document.getElementById('auth-btn').textContent=authMode==='login'?'Continuar':'Crear cuenta';
-  document.getElementById('auth-switch').querySelector('span').textContent=authMode==='login'?'¿Sin cuenta? Crear':'¿Ya tienes cuenta? Iniciar';
-  document.getElementById('auth-name').style.display=authMode==='register'?'block':'none';
-}
-
-async function doAuth(){
-  const u=document.getElementById('auth-user').value.trim();
-  const p=document.getElementById('auth-pass').value;
-  const n=document.getElementById('auth-name').value.trim();
-  if(!u||!p)return alert('Completa todos los campos');
-  try{
-    const endpoint=authMode==='login'?'login':'register';
-    const body=authMode==='login'?{username:u,password:p}:{username:u,password:p,name:n};
-    const res=await fetch(API+endpoint,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
-    const data=await res.json();
-    if(!res.ok)return alert(data.error);
-    token=data.token;userName=data.name||u;isAdmin=data.isAdmin;
-    localStorage.setItem('banabna_token',token);
-    localStorage.setItem('banabna_name',userName);
-    closePanel('auth-panel');
-    const h=new Date().getHours();
-    const g=h<12?'Buenos días':h<18?'Buenas tardes':'Buenas noches';
-    document.getElementById('greeting').textContent=userName?g+', '+userName:g;
-    if(isAdmin)document.getElementById('admin-btn').style.display='flex';
-    document.getElementById('msgs').innerHTML='';
-    addMsg('bot','¡Hola, <strong>'+userName+'</strong>! 🍌 ¿En qué te ayudo?');
-    fetchRates();
-  }catch{alert('Error de conexión');}
-}
-
-async function doLogout(){
-  if(confirm('¿Cerrar sesión?')){
-    token=null;userName='';isAdmin=false;
-    localStorage.removeItem('banabna_token');
-    localStorage.removeItem('banabna_name');
-    document.getElementById('auth-user').value='';
-    document.getElementById('auth-pass').value='';
-    chatHistory=[];
-    document.getElementById('msgs').innerHTML='<div class="msg bot">¡Hasta luego! 🍌</div>';
-    closePanel('history-panel');
-    openPanel('auth-panel');
-  }
+  }catch{}
 }
 
 function tick(){
@@ -577,7 +496,7 @@ async function sendMessage(){
     const body={messages:chatHistory,hasImage:!!pendingImage};
     if(pendingImage)body.image={data:pendingImage.data,type:pendingImage.type};
     
-    const res=await fetch('/chat',{method:'POST',headers:{'Content-Type':'application/json','Authorization':getAuth()},body:JSON.stringify(body)});
+    const res=await fetch('/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
     const data=await res.json();
     if(data.error)throw new Error(data.error);
     
@@ -592,7 +511,6 @@ async function sendMessage(){
     }
     
     chatHistory.push({role:'assistant',content:data.reply});
-    saveSession();
     pendingImage=null;pendingDoc=null;
     document.getElementById('img-name').textContent='';
     document.getElementById('doc-name').textContent='';
@@ -602,30 +520,16 @@ async function sendMessage(){
   }
 }
 
-async function saveSession(){
-  if(chatHistory.length<2)return;
-  try{await fetch('/save-session',{method:'POST',headers:{'Content-Type':'application/json','Authorization':getAuth()},body:JSON.stringify({messages:chatHistory})});}catch{}
-}
-
 async function renderHistory(){
   const list=document.getElementById('history-list');
-  try{
-    const res=await fetch('/sessions',{headers:{'Authorization':getAuth()}});
-    const sessions=await res.json();
-    if(!sessions.length){list.innerHTML='<p class="empty-msg">Sin conversaciones.</p>';return;}
-    list.innerHTML=sessions.map(s=>'<div class="hi" onclick="loadSession('+s.id+')"><div class="hd">'+new Date(s.date).toLocaleString()+'</div><div class="hp">'+s.preview+'</div></div>').join('');
-  }catch{list.innerHTML='<p class="empty-msg">Error.</p>';}
+  list.innerHTML='<p class="empty-msg">Historial guardado en este dispositivo</p>';
 }
 
 async function loadSession(id){
-  try{
-    const res=await fetch('/session/'+id,{headers:{'Authorization':getAuth()}});
-    const data=await res.json();
-    chatHistory=data.messages;
-    const msgs=document.getElementById('msgs');msgs.innerHTML='';
-    chatHistory.forEach(m=>addMsg(m.role==='user'?'user':'bot',m.content));
-    closePanel('history-panel');
-  }catch{}
+  chatHistory=localStorage.getItem('banabna_chat_'+id)?JSON.parse(localStorage.getItem('banabna_chat_'+id)):[];
+  const msgs=document.getElementById('msgs');msgs.innerHTML='';
+  chatHistory.forEach(m=>addMsg(m.role==='user'?'user':'bot',m.content));
+  closePanel('history-panel');
 }
 
 function setTimer(mins,label,el){
@@ -732,7 +636,7 @@ async function doTranslate(){
   const out=document.getElementById('trans-output');
   out.textContent='...';
   try{
-    const res=await fetch('/translate',{method:'POST',headers:{'Content-Type':'application/json','Authorization':getAuth()},body:JSON.stringify({text,from,to})});
+    const res=await fetch('/translate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text,from,to})});
     const data=await res.json();
     out.textContent=data.translatedText||'Error';
   }catch{out.textContent='Error';}
@@ -771,17 +675,6 @@ function takePhoto(){
 }
 function closeCamera(){
   if(camStream){camStream.getTracks().forEach(t=>t.stop());camStream=null;}
-}
-
-async function loadAdmin(){
-  const content=document.getElementById('admin-content');
-  try{
-    const res=await fetch('/admin/users',{headers:{'Authorization':getAuth()}});
-    const users=await res.json();
-    const res2=await fetch('/admin/all-sessions',{headers:{'Authorization':getAuth()}});
-    const sessions=await res2.json();
-    content.innerHTML='<div class="admin-card"><div class="admintitle">Usuarios</div><div class="adminval">'+users.length+'</div></div><div class="admin-card"><div class="admintitle">Sesiones</div><div class="adminval">'+sessions.length+'</div></div>';
-  }catch{content.innerHTML='<p class="empty-msg">Error</p>';}
 }
 
 document.getElementById('ui').addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMessage();}});

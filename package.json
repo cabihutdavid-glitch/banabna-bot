@@ -1,7 +1,15 @@
-{  
-  "name": "banabna-bot",  
-  "version": "1.0.0",  
-  "main": "index.js",  
-  "scripts": {"start": "node server.js"},  
-  "dependencies": {"bcryptjs": "^2.4.3","dotenv": "^17.4.2","express": "^5.2.1","groq-sdk": "^1.1.2","jsonwebtoken": "^9.0.2"}  
-} 
+{
+  "name": "banabna-bot",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "groq-sdk": "^1.1.2"
+  },
+  "author": "",
+  "license": "ISC"
+}
