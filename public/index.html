@@ -29,7 +29,7 @@
     .ib:hover,.ib:active{background:var(--border)}
     .ib:active{transform:scale(.95)}
 
-    .wbar{padding:10px 18px;background:var(--surface2);border-bottom:1px solid(var(--border);display:flex;align-items:center;gap:10px;font-size:12px;color:var(--muted);flex-wrap:wrap;flex-shrink:0;overflow-x:auto}
+    .wbar{padding:10px 16px;background:var(--surface2);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;font-size:12px;color:var(--muted);flex-wrap:wrap;flex-shrink:0;overflow-x:auto}
     .wi{display:flex;align-items:center;gap:4px;white-space:nowrap}
     .wsep{opacity:.3}
 
@@ -38,7 +38,7 @@
     .tab.active{background:var(--surface2);border-color:var(--border);color:var(--text);font-weight:500}
 
     .msgs{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;scrollbar-width:thin;scrollbar-color:var(--border) transparent;-webkit-overflow-scrolling:touch}
-    .msg{max-width:85%;padding:14px 18px;border-radius:18px;font-size:16px;line-height:1.5;animation:fu .2s ease;word-wrap:break-word}
+    .msg{max-width:85%;padding:14px 18px;border-radius:18px;font-size:15px;line-height:1.5;animation:fu .2s ease;word-wrap:break-word}
     @keyframes fu{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
     .msg.bot{align-self:flex-start;background:var(--surface2);border:1px solid var(--border);border-bottom-left-radius:4px}
     .msg.user{align-self:flex-end;background:var(--accent);color:#0e0e10;border-bottom-right-radius:4px;font-weight:500}
@@ -51,7 +51,7 @@
     .sug:active{transform:scale(.97)}
 
     .iarea{padding:14px 18px;border-top:1px solid var(--border);display:flex;gap:10px;align-items:flex-end;flex-shrink:0}
-    #ui{flex:1;background:var(--surface2);border:1px solid var(--border);border-radius:16px;padding:14px 16px;font-size:17px;color:var(--text);font-family:'DM Sans',sans-serif;resize:none;min-height:52px;max-height:120px;outline:none;transition:border-color .15s;-webkit-appearance:none;border-radius:16px !important}
+    #ui{flex:1;background:var(--surface2);border:1px solid var(--border);border-radius:16px;padding:14px 16px;font-size:16px;color:var(--text);font-family:'DM Sans',sans-serif;resize:none;min-height:52px;max-height:120px;outline:none;transition:border-color .15s;-webkit-appearance:none}
     #ui:focus{border-color:var(--accent)}
     #ui::placeholder{color:var(--muted)}
     .sbtn{width:56px;height:56px;border-radius:16px;border:none;background:var(--accent);color:#0e0e10;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;flex-shrink:0}
@@ -60,14 +60,24 @@
 
     .attach-row{padding:0 16px 10px;display:flex;gap:8px;flex-shrink:0}
     .abtn{font-size:13px;padding:10px 16px;background:transparent;border:1px solid var(--border);border-radius:12px;color:var(--muted);cursor:pointer;font-family:'DM Sans',sans-serif;display:flex;align-items:center;gap:6px;transition:all .15s;min-height:40px}
-
     .panel{position:absolute;inset:0;background:var(--surface);z-index:20;display:none;flex-direction:column;overflow:hidden}
     .panel.open{display:flex}
     .ph{padding:14px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
     .ph h2{font-family:'Syne',sans-serif;font-size:15px;flex:1}
-    .pb{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;align-items:center}
+    .pb{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px}
 
-    #auth-panel{display:none}
+    #auth-panel .pb{justify-content:center;align-items:center;padding:20px}
+    #auth-panel .auth-card{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:28px 24px;width:100%;max-width:280px}
+    .auth-card{display:flex;flex-direction:column;align-items:center;text-align:center;gap:14px}
+    .auth-card .emoji{font-size:48px;margin-bottom:4px}
+    .auth-card h2{font-family:'Syne',sans-serif;font-size:22px;font-weight:700}
+    .auth-card p{font-size:13px;color:var(--muted)}
+    .sinput{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:12px 14px;font-size:14px;color:var(--text);font-family:'DM Sans',sans-serif;outline:none;text-align:center}
+    .sinput:focus{border-color:var(--accent)}
+    .sinput::placeholder{color:var(--muted)}
+    .setup-btn{width:100%;padding:14px;background:var(--accent);color:#0e0e10;border:none;border-radius:10px;font-size:14px;font-weight:700;font-family:'DM Sans',sans-serif;cursor:pointer;margin-top:4px}
+    .auth-switch{font-size:12px;color:var(--muted);cursor:pointer;padding:6px}
+    .auth-switch span{color:var(--accent);font-weight:600}
 
     .hi{padding:14px 16px;background:var(--surface2);border:1px solid var(--border);border-radius:14px;cursor:pointer;transition:border-color .15s}
     .hi:hover{border-color:var(--accent)}
@@ -81,7 +91,6 @@
     .tlabel{font-size:13px;color:var(--muted);margin-bottom:16px}
     .tbtns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
     .tbtn{padding:12px 20px;border-radius:12px;border:1px solid var(--border);background:var(--surface);color:var(--text);cursor:pointer;font-size:14px;transition:all .15s;min-height:44px}
-    .tbtn:hover{border-color:var(--accent);color:var(--accent)}
     .tbtn.active{background:var(--accent);color:#0e0e10;border-color:var(--accent)}
     .notes-ta{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:16px;padding:16px;font-size:15px;resize:none;outline:none;min-height:160px}
 
@@ -91,7 +100,7 @@
     .conv-result{font-family:'Syne',sans-serif;font-size:32px;font-weight:700;color:var(--accent);text-align:center;padding:14px 0}
     .conv-rate{font-size:12px;color:var(--muted);text-align:center}
 
-    .player-bar{position:absolute;bottom:80px;left:0;right:0;background:var(--surface2);border-top:1px solid var(--border);padding:12px 20px;display:none;align-items:center;gap:12px;z-index:15}
+    .player-bar{position:absolute;bottom:90px;left:0;right:0;background:var(--surface2);border-top:1px solid var(--border);padding:12px 20px;display:none;align-items:center;gap:12px;z-index:15}
     .player-bar.open{display:flex}
     .player-info{flex:1;min-width:0}
     .player-title{font-size:14px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -105,14 +114,13 @@
 
     .trans-pairs{display:flex;gap:8px;margin-bottom:12px}
     .trans-pair{display:flex;align-items:center;gap:8px;flex:1}
-    .trans-pair select,.trans-pair input{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:10px;font-size:14px}
+    .trans-pair select{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:10px;font-size:14px}
     .trans-arrow{font-size:18px;cursor:pointer}
     .trans-output{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px;font-size:16px;min-height:120px;resize:none;outline:none}
 
     .calc-display{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:18px;font-size:28px;text-align:right;font-family:'Syne',sans-serif;font-weight:700;margin-bottom:12px}
     .calc-btns{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
     .calc-btn{padding:16px;font-size:18px;border-radius:12px;border:1px solid var(--border);background:var(--surface);color:var(--text);cursor:pointer}
-    .calc-btn:hover{border-color:var(--accent)}
     .calc-btn.op{background:var(--accent);color:#0e0e10;border-color:var(--accent)}
     .calc-btn.eq{grid-column:span 2;background:var(--accent2);border-color:var(--accent2)}
 
@@ -128,7 +136,20 @@
 <body>
 <div class="app">
 
-  
+  <div class="panel open" id="auth-panel">
+    <div class="pb">
+      <div class="auth-card">
+        <div class="emoji">🍌</div>
+        <h2 id="auth-title">Banabna</h2>
+        <p id="auth-subtitle">Tu asistente personal IA</p>
+        <input class="sinput" id="auth-user" type="text" placeholder="Usuario" autocomplete="username"/>
+        <input class="sinput" id="auth-pass" type="password" placeholder="Contraseña" autocomplete="current-password"/>
+        <input class="sinput" id="auth-name" type="text" placeholder="Tu nombre (opcional)" style="display:none;"/>
+        <button class="setup-btn" id="auth-btn" onclick="doAuth()">Continuar</button>
+        <p class="auth-switch" id="auth-switch" onclick="toggleAuthMode()"><span>¿Sin cuenta? Crear</span></p>
+      </div>
+    </div>
+  </div>
 
   <div class="panel" id="history-panel">
     <div class="ph">
@@ -155,9 +176,9 @@
           <button class="tbtn" id="startbtn" onclick="toggleTimer()">▶ Iniciar</button>
         </div>
       </div>
-      <div style="font-size:13px;color:var(--muted);">📝 Notas de estudio</div>
-      <textarea class="notes-ta" id="study-notes" placeholder="Escribe tus apuntes aquí..."></textarea>
-      <button class="tbtn" onclick="saveNotes()" style="align-self:flex-end;">💾 Guardar notas</button>
+      <div style="font-size:13px;color:var(--muted);">📝 Notas</div>
+      <textarea class="notes-ta" id="study-notes" placeholder="Escribe aquí..."></textarea>
+      <button class="tbtn" onclick="saveNotes()" style="align-self:flex-end;">💾 Guardar</button>
     </div>
   </div>
 
@@ -178,7 +199,6 @@
           <option value="MXN">🇲🇽 MXN</option>
           <option value="BRL">🇧🇷 BRL</option>
           <option value="GBP">🇬🇧 GBP</option>
-          <option value="ARS">🇦🇷 ARS</option>
         </select>
         <label>A</label>
         <select id="conv-to" onchange="convertCurrency()">
@@ -186,11 +206,8 @@
           <option value="COP">🇨🇴 COP</option>
           <option value="EUR">🇪🇺 EUR</option>
           <option value="MXN">🇲🇽 MXN</option>
-          <option value="BRL">🇧🇷 BRL</option>
-          <option value="GBP">🇬🇧 GBP</option>
-          <option value="ARS">🇦🇷 ARS</option>
         </select>
-        <div class="conv-result" id="conv-result">Cargando...</div>
+        <div class="conv-result" id="conv-result">...</div>
         <div class="conv-rate" id="conv-rate"></div>
       </div>
     </div>
@@ -204,9 +221,9 @@
     <div class="pb">
       <div class="conv-card">
         <label>¿Qué recordar?</label>
-        <input type="text" id="rem-name" placeholder="Ej: Tomar agua..." style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:12px 16px;font-size:16px;width:100%;margin-bottom:12px;"/>
+        <input type="text" id="rem-name" placeholder="Ej: Tomar agua..." style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:12px;font-size:14px;width:100%;margin-bottom:12px;"/>
         <label>¿Cuándo?</label>
-        <input type="datetime-local" id="rem-time" style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:12px 16px;font-size:16px;width:100%;margin-bottom:12px;"/>
+        <input type="datetime-local" id="rem-time" style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:12px;font-size:14px;width:100%;margin-bottom:12px;"/>
         <button class="setup-btn" onclick="addReminder()">➕ Agregar</button>
       </div>
       <div id="rem-list"></div>
@@ -225,16 +242,12 @@
             <option value="es">Español</option>
             <option value="en">English</option>
             <option value="fr">Français</option>
-            <option value="de">Deutsch</option>
-            <option value="pt">Português</option>
           </select>
           <span class="trans-arrow" onclick="swapLangs()">⇄</span>
           <select id="trans-to">
             <option value="en" selected>English</option>
             <option value="es">Español</option>
             <option value="fr">Français</option>
-            <option value="de">Deutsch</option>
-            <option value="pt">Português</option>
           </select>
         </div>
       </div>
@@ -293,7 +306,13 @@
     </div>
   </div>
 
-  
+  <div class="panel" id="admin-panel">
+    <div class="ph">
+      <button class="ib" onclick="closePanel('admin-panel')">←</button>
+      <h2>⚙️ Admin</h2>
+    </div>
+    <div class="pb" id="admin-content"></div>
+  </div>
 
   <div class="header">
     <div class="avatar">🍌</div>
@@ -308,7 +327,7 @@
       <button class="ib" onclick="openPanel('study-panel')" title="Estudio">📚</button>
       <button class="ib" onclick="openPanel('rem-panel');renderReminders();" title="Recordatorios">🔔</button>
       <button class="ib" onclick="openPanel('cam-panel')" title="Cámara">📷</button>
-      <button class="ib" id="admin-btn" onclick="openPanel('admin-panel');" style="display:none;" title="Admin">⚙️</button>
+      <button class="ib" id="admin-btn" onclick="openPanel('admin-panel');loadAdmin();" style="display:none;" title="Admin">⚙️</button>
       <button class="ib" onclick="openPanel('history-panel');renderHistory();" title="Historial">🕐</button>
       <button class="ib" onclick="toggleTheme()" id="theme-btn" title="Tema">🌙</button>
     </div>
@@ -375,7 +394,7 @@
 </div>
 <script>
 let chatHistory=[];
-let userLang='es-CO';
+let userName='', userLang='es-CO', isAdmin=false;
 let isDark=localStorage.getItem('banabna_theme')==='light';
 let currentTab='chat', pendingImage=null, pendingDoc=null;
 let timerSecs=25*60, timerRunning=false, timerInt=null;
@@ -383,23 +402,74 @@ let reminders=JSON.parse(localStorage.getItem('banabna_rems')||'[]');
 let player=null, playerOpen=false;
 let camStream=null;
 let calcExpr='';
+let authMode='login';
 
 const API='/';
+let token=localStorage.getItem('banabna_token');
+
+function getAuth(){return token?'Bearer '+token:'';}
 
 applyTheme();
-doInit();
+if(token){doInit();}else{openPanel('auth-panel');}
 
-function applyTheme(){document.documentElement.setAttribute('data-theme',isDark?'dark':'light');document.getElementById('theme-btn').textContent=isDark?'🌙':'☀️';}
+function applyTheme(){document.documentElement.setAttribute('data-theme',isDark?'dark':'light');document.getElementById('theme-btn').textContent=isDark?'🌙':'��️';}
 function toggleTheme(){isDark=!isDark;localStorage.setItem('banabna_theme',isDark?'dark':'light');applyTheme();}
 
 async function doInit(){
   try{
+    const res=await fetch(API+'sessions',{headers:{'Authorization':getAuth()}});
+    if(!res.ok){closePanel('auth-panel');return openPanel('auth-panel');}
     const h=new Date().getHours();
     const g=h<12?'Buenos días':h<18?'Buenas tardes':'Buenas noches';
-    document.getElementById('greeting').textContent=g;
+    document.getElementById('greeting').textContent=userName?g+', '+userName:g;
     fetchRates();
-    reminders.forEach(r=>{if(!r.done&&new Date(r.time)>Date.now())scheduleNotification(r);});
-  }catch{}
+  }catch{closePanel('auth-panel');openPanel('auth-panel');}
+}
+
+function toggleAuthMode(){
+  authMode=authMode==='login'?'register':'login';
+  document.getElementById('auth-title').textContent=authMode==='login'?'Banabna':'Únete a Banabna';
+  document.getElementById('auth-subtitle').textContent=authMode==='login'?'Tu asistente personal IA':'Crea tu cuenta gratis';
+  document.getElementById('auth-btn').textContent=authMode==='login'?'Continuar':'Crear cuenta';
+  document.getElementById('auth-switch').querySelector('span').textContent=authMode==='login'?'¿Sin cuenta? Crear':'¿Ya tienes cuenta? Iniciar';
+  document.getElementById('auth-name').style.display=authMode==='register'?'block':'none';
+}
+
+async function doAuth(){
+  const u=document.getElementById('auth-user').value.trim();
+  const p=document.getElementById('auth-pass').value;
+  const n=document.getElementById('auth-name').value.trim();
+  if(!u||!p)return alert('Completa todos los campos');
+  try{
+    const endpoint=authMode==='login'?'login':'register';
+    const body=authMode==='login'?{username:u,password:p}:{username:u,password:p,name:n};
+    const res=await fetch(API+endpoint,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+    const data=await res.json();
+    if(!res.ok)return alert(data.error);
+    token=data.token;userName=data.name||u;isAdmin=data.isAdmin;
+    localStorage.setItem('banabna_token',token);
+    localStorage.setItem('banabna_name',userName);
+    closePanel('auth-panel');
+    const h=new Date().getHours();
+    const g=h<12?'Buenos días':h<18?'Buenas tardes':'Buenas noches';
+    document.getElementById('greeting').textContent=userName?g+', '+userName:g;
+    if(isAdmin)document.getElementById('admin-btn').style.display='flex';
+    document.getElementById('msgs').innerHTML='';
+    addMsg('bot','¡Hola, <strong>'+userName+'</strong>! 🍌 ¿En qué te ayudo?');
+    fetchRates();
+  }catch{alert('Error de conexión');}
+}
+
+async function doLogout(){
+  if(confirm('¿Cerrar sesión?')){
+    token=null;userName='';isAdmin=false;
+    localStorage.removeItem('banabna_token');
+    localStorage.removeItem('banabna_name');
+    chatHistory=[];
+    document.getElementById('msgs').innerHTML='<div class="msg bot">¡Hasta luego! 🍌</div>';
+    closePanel('history-panel');
+    openPanel('auth-panel');
+  }
 }
 
 function tick(){
@@ -435,11 +505,11 @@ function setTab(tab,el){
   else if(tab==='doc'){ar.style.display='flex';ia.style.display='none';da.style.display='flex';}
   else{ar.style.display='none';}
   const sugs=document.getElementById('sugs');
-  if(tab==='img'){sugs.innerHTML='<button class="sug" onclick="quickSend(\'Describe esta imagen\')">Describir</button><button class="sug" onclick="quickSend(\'¿Qué hay?\')">Leer texto</button>';}
-  else if(tab==='doc'){sugs.innerHTML='<button class="sug" onclick="quickSend(\'Resume este doc\')">Resumir</button><button class="sug" onclick="quickSend(\'Puntos clave\')">Puntos clave</button>';}
+  if(tab==='img'){sugs.innerHTML='<button class="sug" onclick="quickSend(\'Describe\')">Describir</button><button class="sug" onclick="quickSend(\'¿Qué hay?\')">Leer texto</button>';}
+  else if(tab==='doc'){sugs.innerHTML='<button class="sug" onclick="quickSend(\'Resume\')">Resumir</button><button class="sug" onclick="quickSend(\'Puntos\')">Puntos clave</button>';}
   else if(tab==='music'){sugs.innerHTML='<button class="sug" onclick="togglePlayer()">▶ Play</button><button class="sug" onclick="stopPlayer()">⏹ Stop</button>';}
   else if(tab==='calc'){sugs.innerHTML='<button class="sug" onclick="openPanel(\'calc-panel\')">🧮 Abrir</button>';}
-  else{sugs.innerHTML='<button class="sug" onclick="quickSend(\'Organiza mi día\')">Organizar</button><button class="sug" onclick="quickSend(\'Consejo\')">Consejo</button><button class="sug" onclick="quickSend(\'Tareas\')">Tareas</button><button class="sug" onclick="toggleMusic()">🎵 Lofi</button>';}
+  else{sugs.innerHTML='<button class="sug" onclick="quickSend(\'Organiza\')">Organizar</button><button class="sug" onclick="quickSend(\'Consejo\')">Consejo</button><button class="sug" onclick="quickSend(\'Tareas\')">Tareas</button><button class="sug" onclick="toggleMusic()">🎵 Lofi</button>';}
 }
 
 function handleImage(e){
@@ -496,7 +566,7 @@ async function sendMessage(){
     const body={messages:chatHistory,hasImage:!!pendingImage};
     if(pendingImage)body.image={data:pendingImage.data,type:pendingImage.type};
     
-    const res=await fetch('/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+    const res=await fetch('/chat',{method:'POST',headers:{'Content-Type':'application/json','Authorization':getAuth()},body:JSON.stringify(body)});
     const data=await res.json();
     if(data.error)throw new Error(data.error);
     
@@ -511,6 +581,7 @@ async function sendMessage(){
     }
     
     chatHistory.push({role:'assistant',content:data.reply});
+    saveSession();
     pendingImage=null;pendingDoc=null;
     document.getElementById('img-name').textContent='';
     document.getElementById('doc-name').textContent='';
@@ -520,16 +591,30 @@ async function sendMessage(){
   }
 }
 
+async function saveSession(){
+  if(chatHistory.length<2)return;
+  try{await fetch('/save-session',{method:'POST',headers:{'Content-Type':'application/json','Authorization':getAuth()},body:JSON.stringify({messages:chatHistory})});}catch{}
+}
+
 async function renderHistory(){
   const list=document.getElementById('history-list');
-  list.innerHTML='<p class="empty-msg">Historial guardado en este dispositivo</p>';
+  try{
+    const res=await fetch('/sessions',{headers:{'Authorization':getAuth()}});
+    const sessions=await res.json();
+    if(!sessions.length){list.innerHTML='<p class="empty-msg">Sin conversaciones.</p>';return;}
+    list.innerHTML=sessions.map(s=>'<div class="hi" onclick="loadSession('+s.id+')"><div class="hd">'+new Date(s.date).toLocaleString()+'</div><div class="hp">'+s.preview+'</div></div>').join('');
+  }catch{list.innerHTML='<p class="empty-msg">Error.</p>';}
 }
 
 async function loadSession(id){
-  chatHistory=localStorage.getItem('banabna_chat_'+id)?JSON.parse(localStorage.getItem('banabna_chat_'+id)):[];
-  const msgs=document.getElementById('msgs');msgs.innerHTML='';
-  chatHistory.forEach(m=>addMsg(m.role==='user'?'user':'bot',m.content));
-  closePanel('history-panel');
+  try{
+    const res=await fetch('/session/'+id,{headers:{'Authorization':getAuth()}});
+    const data=await res.json();
+    chatHistory=data.messages;
+    const msgs=document.getElementById('msgs');msgs.innerHTML='';
+    chatHistory.forEach(m=>addMsg(m.role==='user'?'user':'bot',m.content));
+    closePanel('history-panel');
+  }catch{}
 }
 
 function setTimer(mins,label,el){
@@ -560,7 +645,7 @@ async function fetchRates(){
   try{
     const d=await(await fetch('https://api.exchangerate-api.com/v4/latest/USD')).json();
     rates=d.rates;convertCurrency();
-  }catch{document.getElementById('conv-result').textContent='Error';}
+  }catch{}
 }
 function convertCurrency(){
   const amount=parseFloat(document.getElementById('conv-amount').value)||0;
@@ -575,7 +660,7 @@ function convertCurrency(){
 function addReminder(){
   const name=document.getElementById('rem-name').value.trim();
   const time=document.getElementById('rem-time').value;
-  if(!name||!time){alert('Completa');return;}
+  if(!name||!time)return alert('Completa');
   const rem={id:Date.now(),name,time,done:false};
   reminders.push(rem);
   localStorage.setItem('banabna_rems',JSON.stringify(reminders));
@@ -595,9 +680,7 @@ function renderReminders(){
   list.innerHTML=reminders.map(r=>'<div class="rem-item"><div class="rt"><div class="rname">'+r.name+'</div><div class="rtime">'+new Date(r.time).toLocaleString()+'</div></div><button class="rem-del" onclick="deleteReminder('+r.id+')">🗑</button></div>').join('');
 }
 function deleteReminder(id){reminders=reminders.filter(r=>r.id!==id);localStorage.setItem('banabna_rems',JSON.stringify(reminders));renderReminders();}
-function checkReminders(){
-  reminders.forEach(r=>{if(!r.done&&new Date(r.time)<=Date.now()){r.done=true;addMsg('bot','🔔 Recordatorio: <strong>'+r.name+'</strong>');}});
-}
+function checkReminders(){reminders.forEach(r=>{if(!r.done&&new Date(r.time)<=Date.now()){r.done=true;addMsg('bot','🔔 Recordatorio: <strong>'+r.name+'</strong>');}});}
 
 const lofiStreams=[{name:'Lofi Chill',url:'https://streams.ilovemusic.de/iloveradio17.mp3'},{name:'Lofi HipHop',url:'https://streams.ilovemusic.de/iloveradio2.mp3'}];
 let streamIdx=0;
@@ -636,7 +719,7 @@ async function doTranslate(){
   const out=document.getElementById('trans-output');
   out.textContent='...';
   try{
-    const res=await fetch('/translate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text,from,to})});
+    const res=await fetch('/translate',{method:'POST',headers:{'Content-Type':'application/json','Authorization':getAuth()},body:JSON.stringify({text,from,to})});
     const data=await res.json();
     out.textContent=data.translatedText||'Error';
   }catch{out.textContent='Error';}
@@ -675,6 +758,17 @@ function takePhoto(){
 }
 function closeCamera(){
   if(camStream){camStream.getTracks().forEach(t=>t.stop());camStream=null;}
+}
+
+async function loadAdmin(){
+  const content=document.getElementById('admin-content');
+  try{
+    const res=await fetch('/admin/users',{headers:{'Authorization':getAuth()}});
+    const users=await res.json();
+    const res2=await fetch('/admin/all-sessions',{headers:{'Authorization':getAuth()}});
+    const sessions=await res2.json();
+    content.innerHTML='<div class="admin-card"><div class="admintitle">Usuarios</div><div class="adminval">'+users.length+'</div></div><div class="admin-card"><div class="admintitle">Sesiones</div><div class="adminval">'+sessions.length+'</div></div>';
+  }catch{content.innerHTML='<p class="empty-msg">Error</p>';}
 }
 
 document.getElementById('ui').addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMessage();}});

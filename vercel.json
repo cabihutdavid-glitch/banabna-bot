@@ -9,6 +9,12 @@
   "routes": [
     { "src": "/chat", "dest": "server.js" },
     { "src": "/translate", "dest": "server.js" },
+    { "src": "/register", "dest": "server.js" },
+    { "src": "/login", "dest": "server.js" },
+    { "src": "/save-session", "dest": "server.js" },
+    { "src": "/sessions", "dest": "server.js" },
+    { "src": "/session/.*", "dest": "server.js" },
+    { "src": "/admin/.*", "dest": "server.js" },
     { "src": "/(.*)", "dest": "server.js" }
   ]
 }
