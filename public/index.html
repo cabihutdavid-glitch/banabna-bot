@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-  <title>Banana — Tu asistente personal</title>
+  <title>Banabna — Tu asistente personal</title>
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet"/>
   <link rel="manifest" href="/manifest.json">
   <meta name="theme-color" content="#f5c842">
@@ -111,6 +111,34 @@
     .rem-item .rt .rtime{font-size:11px;color:var(--muted);}
     .rem-del{background:transparent;border:none;color:var(--danger);cursor:pointer;font-size:16px;}
     .empty-msg{text-align:center;color:var(--muted);font-size:13px;padding:30px;}
+
+    /* MUSIC PLAYER */
+    .player-bar{position:absolute;bottom:60px;left:0;right:0;background:var(--surface2);border-top:1px solid var(--border);padding:8px 16px;display:none;align-items:center;gap:10px;z-index:15;}
+    .player-bar.open{display:flex;}
+    .player-info{flex:1;min-width:0;}
+    .player-title{font-size:12px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .player-artist{font-size:10px;color:var(--muted);}
+    .player-ctrl{font-size:18px;cursor:pointer;padding:4px;}
+
+    /* TRANSLATOR */
+    .trans-pairs{display:flex;gap:6px;margin-bottom:10px;}
+    .trans-pair{display:flex;align-items:center;gap:6px;flex:1;}
+    .trans-pair select,.trans-pair input{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:8px;font-size:13px;color:var(--text);}
+    .trans-arrow{font-size:16px;cursor:pointer;}
+    .trans-output{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px;font-size:14px;color:var(--text);min-height:100px;resize:none;outline:none;}
+
+    /* SMART CALC */
+    .calc-display{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px;font-size:24px;text-align:right;font-family:'Syne',sans-serif;font-weight:700;margin-bottom:10px;}
+    .calc-btns{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;}
+    .calc-btn{padding:12px;font-size:15px;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--text);cursor:pointer;font-family:'DM Sans',sans-serif;}
+    .calc-btn:hover{border-color:var(--accent);}
+    .calc-btn.op{background:var(--accent);color:#0e0e10;border-color:var(--accent);}
+    .calc-btn.eq{grid-column:span 2;background:var(--accent2);border-color:var(--accent2);}
+
+    /* CAMERA */
+    #cam-video{width:100%;border-radius:12px;background:#000;}
+    #cam-canvas{display:none;}
+    .cam-btns{display:flex;gap:8px;justify-content:center;margin-top:10px;}
   </style>
 </head>
 <body>
@@ -121,7 +149,7 @@
     <div class="pb" style="justify-content:center;">
       <div class="setup-card">
         <div class="emoji">🍌</div>
-        <h2>¡Bienvenido a Banana!</h2>
+        <h2>¡Bienvenido a Banabna!</h2>
         <p>Antes de empezar, ¿cómo te llamas?</p>
         <input class="sinput" id="name-input" type="text" placeholder="Tu nombre..." maxlength="30"/>
         <div style="width:100%;text-align:left;">
@@ -132,7 +160,7 @@
             <option value="en-US">English</option>
           </select>
         </div>
-        <button class="setup-btn" onclick="saveProfile()">Empezar con Banana 🍌</button>
+        <button class="setup-btn" onclick="saveProfile()">Empezar con Banabna 🍌</button>
       </div>
     </div>
   </div>
@@ -224,17 +252,122 @@
     </div>
   </div>
 
+  <!-- MUSIC PLAYER -->
+  <div class="player-bar" id="player-bar">
+    <div class="player-info">
+      <div class="player-title" id="player-title">Lofi Chill</div>
+      <div class="player-artist">Radio • LoFi Beats</div>
+    </div>
+    <button class="player-ctrl" id="player-toggle" onclick="togglePlayer()">▶</button>
+    <button class="player-ctrl" onclick="stopPlayer()">⏹</button>
+  </div>
+
+  <!-- TRANSLATOR -->
+  <div class="panel" id="trans-panel">
+    <div class="ph">
+      <button class="ib" onclick="closePanel('trans-panel')">←</button>
+      <h2>🌐 Traductor</h2>
+    </div>
+    <div class="pb">
+      <div class="trans-pairs">
+        <div class="trans-pair">
+          <select id="trans-from">
+            <option value="es">Español</option>
+            <option value="en">English</option>
+            <option value="fr">Français</option>
+            <option value="de">Deutsch</option>
+            <option value="it">Italiano</option>
+            <option value="pt">Português</option>
+            <option value="ja">日本語</option>
+            <option value="zh">中文</option>
+            <option value="ko">한국어</option>
+          </select>
+          <span class="trans-arrow" onclick="swapLangs()">⇄</span>
+          <select id="trans-to">
+            <option value="en" selected>English</option>
+            <option value="es">Español</option>
+            <option value="fr">Français</option>
+            <option value="de">Deutsch</option>
+            <option value="it">Italiano</option>
+            <option value="pt">Português</option>
+            <option value="ja">日本語</option>
+            <option value="zh">中文</option>
+            <option value="ko">한국어</option>
+          </select>
+        </div>
+      </div>
+      <textarea class="trans-output" id="trans-input" placeholder="Escribe texto para traducir..."></textarea>
+      <button class="sug" onclick="doTranslate()" style="margin-top:8px;">🔄 Traducir</button>
+      <div style="font-size:12px;color:var(--muted);margin:14px 0 6px;">Traducción:</div>
+      <div class="trans-output" id="trans-output" style="min-height:100px;background:var(--surface2);"></div>
+      <button class="tbtn" onclick="speakTrans()" style="margin-top:8px;">🔊 Escuchar</button>
+    </div>
+  </div>
+
+  <!-- SMART CALCULATOR -->
+  <div class="panel" id="calc-panel">
+    <div class="ph">
+      <button class="ib" onclick="closePanel('calc-panel')">←</button>
+      <h2>🧮 Calculadora</h2>
+    </div>
+    <div class="pb" style="max-width:320px;margin:0 auto;">
+      <div class="calc-display" id="calc-display">0</div>
+      <div class="calc-btns">
+        <button class="calc-btn" onclick="calcInput('C')">C</button>
+        <button class="calc-btn" onclick="calcInput('(')">(</button>
+        <button class="calc-btn" onclick="calcInput(')')">)</button>
+        <button class="calc-btn op" onclick="calcInput('/')">÷</button>
+        <button class="calc-btn" onclick="calcInput('7')">7</button>
+        <button class="calc-btn" onclick="calcInput('8')">8</button>
+        <button class="calc-btn" onclick="calcInput('9')">9</button>
+        <button class="calc-btn op" onclick="calcInput('*')">×</button>
+        <button class="calc-btn" onclick="calcInput('4')">4</button>
+        <button class="calc-btn" onclick="calcInput('5')">5</button>
+        <button class="calc-btn" onclick="calcInput('6')">6</button>
+        <button class="calc-btn op" onclick="calcInput('-')">−</button>
+        <button class="calc-btn" onclick="calcInput('1')">1</button>
+        <button class="calc-btn" onclick="calcInput('2')">2</button>
+        <button class="calc-btn" onclick="calcInput('3')">3</button>
+        <button class="calc-btn op" onclick="calcInput('+')">+</button>
+        <button class="calc-btn" onclick="calcInput('0')">0</button>
+        <button class="calc-btn" onclick="calcInput('.')">.</button>
+        <button class="calc-btn" onclick="calcInput('%')">%</button>
+        <button class="calc-btn op" onclick="calcInput('^')">^</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CAMERA -->
+  <div class="panel" id="cam-panel">
+    <div class="ph">
+      <button class="ib" onclick="closePanel('cam-panel')">←</button>
+      <h2>📸 Cámara</h2>
+    </div>
+    <div class="pb">
+      <video id="cam-video" autoplay playsinline></video>
+      <canvas id="cam-canvas"></canvas>
+      <div class="cam-btns">
+        <button class="tbtn" onclick="openCamera()">📷 Abrir cámara</button>
+        <button class="tbtn" onclick="takePhoto()">⭕ Capturar</button>
+        <button class="tbtn" onclick="closeCamera()">⏹ Cerrar</button>
+      </div>
+    </div>
+  </div>
+
   <!-- HEADER -->
   <div class="header">
     <div class="avatar">🍌</div>
     <div class="hinfo">
-      <h1>Banana</h1>
+      <h1>Banabna</h1>
       <small id="greeting">Cargando...</small>
     </div>
     <div class="hbtns">
       <button class="ib" onclick="openPanel('conv-panel');convertCurrency();" title="Conversor">💱</button>
+      <button class="ib" onclick="openPanel('trans-panel')" title="Traductor">🌐</button>
+      <button class="ib" onclick="openPanel('calc-panel')" title="Calculadora">🧮</button>
       <button class="ib" onclick="openPanel('rem-panel');renderReminders();" title="Recordatorios">🔔</button>
       <button class="ib" onclick="openPanel('study-panel')" title="Estudio">📚</button>
+      <button class="ib" onclick="openPanel('cam-panel')" title="Cámara">📷</button>
       <button class="ib" onclick="openPanel('history-panel');renderHistory();" title="Historial">🕐</button>
       <button class="ib" onclick="toggleTheme()" id="theme-btn" title="Tema">🌙</button>
       <button class="ib" onclick="newChat()" title="Nuevo chat">✏️</button>
@@ -250,6 +383,8 @@
     <div class="wi">📅 <span id="wdate">--</span></div>
     <span class="wsep">|</span>
     <div class="wi">🕐 <span id="wtime">--:--</span></div>
+    <span class="wsep">|</span>
+    <div class="wi">📻 <span id="pmusic">LoFi</span></div>
   </div>
 
   <!-- TABS -->
@@ -257,11 +392,13 @@
     <button class="tab active" onclick="setTab('chat',this)">💬 Chat</button>
     <button class="tab" onclick="setTab('img',this)">📷 Imagen</button>
     <button class="tab" onclick="setTab('doc',this)">📄 Documento</button>
+    <button class="tab" onclick="setTab('music',this)">🎵 Lofi</button>
+    <button class="tab" onclick="setTab('calc',this)">🧮 Calculadora</button>
   </div>
 
   <!-- MESSAGES -->
   <div class="msgs" id="msgs">
-    <div class="msg bot">¡Hola! Soy <strong>Banana</strong> 🍌 Puedo chatear, analizar imágenes, documentos y mucho más. ¿En qué te ayudo?</div>
+    <div class="msg bot">¡Hola! Soy <strong>Banabna</strong> 🍌 Puedo chatear, analizar imágenes, documentos y mucho más. ¿En qué te ayudo?</div>
   </div>
 
   <!-- ATTACH ROW -->
@@ -283,12 +420,12 @@
     <button class="sug" onclick="quickSend('Ayúdame a organizar mi día')">Organizar mi día</button>
     <button class="sug" onclick="quickSend('Dame un consejo de productividad')">Consejo</button>
     <button class="sug" onclick="quickSend('Hazme una lista de tareas')">Lista de tareas</button>
-    <button class="sug" onclick="quickSend('¿Qué puedes hacer?')">¿Qué puedes hacer?</button>
+    <button class="sug" onclick="toggleMusic()">🎵 Música lofi</button>
   </div>
 
   <!-- INPUT -->
   <div class="iarea">
-    <textarea id="ui" placeholder="Escríbele a Banana..." rows="1"></textarea>
+    <textarea id="ui" placeholder="Escríbele a Banabna..." rows="1"></textarea>
     <button class="sbtn" id="vbtn" onclick="toggleVoice()" title="Voz">🎤</button>
     <button class="sbtn" onclick="sendMessage()">➤</button>
   </div>
@@ -296,17 +433,20 @@
 </div>
 <script>
   let chatHistory=[], currentId=Date.now().toString();
-  let userName=localStorage.getItem('banana_name')||'';
-  let userLang=localStorage.getItem('banana_lang')||'es-CO';
-  let isDark=(localStorage.getItem('banana_theme')||'dark')==='dark';
+  let userName=localStorage.getItem('banabna_name')||'';
+  let userLang=localStorage.getItem('banabna_lang')||'es-CO';
+  let isDark=(localStorage.getItem('banabna_theme')||'dark')==='dark';
   let isRec=false, recog=null;
   let currentTab='chat', pendingImage=null, pendingDoc=null;
   let timerSecs=25*60, timerRunning=false, timerInt=null;
-  let reminders=JSON.parse(localStorage.getItem('banana_rems')||'[]');
+  let reminders=JSON.parse(localStorage.getItem('banabna_rems')||'[]');
+  let player=null, playerOpen=false;
+  let camStream=null;
+  let calcExpr='';
 
   // THEME
   function applyTheme(){document.documentElement.setAttribute('data-theme',isDark?'dark':'light');document.getElementById('theme-btn').textContent=isDark?'🌙':'☀️';}
-  function toggleTheme(){isDark=!isDark;localStorage.setItem('banana_theme',isDark?'dark':'light');applyTheme();}
+  function toggleTheme(){isDark=!isDark;localStorage.setItem('banabna_theme',isDark?'dark':'light');applyTheme();}
   applyTheme();
 
   // PROFILE
@@ -315,10 +455,10 @@
     const l=document.getElementById('lang-select').value;
     if(!n){document.getElementById('name-input').focus();return;}
     userName=n;userLang=l;
-    localStorage.setItem('banana_name',n);localStorage.setItem('banana_lang',l);
+    localStorage.setItem('banabna_name',n);localStorage.setItem('banabna_lang',l);
     closePanel('setup-panel');initGreeting();
     document.getElementById('msgs').innerHTML='';
-    addMsg('bot',`¡Hola, <strong>${userName}</strong>! Soy Banana 🍌 Ya te tengo guardado. ¿En qué te ayudo hoy?`);
+    addMsg('bot',`¡Hola, <strong>${userName}</strong>! Soy Banabna 🍌 Ya te tengo guardado. ¿En qué te ayudo hoy?`);
   }
   function initGreeting(){
     const h=new Date().getHours();
@@ -354,7 +494,7 @@
   function openPanel(id){document.getElementById(id).classList.add('open');}
   function closePanel(id){document.getElementById(id).classList.remove('open');}
 
-  // TABS
+// TABS
   function setTab(tab,el){
     currentTab=tab;
     document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
@@ -369,7 +509,9 @@
     const sugs=document.getElementById('sugs');
     if(tab==='img'){sugs.innerHTML='<button class="sug" onclick="quickSend(\'Describe esta imagen\')">Describir</button><button class="sug" onclick="quickSend(\'¿Qué texto hay en esta imagen?\')">Leer texto</button><button class="sug" onclick="quickSend(\'¿Qué objetos ves?\')">Identificar objetos</button>';}
     else if(tab==='doc'){sugs.innerHTML='<button class="sug" onclick="quickSend(\'Resume este documento\')">Resumir</button><button class="sug" onclick="quickSend(\'¿Cuáles son los puntos clave?\')">Puntos clave</button><button class="sug" onclick="quickSend(\'Explícame esto\')">Explicar</button>';}
-    else{sugs.innerHTML='<button class="sug" onclick="quickSend(\'Ayúdame a organizar mi día\')">Organizar mi día</button><button class="sug" onclick="quickSend(\'Dame un consejo de productividad\')">Consejo</button><button class="sug" onclick="quickSend(\'Hazme una lista de tareas\')">Lista de tareas</button><button class="sug" onclick="quickSend(\'¿Qué puedes hacer?\')">¿Qué puedes hacer?</button>';}
+    else if(tab==='music'){sugs.innerHTML='<button class="sug" onclick="toggleMusic()">▶ Reproducir lofi</button><button class="sug" onclick="stopPlayer()">⏹ Detener</button>';}
+    else if(tab==='calc'){sugs.innerHTML='<button class="sug" onclick="openPanel(\'calc-panel\')">🧮 Abrir calculadora</button>';}
+    else{sugs.innerHTML='<button class="sug" onclick="quickSend(\'Ayúdame a organizar mi día\')">Organizar mi día</button><button class="sug" onclick="quickSend(\'Dame un consejo de productividad\')">Consejo</button><button class="sug" onclick="quickSend(\'Hazme una lista de tareas\')">Lista de tareas</button><button class="sug" onclick="toggleMusic()">🎵 Música lofi</button>';}
   }
 
   // IMAGE HANDLER
@@ -423,7 +565,7 @@
     
     chatHistory.push({role:'user',content:userContent||displayText});
 
-    const typing=addMsg('bot','Banana está procesando...');
+    const typing=addMsg('bot','Banabna está procesando...');
     typing.classList.add('typing');
 
     try{
@@ -479,23 +621,23 @@
   // HISTORIAL
   function saveToHistory(){
     if(chatHistory.length<2)return;
-    const sessions=JSON.parse(localStorage.getItem('banana_history')||'[]');
+    const sessions=JSON.parse(localStorage.getItem('banabna_history')||'[]');
     const first=chatHistory.find(m=>m.role==='user')?.content||'Conversación';
     const idx=sessions.findIndex(s=>s.id===currentId);
     const session={id:currentId,date:new Date().toLocaleString('es-CO'),preview:first.substring(0,60),messages:[...chatHistory]};
     if(idx>=0)sessions[idx]=session;else sessions.unshift(session);
-    localStorage.setItem('banana_history',JSON.stringify(sessions.slice(0,20)));
+    localStorage.setItem('banabna_history',JSON.stringify(sessions.slice(0,20)));
   }
 
   function renderHistory(){
-    const sessions=JSON.parse(localStorage.getItem('banana_history')||'[]');
+    const sessions=JSON.parse(localStorage.getItem('banabna_history')||'[]');
     const list=document.getElementById('history-list');
     if(!sessions.length){list.innerHTML='<p class="empty-msg">No hay conversaciones guardadas.</p>';return;}
     list.innerHTML=sessions.map(s=>`<div class="hi" onclick="loadSession('${s.id}')"><div class="hd">${s.date}</div><div class="hp">${s.preview}</div></div>`).join('');
   }
 
   function loadSession(id){
-    const sessions=JSON.parse(localStorage.getItem('banana_history')||'[]');
+    const sessions=JSON.parse(localStorage.getItem('banabna_history')||'[]');
     const s=sessions.find(s=>s.id===id);if(!s)return;
     chatHistory=s.messages;currentId=id;
     const msgs=document.getElementById('msgs');msgs.innerHTML='';
@@ -503,7 +645,7 @@
     closePanel('history-panel');
   }
 
-  function clearHistory(){if(confirm('¿Borrar todo?')){localStorage.removeItem('banana_history');renderHistory();}}
+  function clearHistory(){if(confirm('¿Borrar todo?')){localStorage.removeItem('banabna_history');renderHistory();}}
   function newChat(){
     chatHistory=[];currentId=Date.now().toString();
     document.getElementById('msgs').innerHTML='';
@@ -531,8 +673,8 @@
       },1000);
     }
   }
-  function saveNotes(){localStorage.setItem('banana_notes',document.getElementById('study-notes').value);alert('✅ Notas guardadas');}
-  const sn=localStorage.getItem('banana_notes');if(sn)document.getElementById('study-notes').value=sn;
+  function saveNotes(){localStorage.setItem('banabna_notes',document.getElementById('study-notes').value);alert('✅ Notas guardadas');}
+  const sn=localStorage.getItem('banabna_notes');if(sn)document.getElementById('study-notes').value=sn;
 
   // CONVERSOR
   let rates={};
@@ -559,7 +701,7 @@
     if(!name||!time){alert('Completa el nombre y la hora');return;}
     const rem={id:Date.now(),name,time,done:false};
     reminders.push(rem);
-    localStorage.setItem('banana_rems',JSON.stringify(reminders));
+    localStorage.setItem('banabna_rems',JSON.stringify(reminders));
     document.getElementById('rem-name').value='';
     document.getElementById('rem-time').value='';
     renderReminders();
@@ -568,7 +710,7 @@
   }
   function scheduleNotification(rem){
     const delay=new Date(rem.time)-Date.now();
-    if(delay>0)setTimeout(()=>{new Notification('🍌 Banana',{body:rem.name,icon:'/icon.png'});},delay);
+    if(delay>0)setTimeout(()=>{new Notification('🍌 Banabna',{body:rem.name,icon:'/icon.png'});},delay);
   }
   function renderReminders(){
     const list=document.getElementById('rem-list');
@@ -582,7 +724,7 @@
         <button class="rem-del" onclick="deleteReminder(${r.id})">🗑</button>
       </div>`).join('');
   }
-  function deleteReminder(id){reminders=reminders.filter(r=>r.id!==id);localStorage.setItem('banana_rems',JSON.stringify(reminders));renderReminders();}
+  function deleteReminder(id){reminders=reminders.filter(r=>r.id!==id);localStorage.setItem('banabna_rems',JSON.stringify(reminders));renderReminders();}
   function checkReminders(){
     const now=Date.now();
     reminders.forEach(r=>{
@@ -596,6 +738,98 @@
   // INPUT
   document.getElementById('ui').addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMessage();}});
   document.getElementById('ui').addEventListener('input',function(){this.style.height='auto';this.style.height=Math.min(this.scrollHeight,100)+'px';});
+
+  // MUSIC PLAYER
+  const lofiStreams=[
+    {name:'Lofi Chill',url:'https://streams.ilovemusic.de/iloveradio17.mp3'},
+    {name:'Lofi Hip Hop',url:'https://streams.ilovemusic.de/iloveradio2.mp3'},
+    {name:'Chillhop',url:'https://streams.ilovemusic.de/iloveradio109.mp3'}
+  ];
+  let streamIdx=0;
+  function toggleMusic(){
+    const pb=document.getElementById('player-bar');
+    const pt=document.getElementById('player-toggle');
+    if(playerOpen){
+      if(player){player.pause();player=null;}
+      pb.classList.remove('open');
+      playerOpen=false;
+      document.getElementById('pmusic').textContent='LoFi';
+    }else{
+      player=new Audio(lofiStreams[streamIdx].url);
+      player.loop=true;
+      player.play().catch(()=>alert('Error Reproducción'));
+      pb.classList.add('open');
+      playerOpen=true;
+      pt.textContent='⏸';
+      document.getElementById('player-title').textContent=lofiStreams[streamIdx].name;
+      document.getElementById('pmusic').textContent='▶';
+    }
+  }
+  function stopPlayer(){
+    if(player){player.pause();player=null;}
+    document.getElementById('player-bar').classList.remove('open');
+    playerOpen=false;
+    document.getElementById('pmusic').textContent='LoFi';
+  }
+
+  // TRANSLATOR
+  async function doTranslate(){
+    const text=document.getElementById('trans-input').value.trim();
+    const from=document.getElementById('trans-from').value;
+    const to=document.getElementById('trans-to').value;
+    if(!text)return;
+    const out=document.getElementById('trans-output');
+    out.textContent='Traduciendo...';
+    try{
+      const res=await fetch('/translate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text,from,to})});
+      const data=await res.json();
+      out.textContent=data.translatedText||data.error||'Error';
+    }catch{out.textContent='Error de conexión';}
+  }
+  function swapLangs(){
+    const f=document.getElementById('trans-from');
+    const t=document.getElementById('trans-to');
+    const tmp=f.value;f.value=t.value;t.value=tmp;
+  }
+  function speakTrans(){
+    const t=document.getElementById('trans-output').textContent;
+    if(!t||t==='Traduciendo...'||t==='Error de conexión')return;
+    speakText(t);
+  }
+
+  // SMART CALCULATOR
+  function calcInput(val){
+    const d=document.getElementById('calc-display');
+    if(val==='C'){calcExpr='';d.textContent='0';return;}
+    if(val==='='){
+      try{calcExpr=calcExpr.replace(/\^/g,'**');d.textContent=eval(calcExpr).toString();calcExpr=d.textContent;}
+      catch{d.textContent='Error';calcExpr='';}
+      return;
+    }
+    calcExpr+=val;d.textContent=calcExpr;
+  }
+
+  // CAMERA
+  async function openCamera(){
+    try{
+      camStream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'}});
+      document.getElementById('cam-video').srcObject=camStream;
+    }catch{alert('No se pudo abrir la cámara');}
+  }
+  function takePhoto(){
+    if(!camStream)return;
+    const v=document.getElementById('cam-video');
+    const c=document.getElementById('cam-canvas');
+    c.width=v.videoWidth;c.height=v.videoHeight;
+    c.getContext('2d').drawImage(v,0,0);
+    pendingImage={data:c.toDataURL('image/png').split(',')[1],type:'image/png'};
+    closePanel('cam-panel');
+    setTab('img',document.querySelector('.tab'));
+    document.getElementById('img-name').textContent='📷 foto-'+Date.now()+'.png';
+  }
+  function closeCamera(){
+    if(camStream){camStream.getTracks().forEach(t=>t.stop());camStream=null;}
+  }
 
   // INIT
   initGreeting();

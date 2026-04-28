@@ -19,7 +19,7 @@ app.post('/chat', async (req, res) => {
     let apiMessages = [
       {
         role: 'system',
-        content: `Eres Banana, un asistente personal completo, amigable e inteligente.
+        content: `Eres Banabna, un asistente personal completo, amigable e inteligente.
         ${userName ? `El usuario se llama ${userName}. Úsalo ocasionalmente.` : ''}
         Puedes analizar imágenes, documentos, hacer cálculos, dar consejos y mucho más.
         Responde siempre en español, de forma clara, cálida y concisa. Usa emojis con moderación.`
@@ -59,9 +59,26 @@ app.post('/chat', async (req, res) => {
   }
 });
 
+app.post('/translate', async (req, res) => {
+  const { text, from, to } = req.body;
+  try {
+    const completion = await groq.chat.completions.create({
+      model: 'llama-3.3-70b-versatile',
+      messages: [
+        { role: 'system', content: `Translate the following text from ${from} to ${to}. Only respond with the translation, nothing else.` },
+        { role: 'user', content: text }
+      ],
+      max_tokens: 2000
+    });
+    res.json({ translatedText: completion.choices[0].message.content });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 module.exports = app;
 
 const PORT = process.env.PORT || 3000;
 if (require.main === module) {
-  app.listen(PORT, () => console.log(`Banana corriendo en http://localhost:${PORT}`));
+  app.listen(PORT, () => console.log(`Banabna corriendo en http://localhost:${PORT}`));
 }
