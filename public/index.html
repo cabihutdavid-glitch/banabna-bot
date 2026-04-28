@@ -1,12 +1,20 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Banana — Tu asistente personal</title>
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#f5c842">
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/sw.js');
+    }
+  </script>
   <style>
-    :root {
+    /* ── TEMAS ── */
+    :root[data-theme="dark"] {
       --bg: #0e0e10;
       --surface: #1a1a1e;
       --surface2: #242428;
@@ -14,20 +22,32 @@
       --accent2: #f0a500;
       --text: #f0ede8;
       --muted: #888;
-      --font-head: 'Syne', sans-serif;
-      --font-body: 'DM Sans', sans-serif;
+      --border: #2e2e34;
     }
+    :root[data-theme="light"] {
+      --bg: #f5f5f0;
+      --surface: #ffffff;
+      --surface2: #f0ede8;
+      --accent: #f0a500;
+      --accent2: #d4900a;
+      --text: #1a1a1e;
+      --muted: #666;
+      --border: #ddd;
+    }
+
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       background: var(--bg);
       color: var(--text);
-      font-family: var(--font-body);
+      font-family: 'DM Sans', sans-serif;
       min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
       padding: 20px;
+      transition: background 0.3s, color 0.3s;
     }
+
     .chat-container {
       width: 100%;
       max-width: 620px;
@@ -37,44 +57,64 @@
       flex-direction: column;
       background: var(--surface);
       border-radius: 24px;
-      border: 1px solid #2e2e34;
+      border: 1px solid var(--border);
       overflow: hidden;
     }
+
+    /* ── HEADER ── */
     .chat-header {
-      padding: 20px 24px 18px;
-      border-bottom: 1px solid #2e2e34;
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
       display: flex;
       align-items: center;
-      gap: 14px;
+      gap: 12px;
     }
     .avatar {
-      width: 44px; height: 44px;
+      width: 42px; height: 42px;
       background: var(--accent);
       border-radius: 12px;
       display: flex; align-items: center; justify-content: center;
-      font-size: 22px; flex-shrink: 0;
+      font-size: 20px; flex-shrink: 0;
     }
+    .header-info { flex: 1; }
     .header-info h1 {
-      font-family: var(--font-head);
-      font-size: 18px; font-weight: 700;
-      color: var(--text); letter-spacing: -0.3px;
+      font-family: 'Syne', sans-serif;
+      font-size: 17px; font-weight: 700;
+      color: var(--text);
     }
     .status {
-      display: flex; align-items: center; gap: 6px;
-      font-size: 12px; color: var(--muted); margin-top: 2px;
+      display: flex; align-items: center; gap: 5px;
+      font-size: 11px; color: var(--muted); margin-top: 1px;
     }
-    .status-dot { width: 7px; height: 7px; border-radius: 50%; background: #3ecf6e; }
+    .status-dot { width: 6px; height: 6px; border-radius: 50%; background: #3ecf6e; }
+
+    /* ── BOTONES HEADER ── */
+    .header-actions { display: flex; gap: 8px; }
+    .icon-btn {
+      width: 34px; height: 34px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--surface2);
+      color: var(--text);
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px;
+      transition: background 0.15s;
+    }
+    .icon-btn:hover { background: var(--border); }
+
+    /* ── MENSAJES ── */
     .messages {
       flex: 1; overflow-y: auto;
-      padding: 20px;
-      display: flex; flex-direction: column; gap: 14px;
-      scrollbar-width: thin; scrollbar-color: #2e2e34 transparent;
+      padding: 16px;
+      display: flex; flex-direction: column; gap: 12px;
+      scrollbar-width: thin; scrollbar-color: var(--border) transparent;
     }
     .msg {
       max-width: 80%;
-      padding: 12px 16px;
+      padding: 11px 15px;
       border-radius: 16px;
-      font-size: 14.5px; line-height: 1.6;
+      font-size: 14px; line-height: 1.6;
       animation: fadeUp 0.25s ease;
     }
     @keyframes fadeUp {
@@ -84,9 +124,8 @@
     .msg.bot {
       align-self: flex-start;
       background: var(--surface2);
-      border: 1px solid #2e2e34;
+      border: 1px solid var(--border);
       border-bottom-left-radius: 4px;
-      color: var(--text);
     }
     .msg.user {
       align-self: flex-end;
@@ -96,62 +135,131 @@
       font-weight: 500;
     }
     .msg.typing { color: var(--muted); font-style: italic; }
+
+    /* ── FECHA DEL HISTORIAL ── */
+    .date-divider {
+      text-align: center;
+      font-size: 11px;
+      color: var(--muted);
+      margin: 4px 0;
+    }
+
+    /* ── SUGERENCIAS ── */
     .suggestions {
-      padding: 0 20px 12px;
-      display: flex; gap: 8px; flex-wrap: wrap;
+      padding: 0 16px 10px;
+      display: flex; gap: 7px; flex-wrap: wrap;
     }
     .suggestion-btn {
-      font-size: 12.5px; padding: 6px 12px;
+      font-size: 12px; padding: 5px 11px;
       background: transparent;
-      border: 1px solid #2e2e34;
+      border: 1px solid var(--border);
       border-radius: 20px;
       color: var(--muted); cursor: pointer;
-      font-family: var(--font-body);
+      font-family: 'DM Sans', sans-serif;
       transition: all 0.15s;
     }
     .suggestion-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+    /* ── INPUT ── */
     .input-area {
-      padding: 14px 16px;
-      border-top: 1px solid #2e2e34;
-      display: flex; gap: 10px; align-items: flex-end;
+      padding: 12px 14px;
+      border-top: 1px solid var(--border);
+      display: flex; gap: 8px; align-items: flex-end;
+      background: var(--surface);
     }
     #user-input {
       flex: 1;
       background: var(--surface2);
-      border: 1px solid #2e2e34;
+      border: 1px solid var(--border);
       border-radius: 12px;
-      padding: 11px 14px;
+      padding: 10px 13px;
       font-size: 14px;
       color: var(--text);
-      font-family: var(--font-body);
+      font-family: 'DM Sans', sans-serif;
       resize: none;
-      min-height: 44px; max-height: 120px;
+      min-height: 42px; max-height: 120px;
       transition: border-color 0.15s;
       outline: none;
     }
     #user-input:focus { border-color: var(--accent); }
     #user-input::placeholder { color: var(--muted); }
-    #send-btn {
-      width: 44px; height: 44px;
+
+    .send-btn {
+      width: 42px; height: 42px;
       border-radius: 12px; border: none;
       background: var(--accent); color: #0e0e10;
-      font-size: 18px; cursor: pointer; flex-shrink: 0;
+      font-size: 17px; cursor: pointer; flex-shrink: 0;
       display: flex; align-items: center; justify-content: center;
       transition: background 0.15s, transform 0.1s;
     }
-    #send-btn:hover  { background: var(--accent2); }
-    #send-btn:active { transform: scale(0.95); }
+    .send-btn:hover  { background: var(--accent2); }
+    .send-btn:active { transform: scale(0.95); }
+
+    /* ── VOZ ACTIVA ── */
+    .send-btn.recording { background: #e74c3c; animation: pulse 1s infinite; }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.08); }
+    }
+
+    /* ── PANEL HISTORIAL ── */
+    #history-panel {
+      position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+      background: var(--surface);
+      z-index: 20;
+      display: none;
+      flex-direction: column;
+      border-radius: 24px;
+      overflow: hidden;
+    }
+    #history-panel.open { display: flex; }
+    .history-header {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; gap: 12px;
+    }
+    .history-header h2 { font-family: 'Syne', sans-serif; font-size: 16px; flex: 1; }
+    .history-list { flex: 1; overflow-y: auto; padding: 12px; display: flex; flex-direction: column; gap: 8px; }
+    .history-item {
+      padding: 12px 14px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      cursor: pointer;
+      transition: border-color 0.15s;
+    }
+    .history-item:hover { border-color: var(--accent); }
+    .history-item .h-date { font-size: 11px; color: var(--muted); margin-bottom: 4px; }
+    .history-item .h-preview { font-size: 13px; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .clear-btn {
+      margin: 12px; padding: 10px;
+      background: transparent;
+      border: 1px solid #e74c3c;
+      border-radius: 12px;
+      color: #e74c3c;
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+    }
+    .clear-btn:hover { background: #e74c3c22; }
+    .empty-history { text-align: center; color: var(--muted); font-size: 13px; padding: 40px 20px; }
   </style>
-<link rel="manifest" href="/manifest.json">
-<meta name="theme-color" content="#f5c842">
-<script>
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('/sw.js');
-  }
-</script>
 </head>
 <body>
-<div class="chat-container">
+
+<div class="chat-container" style="position:relative;">
+
+  <!-- PANEL HISTORIAL -->
+  <div id="history-panel">
+    <div class="history-header">
+      <button class="icon-btn" onclick="toggleHistory()">←</button>
+      <h2>Historial</h2>
+    </div>
+    <div class="history-list" id="history-list"></div>
+    <button class="clear-btn" onclick="clearHistory()">🗑 Borrar todo el historial</button>
+  </div>
+
+  <!-- HEADER -->
   <div class="chat-header">
     <div class="avatar">🍌</div>
     <div class="header-info">
@@ -161,8 +269,14 @@
         Asistente personal activo
       </div>
     </div>
+    <div class="header-actions">
+      <button class="icon-btn" onclick="toggleHistory()" title="Historial">🕐</button>
+      <button class="icon-btn" onclick="toggleTheme()" id="theme-btn" title="Modo claro/oscuro">🌙</button>
+      <button class="icon-btn" onclick="newChat()" title="Nueva conversación">✏️</button>
+    </div>
   </div>
 
+  <!-- MENSAJES -->
   <div class="messages" id="messages">
     <div class="msg bot">
       ¡Hola! Soy <strong>Banana</strong>, tu asistente personal 🍌<br>
@@ -170,6 +284,7 @@
     </div>
   </div>
 
+  <!-- SUGERENCIAS -->
   <div class="suggestions">
     <button class="suggestion-btn" onclick="quickSend('Ayúdame a organizar mi día')">Organizar mi día</button>
     <button class="suggestion-btn" onclick="quickSend('Dame un consejo de productividad')">Consejo productivo</button>
@@ -177,15 +292,37 @@
     <button class="suggestion-btn" onclick="quickSend('¿Qué puedes hacer?')">¿Qué puedes hacer?</button>
   </div>
 
+  <!-- INPUT -->
   <div class="input-area">
     <textarea id="user-input" placeholder="Escríbele a Banana..." rows="1"></textarea>
-    <button id="send-btn" onclick="sendMessage()">➤</button>
+    <button class="send-btn" id="voice-btn" onclick="toggleVoice()" title="Hablar">🎤</button>
+    <button class="send-btn" onclick="sendMessage()">➤</button>
   </div>
+
 </div>
 
 <script>
+  // ── ESTADO ──────────────────────────────────────────────
   let history = [];
+  let isRecording = false;
+  let recognition = null;
+  let isDark = true;
 
+  // ── TEMA ────────────────────────────────────────────────
+  function toggleTheme() {
+    isDark = !isDark;
+    document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
+    document.getElementById('theme-btn').textContent = isDark ? '🌙' : '☀️';
+    localStorage.setItem('banana_theme', isDark ? 'dark' : 'light');
+  }
+
+  // Cargar tema guardado
+  const savedTheme = localStorage.getItem('banana_theme') || 'dark';
+  isDark = savedTheme === 'dark';
+  document.documentElement.setAttribute('data-theme', savedTheme);
+  document.getElementById('theme-btn') && (document.getElementById('theme-btn').textContent = isDark ? '🌙' : '☀️');
+
+  // ── MENSAJES ─────────────────────────────────────────────
   function addMsg(role, text) {
     const msgs = document.getElementById('messages');
     const div  = document.createElement('div');
@@ -201,6 +338,7 @@
     sendMessage();
   }
 
+  // ── ENVIAR MENSAJE ───────────────────────────────────────
   async function sendMessage() {
     const input = document.getElementById('user-input');
     const text  = input.value.trim();
@@ -225,21 +363,144 @@
       typing.innerHTML = data.reply.replace(/\n/g, '<br>');
       typing.classList.remove('typing');
       history.push({ role: 'assistant', content: data.reply });
+
+      // Leer respuesta en voz
+      speakText(data.reply);
+
+      // Guardar en historial
+      saveToHistory();
+
     } catch (err) {
       typing.textContent = '❌ Error: ' + err.message;
       typing.classList.remove('typing');
     }
   }
 
+  // ── VOZ — ESCUCHAR ───────────────────────────────────────
+  function toggleVoice() {
+    if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+      alert('Tu navegador no soporta reconocimiento de voz. Usa Chrome.');
+      return;
+    }
+
+    if (isRecording) {
+      recognition.stop();
+      return;
+    }
+
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    recognition = new SpeechRecognition();
+    recognition.lang = 'es-ES';
+    recognition.continuous = false;
+    recognition.interimResults = false;
+
+    recognition.onstart = () => {
+      isRecording = true;
+      document.getElementById('voice-btn').classList.add('recording');
+      document.getElementById('voice-btn').textContent = '⏹';
+    };
+
+    recognition.onresult = (e) => {
+      const transcript = e.results[0][0].transcript;
+      document.getElementById('user-input').value = transcript;
+      sendMessage();
+    };
+
+    recognition.onend = () => {
+      isRecording = false;
+      document.getElementById('voice-btn').classList.remove('recording');
+      document.getElementById('voice-btn').textContent = '🎤';
+    };
+
+    recognition.start();
+  }
+
+  // ── VOZ — HABLAR ─────────────────────────────────────────
+  function speakText(text) {
+    if (!window.speechSynthesis) return;
+    const clean = text.replace(/[#*_~`]/g, '').substring(0, 300);
+    const utterance = new SpeechSynthesisUtterance(clean);
+    utterance.lang = 'es-ES';
+    utterance.rate = 1.05;
+    window.speechSynthesis.speak(utterance);
+  }
+
+  // ── HISTORIAL ────────────────────────────────────────────
+  function saveToHistory() {
+    if (history.length < 2) return;
+    const sessions = JSON.parse(localStorage.getItem('banana_history') || '[]');
+    const first = history.find(m => m.role === 'user')?.content || 'Conversación';
+    const existing = sessions.findIndex(s => s.id === currentSessionId);
+    const session = {
+      id: currentSessionId,
+      date: new Date().toLocaleString('es-CO'),
+      preview: first.substring(0, 60),
+      messages: [...history]
+    };
+    if (existing >= 0) sessions[existing] = session;
+    else sessions.unshift(session);
+    localStorage.setItem('banana_history', JSON.stringify(sessions.slice(0, 20)));
+  }
+
+  function toggleHistory() {
+    const panel = document.getElementById('history-panel');
+    panel.classList.toggle('open');
+    if (panel.classList.contains('open')) renderHistory();
+  }
+
+  function renderHistory() {
+    const sessions = JSON.parse(localStorage.getItem('banana_history') || '[]');
+    const list = document.getElementById('history-list');
+    if (sessions.length === 0) {
+      list.innerHTML = '<p class="empty-history">No hay conversaciones guardadas aún.</p>';
+      return;
+    }
+    list.innerHTML = sessions.map(s => `
+      <div class="history-item" onclick="loadSession('${s.id}')">
+        <div class="h-date">${s.date}</div>
+        <div class="h-preview">${s.preview}</div>
+      </div>
+    `).join('');
+  }
+
+  function loadSession(id) {
+    const sessions = JSON.parse(localStorage.getItem('banana_history') || '[]');
+    const session = sessions.find(s => s.id === id);
+    if (!session) return;
+    history = session.messages;
+    currentSessionId = id;
+    const msgs = document.getElementById('messages');
+    msgs.innerHTML = '';
+    history.forEach(m => addMsg(m.role === 'user' ? 'user' : 'bot', m.content));
+    toggleHistory();
+  }
+
+  function clearHistory() {
+    if (confirm('¿Borrar todo el historial?')) {
+      localStorage.removeItem('banana_history');
+      renderHistory();
+    }
+  }
+
+  function newChat() {
+    history = [];
+    currentSessionId = Date.now().toString();
+    const msgs = document.getElementById('messages');
+    msgs.innerHTML = '';
+    addMsg('bot', '¡Hola de nuevo! Soy <strong>Banana</strong> 🍌 ¿En qué te ayudo?');
+  }
+
+  let currentSessionId = Date.now().toString();
+
+  // ── INPUT AUTO-RESIZE ────────────────────────────────────
   document.getElementById('user-input').addEventListener('keydown', function(e) {
     if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
   });
-
   document.getElementById('user-input').addEventListener('input', function() {
     this.style.height = 'auto';
     this.style.height = Math.min(this.scrollHeight, 120) + 'px';
   });
 </script>
+
 </body>
 </html>
-1
