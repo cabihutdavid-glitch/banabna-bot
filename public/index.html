@@ -5,232 +5,161 @@
   <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
   <meta name="apple-mobile-web-app-capable" content="yes"/>
   <meta name="theme-color" content="#f5c842"/>
-  <title>Banabna — Tu asistente personal</title>
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet"/>
+  <title>Banabna</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet"/>
   <link rel="manifest" href="/manifest.json">
   <script>if('serviceWorker' in navigator)navigator.serviceWorker.register('/sw.js');</script>
   <style>
     :root{--bg:#0e0e10;--surface:#1a1a1e;--surface2:#242428;--accent:#f5c842;--accent2:#f0a500;--text:#f0ede8;--muted:#888;--border:#2e2e34;--danger:#e74c3c;}
-    [data-theme="light"]{--bg:#f5f5f0;--surface:#fff;--surface2:#f0ede8;--accent:#f0a500;--accent2:#d4900a;--text:#1a1a1e;--muted:#666;--border:#ddd;--danger:#e74c3c;}
-    *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-    html,body{height:100%;overflow:hidden;touch-action:manipulation}
-    body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:0;transition:background .3s,color .3s}
-    .app{width:100%;height:100%;height:100vh;max-height:100vh;display:flex;flex-direction:column;background:var(--surface);overflow:hidden;position:relative}
-    @media(min-width:680px){body{padding:20px;background:var(--bg)}.app{height:92vh;max-height:820px;border-radius:24px;border:1px solid var(--border)}}
+    [data-theme="light"]{--bg:#f5f5f0;--surface:#fff;--surface2:#f0ede8;--accent:#f0a500;--accent2:#d4900a;--text:#1a1a1e;--muted:#666;--border:#ddd;}
+    *{box-sizing:border-box;margin:0;padding:0}
+    html,body{height:100%;overflow:hidden}
+    body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;display:flex;align-items:center;justify-content:center;transition:background .3s}
+    .app{width:100%;height:100%;display:flex;flex-direction:column;background:var(--surface);overflow:hidden}
 
-    .header{padding:12px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;flex-shrink:0}
-    .header-pc{padding:10px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;flex-shrink:0}
-    .avatar{width:40px;height:40px;background:var(--accent);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
-    .hinfo{flex:1}
-    .hinfo h1{font-size:14px}
-    .hinfo small{font-size:10px;color:var(--muted)}
-    .hbtns{display:flex;gap:4px}
-    .menu-bar{position:relative}
-    .menu-drop{position:absolute;top:100%;right:0;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:8px;display:none;flex-direction:column;gap:4px;min-width:160px;z-index:50;box-shadow:0 4px 12px rgba(0,0,0,3)}
+    /* Header */
+    .header{height:50px;padding:0 12px;background:var(--surface2);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+    .header-left{display:flex;align-items:center;gap:10px}
+    .logo{width:32px;height:32px;background:var(--accent);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px}
+    .title{font-weight:700;font-size:15px}
+    .greeting{font-size:11px;color:var(--muted);margin-left:10px}
+
+    /* Menu button */
+    .menu-btn{width:36px;height:36px;background:var(--surface);border:1px solid var(--border);border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:16px}
+
+    /* Dropdown menu */
+    .menu-drop{position:absolute;top:50px;right:12px;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:6px;display:none;flex-direction:column;gap:2px;min-width:160px;z-index:100;box-shadow:0 4px 16px rgba(0,0,0,0.3)}
     .menu-drop.show{display:flex}
-    .menu-item{width:100%;padding:10px 12px;text-align:left;font-size:13px;border-radius:8px;background:transparent;border:none;color:var(--text);cursor:pointer;display:flex;align-items:center;gap:8px}
+    .menu-item{padding:10px 12px;font-size:13px;border-radius:8px;cursor:pointer;text-align:left;background:none;border:none;color:var(--text);width:100%}
     .menu-item:hover{background:var(--surface2)}
 
-    .wbar{padding:10px 16px;background:var(--surface2);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;font-size:12px;color:var(--muted);flex-wrap:wrap;flex-shrink:0;overflow-x:auto}
-    .wi{display:flex;align-items:center;gap:4px;white-space:nowrap}
-    .wsep{opacity:.3}
+    /* Tabs */
+    .tabs{height:44px;padding:0 12px;background:var(--surface2);border-bottom:1px solid var(--border);display:flex;gap:4px;flex-shrink:0}
+    .tab{padding:0 14px;font-size:12px;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;display:flex;align-items:center}
+    .tab.active{color:var(--accent);border-bottom-color:var(--accent)}
 
-    .tabs{display:flex;gap:4px;padding:12px 16px 0;flex-shrink:0;overflow-x:auto}
-    .tab{padding:12px 16px;border-radius:12px 12px 0 0;border:1px solid transparent;font-size:13px;cursor:pointer;color:var(--muted);background:transparent;white-space:nowrap;min-height:44px}
-    .tab.active{background:var(--surface2);border-color:var(--border);color:var(--text);font-weight:500}
+    /* Messages */
+    .msgs{flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:8px}
+    .msg{max-width:85%;padding:10px 14px;border-radius:14px;font-size:14px;line-height:1.4}
+    .msg.bot{background:var(--surface2);border:1px solid var(--border);align-self:flex-start;border-radius:14px 14px 14px 4px}
+    .msg.user{background:var(--accent);color:#0e0e10;align-self:flex-end;border-radius:14px 14px 4px 14px}
+    .msg img{max-width:100%;border-radius:8px}
 
-    .msgs{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;scrollbar-width:thin;scrollbar-color:var(--border) transparent}
-    .msg{max-width:85%;padding:14px 18px;border-radius:18px;font-size:15px;line-height:1.5;animation:fu .2s ease;word-wrap:break-word}
-    @keyframes fu{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-    .msg.bot{align-self:flex-start;background:var(--surface2);border:1px solid var(--border);border-bottom-left-radius:4px}
-    .msg.user{align-self:flex-end;background:var(--accent);color:#0e0e10;border-bottom-right-radius:4px;font-weight:500}
-    .msg.typing{color:var(--muted);font-style:italic}
-    .msg img{max-width:100%;border-radius:12px;margin-top:10px;display:block}
-
-    .sugs{padding:0 16px 12px;display:flex;gap:8px;flex-wrap:wrap;flex-shrink:0}
-    .sug{font-size:13px;padding:10px 16px;background:transparent;border:1px solid var(--border);border-radius:24px;color:var(--muted);cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .15s;white-space:nowrap;min-height:40px}
-    .sug:hover,.sug:active{border-color:var(--accent);color:var(--accent)}
-
-    .iarea{padding:12px;border-top:1px solid var(--border);display:flex;gap:10px;align-items:flex-end;flex-shrink:0}
-    #ui{flex:1;background:var(--surface2);border:1px solid var(--border);border-radius:14px;padding:14px 12px;font-size:16px;color:var(--text);font-family:'DM Sans',sans-serif;resize:none;min-height:52px;max-height:120px;outline:none}
+    /* Input area */
+    .iarea{padding:10px 12px;background:var(--surface2);border-top:1px solid var(--border);display:flex;gap:8px;flex-shrink:0}
+    #ui{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:10px 12px;font-size:14px;color:var(--text);font-family:inherit;resize:none;min-height:40px;max-height:100px;outline:none}
     #ui:focus{border-color:var(--accent)}
-    #ui::placeholder{color:var(--muted)}
-    .sbtn{width:52px;height:52px;border-radius:14px;border:none;background:var(--accent);color:#0e0e10;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-    .sbtn:hover,.sbtn:active{background:var(--accent2)}
+    .sbtn{width:40px;height:40px;background:var(--accent);border:none;border-radius:10px;color:#0e0e10;font-size:16px;cursor:pointer}
 
-    .attach-row{padding:0 16px 10px;display:flex;gap:8px;flex-shrink:0}
-    .abtn{font-size:13px;padding:10px 16px;background:transparent;border:1px solid var(--border);border-radius:12px;color:var(--muted);cursor:pointer;font-family:'DM Sans',sans-serif;display:flex;align-items:center;gap:6px;min-height:40px}
-    .panel{position:absolute;inset:0;background:var(--surface);z-index:20;display:none;flex-direction:column;overflow:hidden}
-    .panel.close{flex}
-    .ph{padding:14px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
-    .ph h2{font-family:'Syne',sans-serif;font-size:15px;flex:1}
-    .pb{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px}
+    /* Panel */
+    .panel{position:absolute;inset:0;background:var(--surface);z-index:50;display:none;flex-direction:column}
+    .panel-header{height:50px;padding:0 12px;background:var(--surface2);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;flex-shrink:0}
+    .back-btn{width:36px;height:36px;background:var(--surface);border:1px solid var(--border);border-radius:8px;cursor:pointer}
+    .panel-title{font-weight:600;font-size:15px}
+    .panel-content{flex:1;overflow-y:auto;padding:12px}
 
-    .setup-card{background:var(--surface2);border:1px solid var(--border);border-radius:20px;padding:28px 24px;width:100%;max-width:280px;text-align:center}
-    .setup-card .emoji{font-size:48px;margin-bottom:8px}
-    .setup-card h2{font-family:'Syne',sans-serif;font-size:22px;font-weight:700;margin-bottom:8px}
-    .setup-card p{font-size:13px;color:var(--muted);margin-bottom:16px}
-    .setup-input{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 14px;font-size:14px;color:var(--text);font-family:'DM Sans',sans-serif;outline:none;text-align:center;margin-bottom:12px}
-    .setup-input:focus{border-color:var(--accent)}
-    .setup-btn{width:100%;padding:14px;background:var(--accent);color:#0e0e10;border:none;border-radius:10px;font-size:14px;font-weight:700;font-family:'DM Sans',sans-serif;cursor:pointer}
+    /* Buttons */
+    .btn{background:var(--accent);color:#0e0e10;border:none;border-radius:8px;padding:12px 16px;font-size:14px;font-weight:600;cursor:pointer}
 
-    .hi{padding:14px 16px;background:var(--surface2);border:1px solid var(--border);border-radius:14px;cursor:pointer;margin-bottom:8px}
-    .hi .hd{font-size:11px;color:var(--muted);margin-bottom:4px}
-    .hi .hp{font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-    .clrbtn{margin:12px;padding:12px;background:transparent;border:1px solid var(--danger);border-radius:14px;color:var(--danger);cursor:pointer;font-size:14px}
-    .empty-msg{text-align:center;color:var(--muted);font-size:14px;padding:40px}
+    /* Input setup */
+    .setup-input{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 14px;font-size:15px;color:var(--text);margin-bottom:12px}
 
-    .stimer{background:var(--surface2);border:1px solid var(--border);border-radius:18px;padding:24px;text-align:center}
-    .tdisplay{font-family:'Syne',sans-serif;font-size:56px;font-weight:700;color:var(--accent);margin:12px 0}
-    .tlabel{font-size:13px;color:var(--muted);margin-bottom:16px}
-    .tbtns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
-    .tbtn{padding:12px 20px;border-radius:12px;border:1px solid var(--border);background:var(--surface);color:var(--text);cursor:pointer;font-size:14px}
-    .tbtn.active{background:var(--accent);color:#0e0e10;border-color:var(--accent)}
-    .notes-ta{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:16px;padding:16px;font-size:15px;resize:none;outline:none;min-height:160px}
+    /* Cards & items */
+    .card{background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:10px}
+    .item{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:12px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center}
 
-    .conv-card{background:var(--surface2);border:1px solid var(--border);border-radius:18px;padding:20px}
-    .conv-card label{font-size:13px;color:var(--muted);display:block;margin-bottom:6px}
-    .conv-card input,.conv-card select{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:12px 16px;font-size:16px;margin-bottom:12px}
-    .conv-result{font-family:'Syne',sans-serif;font-size:32px;font-weight:700;color:var(--accent);text-align:center;padding:14px 0}
-    .conv-rate{font-size:12px;color:var(--muted);text-align:center}
+    /* Small buttons */
+    .small-btn{padding:8px 14px;background:var(--surface);border:1px solid var(--border);border-radius:8px;font-size:12px;color:var(--muted);cursor:pointer}
 
-    .player-bar{position:absolute;bottom:90px;left:0;right:0;background:var(--surface2);border-top:1px solid var(--border);padding:12px 20px;display:none;align-items:center;gap:12px;z-index:15}
-    .player-bar.open{display:flex}
-    .player-title{font-size:14px;font-weight:500}
-    .player-artist{font-size:11px;color:var(--muted)}
-    .player-ctrl{font-size:22px;cursor:pointer;padding:6px;background:transparent;border:none}
+    /* Attach row */
+    .attach-row{display:none;padding:0 12px 8px;gap:8px}
+    .attach-row.show{display:flex}
 
-    .rem-item{background:var(--surface2);border:1px solid var(--border);border-radius:14px;padding:14px 16px;display:flex;align-items:center;gap:12px}
-    .rem-item .rname{font-size:14px;font-weight:500;flex:1}
-    .rem-item .rtime{font-size:12px;color:var(--muted)}
+    /* Suggestions */
+    .sugs{padding:0 12px 8px;display:flex;gap:6px;flex-wrap:wrap}
+    .sug{padding:6px 12px;background:transparent;border:1px solid var(--border);border-radius:20px;font-size:11px;color:var(--muted)}
 
-    .trans-pairs{display:flex;gap:8px;margin-bottom:12px}
-    .trans-pair{display:flex;align-items:center;gap:8px;flex:1}
-    .trans-pair select{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:10px;font-size:14px}
-    .trans-arrow{font-size:18px;cursor:pointer}
-    .trans-output{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px;font-size:16px;min-height:120px;resize:none;outline:none}
+    /* Status bar */
+    .wbar{padding:6px 12px;background:var(--surface2);border-bottom:1px solid var(--border);font-size:10px;color:var(--muted);display:flex;gap:8px;flex-wrap:wrap}
 
-    .calc-display{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:18px;font-size:28px;text-align:right;font-family:'Syne',sans-serif;font-weight:700;margin-bottom:12px}
-    .calc-btns{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
-    .calc-btn{padding:16px;font-size:18px;border-radius:12px;border:1px solid var(--border);background:var(--surface);color:var(--text);cursor:pointer}
-    .calc-btn.op{background:var(--accent);color:#0e0e10;border-color:var(--accent)}
+    /* Player bar */
+    .player-bar{display:none;position:fixed;bottom:60px;left:0;right:0;background:var(--surface2);border-top:1px solid var(--border);padding:8px 12px;gap:10px;align-items:center}
+    .player-bar.show{display:flex}
 
-    #cam-video{width:100%;border-radius:16px;background:#000;object-fit:cover}
-    #cam-canvas{display:none}
-    .cam-btns{display:flex;gap:10px;justify-content:center;margin-top:14px}
+    /* Calc */
+    .calc-display{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px;font-size:22px;text-align:right;font-weight:700}
+    .calc-btns{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+    .calc-btn{padding:14px;font-size:16px;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--text)}
+    .calc-btn.op{background:var(--accent);color:#0e0e10}
 
-    @media(max-width:500px){
-      .header-pc{display:none}
-      .header{position:fixed;top:0;left:-100%;width:80%;max-width:280px;height:100vh;background:var(--surface);z-index:100;flex-direction:column;padding:16px;gap:12px;transition:left .3s;border-right:1px solid var(--border);display:flex}
-      .header.open{left:0}
-      .menu-btn{position:fixed;top:10px;left:10px;z-index:26;width:40px;height:40px;display:flex !important;background:var(--surface);border:1px solid var(--border);border-radius:10px;}
-      .wbar{display:none}
-      .app{height:100vh;max-height:100vh;border-radius:0}
-      .iarea{position:fixed;bottom:0;left:0;right:0;background:var(--surface);border-top:1px solid var(--border);padding:10px 8px;gap:6px;z-index:30}
-      #ui{min-height:48px;padding:12px 10px;font-size:15px}
-      .sbtn{width:48px;height:48px;border-radius:10px;font-size:16px}
-      .msgs{padding-top:60px;padding-bottom:80px}
-      .tabs{position:fixed;top:0;left:0;right:0;background:var(--surface);border-bottom:1px solid var(--border);padding:8px 8px 0;z-index:25}
-      .tab{padding:8px 10px;font-size:11px;min-height:36px}
-      .player-bar{bottom:70px}
-      .header .avatar{display:none}
-      .header h1{font-size:18px}
+    /* Video */
+    video{width:100%;border-radius:10px;background:#000}
+
+    /* Timer */
+    .timer-display{font-size:48px;font-weight:700;color:var(--accent);text-align:center;margin:10px 0}
+    .timer-btns{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+
+    /* PC */
+    @media(min-width:600px){
+      body{padding:20px}
+      .app{height:90vh;max-height:700px;border-radius:16px;border:1px solid var(--border)}
+      .header{height:56px;padding:0 16px}
+      .menu-btn{width:40px;height:40px}
+      .menu-drop{right:16px;top:56px}
+      .tabs{height:48px;padding:0 16px}
+      .tab{padding:0 18px;font-size:13px}
+      .msgs{padding:16px}
+      .msg{padding:12px 16px;font-size:15px}
+      .iarea{padding:12px 16px}
+      #ui{padding:12px 14px;font-size:15px}
+      .sbtn{width:44px;height:44px;border-radius:12px}
+      .panel-content{padding:16px}
     }
-    @media(min-width:501px){.menu-btn{display:none}}
   </style>
 </head>
 <body>
 <div class="app">
 
-  <div class="panel open" id="setup-panel">
-    <div class="pb" style="justify-content:center;align-items:center;">
-      <div class="setup-card">
-        <div class="emoji">🍌</div>
-        <h2>Bienvenido a Banabna</h2>
-        <p>¿Cómo te llamas?</p>
-        <input class="setup-input" id="name-input" type="text" placeholder="Tu nombre" maxlength="30"/>
-        <button class="setup-btn" onclick="saveName()">Continuar</button>
-      </div>
+  <!-- Setup Panel -->
+  <div class="panel" id="setup-panel" style="display:flex;">
+    <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px;text-align:center;gap:16px;">
+      <div style="font-size:48px;">🍌</div>
+      <div style="font-size:24px;font-weight:700;">Banabna</div>
+      <p style="color:var(--muted);font-size:14px;">¿Cómo te llamas?</p>
+      <input class="setup-input" id="name-input" placeholder="Tu nombre" style="text-align:center;max-width:250px;">
+      <button class="btn" onclick="saveName()" style="width:250px;">Continuar</button>
     </div>
   </div>
 
+  <!-- Menu Dropdown -->
+  <div class="menu-drop" id="menu-drop">
+    <button class="menu-item" onclick="openPanel('conv-panel')">💱 Monedas</button>
+    <button class="menu-item" onclick="openCalc()">🧮 Calculadora</button>
+    <button class="menu-item" onclick="openPanel('trans-panel')">🌐 Traductor</button>
+    <button class="menu-item" onclick="openPanel('study-panel')">📚 Estudio</button>
+    <button class="menu-item" onclick="openPanel('cam-panel')">📷 Cámara</button>
+    <button class="menu-item" onclick="openPanel('history-panel')">🕐 Historial</button>
+    <button class="menu-item" onclick="toggleTheme()">🌙 Tema</button>
+    <button class="menu-item" onclick="toggleMusic()">🎵 Lofi</button>
+    <button class="menu-item" onclick="newChat()" style="color:var(--danger);">✏️ Nuevo chat</button>
+  </div>
+
+  <!-- History Panel -->
   <div class="panel" id="history-panel">
-    <div class="ph">
-      <button class="ib" onclick="closePanel('history-panel')">←</button>
-      <h2>🕐 Historial</h2>
+    <div class="panel-header">
+      <button class="back-btn" onclick="closePanel('history-panel')">←</button>
+      <span class="panel-title">Historial</span>
     </div>
-    <div class="pb" id="history-list"></div>
-    <button class="clrbtn" onclick="clearHistory()">🗑 Borrar todo</button>
+    <div class="panel-content" id="history-list"></div>
   </div>
 
-  <div class="panel" id="study-panel">
-    <div class="ph">
-      <button class="ib" onclick="closePanel('study-panel')">←</button>
-      <h2>📚 Estudio</h2>
-    </div>
-    <div class="pb">
-      <div class="stimer">
-        <div class="tlabel" id="tlabel">Pomodoro</div>
-        <div class="tdisplay" id="tdisplay">25:00</div>
-        <div class="tbtns">
-          <button class="tbtn" onclick="setTimer(25,this)">25</button>
-          <button class="tbtn" onclick="setTimer(5,this)">5</button>
-          <button class="tbtn" onclick="setTimer(15,this)">15</button>
-          <button class="tbtn" id="startbtn" onclick="toggleTimer()">▶</button>
-        </div>
-      </div>
-      <textarea class="notes-ta" id="study-notes" placeholder="Notas..."></textarea>
-      <button class="tbtn" onclick="saveNotes()">💾 Guardar</button>
-    </div>
-  </div>
-
-  <div class="panel" id="conv-panel">
-    <div class="ph">
-      <button class="ib" onclick="closePanel('conv-panel')">←</button>
-      <h2>💱 Monedas</h2>
-    </div>
-    <div class="pb">
-      <div class="conv-card">
-        <input type="number" id="conv-amount" value="1" oninput="convertCurrency()"/>
-        <select id="conv-from" onchange="convertCurrency()">
-          <option value="USD">USD</option>
-          <option value="COP" selected>COP</option>
-          <option value="EUR">EUR</option>
-          <option value="MXN">MXN</option>
-        </select>
-        <select id="conv-to" onchange="convertCurrency()">
-          <option value="USD" selected>USD</option>
-          <option value="COP">COP</option>
-          <option value="EUR">EUR</option>
-        </select>
-        <div class="conv-result" id="conv-result">...</div>
-      </div>
-    </div>
-  </div>
-
-  <div class="panel" id="trans-panel">
-    <div class="ph">
-      <button class="ib" onclick="closePanel('trans-panel')">←</button>
-      <h2>🌐 Traductor</h2>
-    </div>
-    <div class="pb">
-      <div class="trans-pairs">
-        <select id="trans-from"><option value="es">Español</option><option value="en">English</option></select>
-        <span class="trans-arrow" onclick="swapLangs()">⇄</span>
-        <select id="trans-to"><option value="en">English</option><option value="es">Español</option></select>
-      </div>
-      <textarea class="trans-output" id="trans-input" placeholder="Texto..."></textarea>
-      <button class="sug" onclick="doTranslate()">🔄 Traducir</button>
-      <div class="trans-output" id="trans-output" style="min-height:100px;background:var(--surface2);margin-top:12px;"></div>
-    </div>
-  </div>
-
+  <!-- Calc Panel -->
   <div class="panel" id="calc-panel">
-    <div class="ph">
-      <button class="ib" onclick="closePanel('calc-panel')">←</button>
-      <h2>🧮 Calculadora</h2>
+    <div class="panel-header">
+      <button class="back-btn" onclick="closePanel('calc-panel')">←</button>
+      <span class="panel-title">Calculadora</span>
     </div>
-    <div class="pb" style="max-width:300px;margin:0 auto;">
+    <div class="panel-content">
       <div class="calc-display" id="calc-display">0</div>
       <div class="calc-btns">
         <button class="calc-btn" onclick="calc('C')">C</button>
@@ -252,175 +181,212 @@
         <button class="calc-btn" onclick="calc('0')">0</button>
         <button class="calc-btn" onclick="calc('.')">.</button>
         <button class="calc-btn" onclick="calc('%')">%</button>
-        <button class="calc-btn op" onclick="calc('^')">^</button>
+        <button class="calc-btn" onclick="calc('^')">^</button>
       </div>
     </div>
   </div>
 
+  <!-- Study Panel -->
+  <div class="panel" id="study-panel">
+    <div class="panel-header">
+      <button class="back-btn" onclick="closePanel('study-panel')">←</button>
+      <span class="panel-title">Estudio</span>
+    </div>
+    <div class="panel-content">
+      <div class="timer-display" id="timer-display">25:00</div>
+      <div class="timer-btns">
+        <button class="small-btn" onclick="setTimer(25)">25</button>
+        <button class="small-btn" onclick="setTimer(5)">5</button>
+        <button class="small-btn" onclick="setTimer(15)">15</button>
+        <button class="small-btn" onclick="toggleTimer()">▶/⏸</button>
+      </div>
+      <textarea class="setup-input" id="study-notes" placeholder="Notas..." style="min-height:200px;margin-top:16px;"></textarea>
+      <button class="btn" onclick="saveNotes()" style="margin-top:8px;width:100%;">💾 Guardar</button>
+    </div>
+  </div>
+
+  <!-- Camera Panel -->
   <div class="panel" id="cam-panel">
-    <div class="ph">
-      <button class="ib" onclick="closePanel('cam-panel')">←</button>
-      <h2>📷 Cámara</h2>
+    <div class="panel-header">
+      <button class="back-btn" onclick="closePanel('cam-panel')">←</button>
+      <span class="panel-title">Cámara</span>
     </div>
-    <div class="pb">
+    <div class="panel-content">
       <video id="cam-video" autoplay playsinline></video>
-      <canvas id="cam-canvas"></canvas>
-      <div class="cam-btns">
-        <button class="tbtn" onclick="openCamera()">Abrir</button>
-        <button class="tbtn" onclick="takePhoto()">Capturar</button>
+      <canvas id="cam-canvas" style="display:none;"></canvas>
+      <div style="display:flex;gap:8px;margin-top:12px;">
+        <button class="btn" onclick="openCamera()" style="flex:1;">📷 Abrir</button>
+        <button class="btn" onclick="takePhoto()" style="flex:1;">⭕ Capturar</button>
       </div>
     </div>
   </div>
 
-  <div class="header" id="main-header">
-    <button class="ib" onclick="toggleMenu()">←</button>
-    <div style="display:flex;align-items:center;gap:12px;">
-      <div class="avatar">🍌</div>
-      <h1>Banabna</h1>
+  <!-- Translator Panel -->
+  <div class="panel" id="trans-panel">
+    <div class="panel-header">
+      <button class="back-btn" onclick="closePanel('trans-panel')">←</button>
+      <span class="panel-title">Traductor</span>
     </div>
-    <div class="hbtns" style="position:absolute;bottom:20px;left:16px;right:16px;flex-direction:column;">
-      <button class="ib" onclick="openPanel('conv-panel');convertCurrency();">💱 Monedas</button>
-      <button class="ib" onclick="openPanel('trans-panel')">🌐 Traducir</button>
-      <button class="ib" onclick="openPanel('calc-panel')">🧮 Calc</button>
-      <button class="ib" onclick="openPanel('study-panel')">📚 Estudio</button>
-      <button class="ib" onclick="openPanel('cam-panel')">📷 Cámara</button>
-      <button class="ib" onclick="openPanel('history-panel');renderHistory();">🕐 Historial</button>
-      <button class="ib" onclick="toggleTheme()" id="theme-btn">🌙 Tema</button>
-      <button class="ib" onclick="togglePlayer()">🎵 Lofi</button>
-    </div>
-  </div>
-  <button class="ib menu-btn" onclick="toggleMenu()">☰</button>
-
-  <div class="header-pc">
-    <div class="avatar">🍌</div>
-    <div class="hinfo">
-      <h1>Banabna</h1>
-      <small id="greeting">Hola</small>
-    </div>
-    <div class="menu-bar">
-      <button class="menu-item" style="width:40px;height:40px;justify-content:center;background:var(--surface2);border:1px solid var(--border);" onclick="toggleDropdown()">☰</button>
-      <div class="menu-drop" id="menu-drop">
-        <button class="menu-item" onclick="openPanel('conv-panel');convertCurrency();toggleDropdown();">💱 Monedas</button>
-        <button class="menu-item" onclick="openPanel('trans-panel');">🌐 Traducir</button>
-        <button class="menu-item" onclick="openPanel('calc-panel');">🧮 Calc</button>
-        <button class="menu-item" onclick="openPanel('study-panel');">📚 Estudio</button>
-        <button class="menu-item" onclick="openPanel('cam-panel');">📷 Cámara</button>
-        <button class="menu-item" onclick="openPanel('history-panel');renderHistory();toggleDropdown();">🕐 Historial</button>
-        <button class="menu-item" onclick="toggleTheme();toggleDropdown();">🌙 Tema</button>
-        <button class="menu-item" onclick="toggleMusic();toggleDropdown();">🎵 Lofi</button>
-        <button class="menu-item" onclick="newChat();toggleDropdown();" style="color:var(--danger);">✏️ Nuevo chat</button>
-        <button class="menu-item" onclick="toggleDropdown();">❌ Cerrar</button>
+    <div class="panel-content">
+      <div style="display:flex;gap:8px;margin-bottom:12px;">
+        <select id="trans-from" style="flex:1;padding:10px;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--text);"><option value="es">Español</option><option value="en">English</option></select>
+        <span style="align-self:center;">⇄</span>
+        <select id="trans-to" style="flex:1;padding:10px;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--text);"><option value="en">English</option><option value="es">Español</option></select>
       </div>
+      <textarea class="setup-input" id="trans-input" placeholder="Texto..." style="min-height:100px;"></textarea>
+      <button class="btn" onclick="doTranslate()" style="width:100%;margin-top:8px;">🔄 Traducir</button>
+      <div class="card" id="trans-output" style="min-height:80px;margin-top:12px;"></div>
     </div>
   </div>
 
+  <!-- Currencies Panel -->
+  <div class="panel" id="conv-panel">
+    <div class="panel-header">
+      <button class="back-btn" onclick="closePanel('conv-panel')">←</button>
+      <span class="panel-title">Monedas</span>
+    </div>
+    <div class="panel-content">
+      <input type="number" id="conv-amount" class="setup-input" value="1" oninput="convertCurrency()">
+      <select id="conv-from" class="setup-input" onchange="convertCurrency()">
+        <option value="USD">USD - Dólar</option>
+        <option value="COP" selected>COP - Peso</option>
+        <option value="EUR">EUR - Euro</option>
+      </select>
+      <select id="conv-to" class="setup-input" onchange="convertCurrency()">
+        <option value="USD" selected>USD - Dólar</option>
+        <option value="COP">COP - Peso</option>
+        <option value="EUR">EUR - Euro</option>
+      </select>
+      <div style="text-align:center;font-size:24px;font-weight:700;color:var(--accent);padding:20px;" id="conv-result">...</div>
+    </div>
+  </div>
+
+  <!-- Main Header -->
+  <div class="header">
+    <div class="header-left">
+      <div class="logo">🍌</div>
+      <span class="title">Banabna</span>
+      <span class="greeting" id="greeting"></span>
+    </div>
+    <button class="menu-btn" onclick="toggleMenu()">☰</button>
+  </div>
+
+  <!-- Status bar -->
   <div class="wbar">
-    <div class="wi">🌡 <span id="wtemp">--°C</span></div>
-    <span class="wsep">|</span>
-    <div class="wi">📅 <span id="wdate">--</span></div>
-    <span class="wsep">|</span>
-    <div class="wi">🕐 <span id="wtime">--:--</span></div>
-    <span class="wsep">|</span>
-    <div class="wi">📻 <span id="pmusic">LoFi</span></div>
+    <span>📅 <span id="wdate">--</span></span>
+    <span>🕐 <span id="wtime">--:--</span></span>
+    <span>📻 <span id="pmusic">Lofi</span></span>
   </div>
 
+  <!-- Tabs -->
   <div class="tabs">
     <button class="tab active" onclick="setTab('chat',this)">💬 Chat</button>
-    <button class="tab" onclick="setTab('img',this)">📷 Imagen</button>
-    <button class="tab" onclick="setTab('doc',this)">📄 Doc</button>
+    <button class="tab" onclick="setTab('img',this)">📷</button>
+    <button class="tab" onclick="setTab('doc',this)">📄</button>
   </div>
 
+  <!-- Messages -->
   <div class="msgs" id="msgs">
     <div class="msg bot">¡Hola! Soy <strong>Banabna</strong> 🍌 ¿En qué te ayudo?</div>
   </div>
 
-  <div class="attach-row" id="attach-row" style="display:none;">
-    <div id="img-attach" style="display:none;">
-      <button class="abtn" onclick="document.getElementById('img-input').click()">📷</button>
-      <input type="file" id="img-input" accept="image/*" style="display:none;" onchange="handleImage(event)"/>
-    </div>
-    <div id="doc-attach" style="display:none;">
-      <button class="abtn" onclick="document.getElementById('doc-input').click()">📄</button>
-      <input type="file" id="doc-input" accept=".txt,.md" style="display:none;" onchange="handleDoc(event)"/>
-    </div>
+  <!-- Attach -->
+  <div class="attach-row" id="attach-row">
+    <button class="small-btn" onclick="document.getElementById('img-input').click()">📷 Imagen</button>
+    <input type="file" id="img-input" accept="image/*" style="display:none" onchange="handleImage(event)">
   </div>
 
-  <div class="sugs" id="sugs">
+  <!-- Suggestions -->
+  <div class="sugs">
     <button class="sug" onclick="quickSend('Organiza mi día')">Organizar</button>
     <button class="sug" onclick="quickSend('Consejo')">Consejo</button>
     <button class="sug" onclick="quickSend('Tareas')">Tareas</button>
   </div>
 
+  <!-- Input -->
   <div class="iarea">
     <textarea id="ui" placeholder="Escríbele a Banabna..." rows="1"></textarea>
     <button class="sbtn" onclick="sendMessage()">➤</button>
   </div>
 
+  <!-- Player -->
   <div class="player-bar" id="player-bar">
-    <div class="player-title" id="player-title">Lofi</div>
-    <button class="player-ctrl" id="player-toggle" onclick="toggleMusic()">▶</button>
-    <button class="player-ctrl" onclick="stopMusic()">⏹</button>
+    <span style="flex:1;font-size:13px;" id="player-title">Lofi</span>
+    <button class="small-btn" onclick="toggleMusic()">▶/⏸</button>
+    <button class="small-btn" onclick="stopMusic()">⏹</button>
   </div>
 
 </div>
 <script>
-let chatHistory=[];
-let userName=localStorage.getItem('banabna_name')||'';
-let isDark=localStorage.getItem('banabna_theme')==='light';
-let currentTab='chat', pendingImage=null, pendingDoc=null;
-let timerSecs=25*60, timerRunning=false, timerInt=null;
-let player=null, playerOpen=false, camStream=null;
-let calcExpr='', rates={};
+let chatHistory=[], userName=localStorage.getItem('banabna_name')||'', isDark=localStorage.getItem('banabna_theme')==='light', currentTab='chat', pendingImage=null, timerSec=25*60, timerRun=false, timerInt=null, player=null, camStream=null, calcExpr='';
 
 const API='/';
 
+function init(){
+  if(userName){
+    document.getElementById('setup-panel').style.display='none';
+    document.getElementById('greeting').textContent=userName;
+  }
+  applyTheme();
+  setInterval(()=>{
+    const d=new Date();
+    document.getElementById('wtime').textContent=d.toLocaleTimeString('es-CO',{hour:'2-digit',minute:'2-digit'});
+    document.getElementById('wdate').textContent=d.toLocaleDateString('es-CO',{day:'numeric',month:'short'});
+  },1000);
+  const sc=localStorage.getItem('banabna_chat');
+  if(sc)try{JSON.parse(sc).forEach(m=>addMsg(m.role,m.content));}catch{}
+}
+
 function saveName(){
-  const name=document.getElementById('name-input').value.trim();
-  if(!name)return alert('Escribe tu nombre');
-  userName=name;
-  localStorage.setItem('banabna_name',name);
+  const n=document.getElementById('name-input').value.trim();
+  if(!n)return alert('Escribe tu nombre');
+  userName=n;localStorage.setItem('banabna_name',n);
   document.getElementById('setup-panel').style.display='none';
-  document.getElementById('greeting').textContent='Hola, '+userName;
+  document.getElementById('greeting').textContent=n;
 }
 
-function applyTheme(){
-  document.documentElement.setAttribute('data-theme',isDark?'dark':'light');
-  document.getElementById('theme-btn').textContent=isDark?'🌙':'☀️';
-}
-function toggleTheme(){isDark=!isDark;localStorage.setItem('banabna_theme',isDark?'dark':'light');applyTheme();}
+function applyTheme(){document.documentElement.setAttribute('data-theme',isDark?'dark':'light');}
+function toggleTheme(){isDark=!isDark;localStorage.setItem('banabna_theme',isDark?'light':'dark');applyTheme();}
 
-if(userName){document.getElementById('setup-panel').style.display='none';document.getElementById('greeting').textContent='Hola, '+userName;}else{document.getElementById('setup-panel').style.display='flex';}
-applyTheme();
-
-// Clock
-setInterval(()=>{
-  const n=new Date();
-  document.getElementById('wtime').textContent=n.toLocaleTimeString('es-CO',{hour:'2-digit',minute:'2-digit'});
-  document.getElementById('wdate').textContent=n.toLocaleDateString('es-CO',{weekday:'short',day:'numeric'});
-},1000);
+function toggleMenu(){document.getElementById('menu-drop').classList.toggle('show');}
 
 function openPanel(id){document.getElementById(id).style.display='flex';}
 function closePanel(id){document.getElementById(id).style.display='none';}
-function toggleMenu(){
-  document.getElementById('main-header').classList.toggle('open');
-}
-function toggleDropdown(){
-  document.getElementById('menu-drop').classList.toggle('show');
-}
-function newChat(){
-  chatHistory=[];
-  document.getElementById('msgs').innerHTML='<div class="msg bot">¡Nuevo chat! 🍌</div>';
-  localStorage.removeItem('banabna_chat');
+function openCalc(){openPanel('calc-panel');}
+
+function setTab(t,el){
+  currentTab=t;
+  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('attach-row').classList.toggle('show',t==='img');
 }
 
-function setTab(tab,el){
-  currentTab=tab;
-  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-  el.classList.add('active');
-  const ar=document.getElementById('attach-row');
-  if(tab==='img'){ar.style.display='flex';document.getElementById('img-attach').style.display='flex';document.getElementById('doc-attach').style.display='none';}
-  else if(tab==='doc'){ar.style.display='flex';document.getElementById('img-attach').style.display='none';document.getElementById('doc-attach').style.display='flex';}
-  else{ar.style.display='none';}
+function addMsg(role,text){
+  const d=document.createElement('div');
+  d.className='msg '+role;
+  d.innerHTML=text.replace(/\n/g,'<br>');
+  document.getElementById('msgs').appendChild(d);
+  document.getElementById('msgs').scrollTop=document.getElementById('msgs').scrollHeight;
+}
+
+function quickSend(t){document.getElementById('ui').value=t;sendMessage();}
+
+async function sendMessage(){
+  const inp=document.getElementById('ui');
+  let txt=inp.value.trim();
+  if(!txt&&!pendingImage)return;
+  inp.value='';
+  addMsg('user',txt+(pendingImage?' 📷':''));
+  chatHistory.push({role:'user',content:txt});
+  const t=addMsg('bot','Escribo...');
+  try{
+    const res=await fetch(API+'chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages:chatHistory,userName,hasImage:!!pendingImage,image:pendingImage})});
+    const d=await res.json();
+    t.innerHTML=d.reply.replace(/\n/g,'<br>');
+    chatHistory.push({role:'assistant',content:d.reply});
+    localStorage.setItem('banabna_chat',JSON.stringify(chatHistory));
+  }catch(e){t.innerHTML='Error: '+e.message;}
+  pendingImage=null;
 }
 
 function handleImage(e){
@@ -430,156 +396,73 @@ function handleImage(e){
   r.onload=ev=>{pendingImage={data:ev.target.result.split(',')[1],type:f.type};};
   r.readAsDataURL(f);
 }
-function handleDoc(e){
-  const f=e.target.files[0];
-  if(!f)return;
-  const r=new FileReader();
-  r.onload=ev=>{pendingDoc=ev.target.result;};
-  r.readAsText(f);
+
+function newChat(){
+  chatHistory=[];
+  document.getElementById('msgs').innerHTML='<div class="msg bot">¡Nuevo chat! 🍌</div>';
+  localStorage.removeItem('banabna_chat');
+  toggleMenu();
 }
 
-function addMsg(role,text){
-  const d=document.createElement('div');
-  d.className='msg '+role;
-  d.innerHTML=text.replace(/\n/g,'<br>');
-  document.getElementById('msgs').appendChild(d);
-  document.getElementById('msgs').scrollTop=document.getElementById('msgs').scrollHeight;
-  return d;
-}
-function quickSend(t){document.getElementById('ui').value=t;sendMessage();}
-
-async function sendMessage(){
-  const inp=document.getElementById('ui');
-  let text=inp.value.trim();
-  if(!text&&!pendingImage&&!pendingDoc)return;
-  inp.value='';inp.style.height='auto';
-  let displayText=text;
-  if(pendingImage)displayText+=' 📷';
-  if(pendingDoc)displayText+=' 📄';
-  addMsg('user',displayText);
-  chatHistory.push({role:'user',content:displayText});
-  const typing=addMsg('bot','Banabna escribe...');typing.classList.add('typing');
-  try{
-    const body={messages:chatHistory,hasImage:!!pendingImage,userName};
-    if(pendingImage)body.image={data:pendingImage.data,type:pendingImage.type};
-    const res=await fetch(API+'chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
-    const data=await res.json();
-    if(data.error)throw new Error(data.error);
-    typing.innerHTML=data.reply.replace(/\n/g,'<br>');
-    typing.classList.remove('typing');
-    chatHistory.push({role:'assistant',content:data.reply});
-    localStorage.setItem('banabna_chat',JSON.stringify(chatHistory));
-    if(pendingImage){
-      const img=document.createElement('img');img.src='data:'+pendingImage.type+';base64,'+pendingImage.data;img.style.maxHeight='200px';typing.appendChild(img);
-    }
-    pendingImage=null;pendingDoc=null;
-  }catch(err){typing.innerHTML='Error: '+err.message;typing.classList.remove('typing');}
-}
-
-// History
-function saveToHistory(){
-  if(chatHistory.length<2)return;
-  const sessions=JSON.parse(localStorage.getItem('banabna_history')||'[]');
-  const preview=chatHistory.find(m=>m.role==='user')?.content||'Chat';
-  sessions.unshift({id:Date.now(),date:new Date().toISOString(),preview:preview.substring(0,50),messages:chatHistory});
-  localStorage.setItem('banabna_history',JSON.stringify(sessions.slice(0,20)));
-}
 function renderHistory(){
-  const list=document.getElementById('history-list');
-  const sessions=JSON.parse(localStorage.getItem('banabna_history')||'[]');
-  if(!sessions.length){list.innerHTML='<p class="empty-msg">Sin historial</p>';return;}
-  list.innerHTML=sessions.map(s=>'<div class="hi" onclick="loadHistory('+s.id+')"><div class="hd">'+new Date(s.date).toLocaleString()+'</div><div class="hp">'+s.preview+'</div></div>').join('');
+  const s=JSON.parse(localStorage.getItem('banabna_history')||'[]');
+  document.getElementById('history-list').innerHTML=s.length?s.map(x=>'<div class="item" onclick="loadHistory('+x.id+')"><span>'+x.preview+'</span><span style="color:var(--muted);font-size:11px;">'+new Date(x.date).toLocaleDateString()+'</span></div>').join(''):'<p style="color:var(--muted);text-align:center;">Sin historial</p>';
 }
 function loadHistory(id){
-  const sessions=JSON.parse(localStorage.getItem('banabna_history')||'[]');
-  const s=sessions.find(s=>s.id===id);
-  if(s){chatHistory=s.messages;document.getElementById('msgs').innerHTML='';chatHistory.forEach(m=>addMsg(m.role==='user'?'user':'bot',m.content));}
+  const s=JSON.parse(localStorage.getItem('banabna_history')||'[]');
+  const h=s.find(x=>x.id===id);
+  if(h){chatHistory=h.messages;document.getElementById('msgs').innerHTML='';h.messages.forEach(m=>addMsg(m.role,m.content));}
   closePanel('history-panel');
 }
-function clearHistory(){if(confirm('Borrar?')){localStorage.removeItem('banabna_history');renderHistory();}}
+
+// Calc
+function calc(v){
+  const d=document.getElementById('calc-display');
+  if(v==='C'){calcExpr='';d.innerText='0';}
+  else if(v==='='){try{d.innerText=eval(calcExpr.replace(/\^/,'**'));calcExpr=d.innerText;}catch{d.innerText='Error';calcExpr='';}}
+  else{calcExpr+=v;d.innerText=calcExpr;}
+}
 
 // Timer
-function setTimer(mins,el){
-  clearInterval(timerInt);timerRunning=false;timerSecs=mins*60;
-  document.getElementById('tlabel').textContent=mins+' min';
-  document.getElementById('tdisplay').textContent=mins+':00';
-  document.querySelectorAll('.tbtn').forEach(b=>b.classList.remove('active'));
-  if(el)el.classList.add('active');
-}
+function setTimer(m){timerSec=m*60;timerRun=false;document.getElementById('timer-display').innerText=m+':00';}
 function toggleTimer(){
-  if(timerRunning){clearInterval(timerInt);timerRunning=false;document.getElementById('startbtn').textContent='▶';}
-  else{timerRunning=true;document.getElementById('startbtn').textContent='⏸';
-    timerInt=setInterval(()=>{timerSecs--;document.getElementById('tdisplay').textContent=Math.floor(timerSecs/60)+':'+(timerSecs%60).toString().padStart(2,'0');
-      if(timerSecs<=0){clearInterval(timerInt);timerRunning=false;document.getElementById('startbtn').textContent='▶';alert('¡_LISTO!');}
-    },1000);
-  }
+  if(timerRun){clearInterval(timerInt);timerRun=false;}
+  else{timerRun=true;timerInt=setInterval(()=>{timerSec--;document.getElementById('timer-display').innerText=Math.floor(timerSec/60)+':'+(timerSec%60).toString().padStart(2,'0');if(timerSec<=0){clearInterval(timerInt);timerRun=false;alert('¡Listo!');}},1000);}
 }
-function saveNotes(){localStorage.setItem('banabna_notes',document.getElementById('study-notes').value);alert('✅');}
+function saveNotes(){localStorage.setItem('banabna_notes',document.getElementById('study-notes').value);alert('Guardado');}
 const sn=localStorage.getItem('banabna_notes');if(sn)document.getElementById('study-notes').value=sn;
+
+// Camera
+async function openCamera(){try{camStream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'}});document.getElementById('cam-video').srcObject=camStream;}catch{alert('No cámara');}}
+function takePhoto(){if(!camStream)return;const v=document.getElementById('cam-video');const c=document.getElementById('cam-canvas');c.width=v.videoWidth;c.height=v.videoHeight;c.getContext('2d').drawImage(v,0,0);pendingImage={data:c.toDataURL('image/png').split(',')[1],type:'image/png'};closePanel('cam-panel');setTab('img',document.querySelector('.tab'));}
 
 // Currency
 async function convertCurrency(){
   const a=parseFloat(document.getElementById('conv-amount').value)||0;
   const f=document.getElementById('conv-from').value;
   const t=document.getElementById('conv-to').value;
-  if(!rates[f]){
-    try{const d=await fetch('https://api.exchangerate-api.com/v4/latest/USD').then(r=>r.json());rates=d.rates;}catch{}
-  }
-  if(rates[f]&&rates[t]){document.getElementById('conv-result').textContent=(a/rates[f]*rates[t]).toLocaleString()+' '+t;}
+  try{const d=await fetch('https://api.exchangerate-api.com/v4/latest/USD').then(r=>r.json());document.getElementById('conv-result').innerText=(a/d.rates[f]*d.rates[t]).toFixed(2)+' '+t;}catch{}
 }
-
-// Translator
-async function doTranslate(){
-  const t=document.getElementById('trans-input').value;
-  const f=document.getElementById('trans-from').value;
-  const to=document.getElementById('trans-to').value;
-  if(!t)return;
-  const out=document.getElementById('trans-output');out.textContent='...';
-  try{
-    const res=await fetch(API+'chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages:[{role:'user',content:'Translate from '+f+' to '+to+': '+t}]})});
-    const d=await res.json();out.textContent=d.reply||'Error';
-  }catch{out.textContent='Error';}
-}
-function swapLangs(){
-  const f=document.getElementById('trans-from');const t=document.getElementById('trans-to');
-  const tmp=f.value;f.value=t.value;t.value=tmp;
-}
-
-// Calculator
-function calc(v){
-  const d=document.getElementById('calc-display');
-  if(v==='C'){calcExpr='';d.textContent='0';return;}
-  if(v==='='){try{d.textContent=eval(calcExpr.replace(/\^/g,'**')).toString();calcExpr=d.textContent;}catch{d.textContent='Error';calcExpr='';}return;}
-  calcExpr+=v;d.textContent=calcExpr;
-}
-
-// Camera
-async function openCamera(){try{camStream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'}});document.getElementById('cam-video').srcObject=camStream;}catch{alert('No');}}
-function takePhoto(){
-  if(!camStream)return;
-  const v=document.getElementById('cam-video');const c=document.getElementById('cam-canvas');
-  c.width=v.videoWidth;c.height=v.videoHeight;c.getContext('2d').drawImage(v,0,0);
-  pendingImage={data:c.toDataURL('image/png').split(',')[1],type:'image/png'};
-  closePanel('cam-panel');setTab('img',document.querySelector('.tab'));
-}
-function closeCamera(){if(camStream){camStream.getTracks().forEach(t=>t.stop());camStream=null;}}
 
 // Music
-const lofi=[{n:'Lofi',u:'https://streams.ilovemusic.de/iloveradio17.mp3'}];
 function toggleMusic(){
-  const pb=document.getElementById('player-bar');
-  if(playerOpen){player.pause();player=null;pb.classList.remove('open');playerOpen=false;document.getElementById('pmusic').textContent='LoFi';return;}
-  player=new Audio(lofi[0].u);player.loop=true;player.play().catch(()=>{});
-  pb.classList.add('open');playerOpen=true;document.getElementById('player-toggle').textContent='⏸';
-  document.getElementById('player-title').textContent=lofi[0].n;document.getElementById('pmusic').textContent='▶';
+  const b=document.getElementById('player-bar');
+  if(b.classList.contains('show')){player.pause();b.classList.remove('show');document.getElementById('pmusic').innerText='Lofi';player=null;}
+  else{player=new Audio('https://streams.ilovemusic.de/iloveradio17.mp3');player.loop=true;player.play().catch(()=>{});b.classList.add('show');document.getElementById('pmusic').innerText='▶';}
 }
-function stopMusic(){if(player){player.pause();player=null;}document.getElementById('player-bar').classList.remove('open');playerOpen=false;document.getElementById('pmusic').textContent='LoFi';}
+function stopMusic(){const b=document.getElementById('player-bar');if(player){player.pause();player=null;}b.classList.remove('show');document.getElementById('pmusic').innerText='Lofi';}
 
-// Init
-const savedChat=localStorage.getItem('banabna_chat');
-if(savedChat){try{const c=JSON.parse(savedChat);if(c.length){chatHistory=c;c.forEach(m=>addMsg(m.role==='user'?'user':'bot',m.content));}}catch{}}
-document.getElementById('ui').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMessage();}});
-document.getElementById('ui').addEventListener('input',function(){this.style.height='auto';this.style.height=Math.min(this.scrollHeight,120)+'px';});
+// Translation
+async function doTranslate(){
+  const t=document.getElementById('trans-input').value;
+  if(!t)return;
+  document.getElementById('trans-output').innerText='...';
+  try{const res=await fetch(API+'chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages:[{role:'user',content:'Translate from '+(document.getElementById('trans-from').value)+' to '+(document.getElementById('trans-to').value)+': '+t}]})});
+  const d=await res.json();document.getElementById('trans-output').innerText=d.reply;}catch{document.getElementById('trans-output').innerText='Error';}
+}
+
+init();
+document.getElementById('ui').addEventListener('keydown',e=>{if(e.key==='Enter')sendMessage();});
 </script>
 </body>
 </html>
