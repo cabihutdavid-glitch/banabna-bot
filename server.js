@@ -10,10 +10,14 @@ app.use(express.json({ limit: '10mb' }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.post('/chat', async (req, res) => {
-  console.log('Received chat request:', JSON.stringify(req.body).substring(0, 200));
   const { messages, userName } = req.body;
+  
+  if (!process.env.GROQ_API_KEY) {
+    return res.status(500).json({ error: 'API key not configured' });
+  }
+  
   try {
-    let systemMsg = `Eres Banabna, un asistente personal amigable e inteligente. Responde siempre en español, de forma clara y concisa.`;
+    let systemMsg = `Eres Banabna, asistente personal. Responde en español curto.`;
     if (userName) systemMsg += ` El usuario se llama ${userName}.`;
 
     const apiMessages = [{ role: 'system', content: systemMsg }, ...messages];
@@ -21,17 +25,17 @@ app.post('/chat', async (req, res) => {
     const completion = await groq.chat.completions.create({
       model: 'llama-3.1-8b-instant',
       messages: apiMessages,
-      max_tokens: 500
+      max_tokens: 300
     });
     
-    const reply = completion.choices[0].message.content;
-    console.log('Reply:', reply.substring(0, 100));
-    res.json({ reply });
-
+    res.json({ reply: completion.choices[0].message.content });
   } catch (err) {
-    console.error('Error:', err.message);
     res.status(500).json({ error: err.message });
   }
+});
+
+app.get('/test', (req, res) => {
+  res.json({ status: 'ok', key: process.env.GROQ_API_KEY ? 'yes' : 'no' });
 });
 
 app.get('/', (req, res) => {
