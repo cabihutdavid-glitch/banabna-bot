@@ -2,118 +2,111 @@
 <html lang="es" data-theme="dark">
 <head>
   <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no,viewport-fit=cover"/>
   <meta name="apple-mobile-web-app-capable" content="yes"/>
-  <meta name="theme-color" content="#f5c842"/>
+  <meta name="mobile-web-app-capable" content="yes"/>
+  <meta name="theme-color" content="#141416"/>
   <title>Banabna</title>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet"/>
   <link rel="manifest" href="/manifest.json">
   <script>if('serviceWorker' in navigator)navigator.serviceWorker.register('/sw.js');</script>
   <style>
-    :root{--bg:#0e0e10;--surface:#1a1a1e;--surface2:#242428;--accent:#f5c842;--accent2:#f0a500;--text:#f0ede8;--muted:#888;--border:#2e2e34;--danger:#e74c3c;}
-    [data-theme="light"]{--bg:#f5f5f0;--surface:#fff;--surface2:#f0ede8;--accent:#f0a500;--accent2:#d4900a;--text:#1a1a1e;--muted:#666;--border:#ddd;}
-    *{box-sizing:border-box;margin:0;padding:0}
-    html,body{height:100%;overflow:hidden}
+    :root{--bg:#0a0a0c;--surface:#141416;--surface2:#1c1c20;--surface3:#242428;--accent:#e6b84c;--accent2:#d4a53c;--text:#e8e6e2;--muted:#6a6a70;--border:#2a2a30;--radius:12px;--shadow:0 4px 24px rgba(0,0,0,0.4);}
+    [data-theme="light"]{--bg:#f4f4f2;--surface:#fff;--surface2:#f8f8f6;--surface3:#eee;--accent:#d4a53c;--accent2:#c4942c;--text:#1a1a1c;--muted:#888;--border:#ddd;}
+    *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+    html,body{height:100%;overflow:hidden;touch-action:manipulation}
     body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;display:flex;align-items:center;justify-content:center;transition:background .3s}
     .app{width:100%;height:100%;display:flex;flex-direction:column;background:var(--surface);overflow:hidden}
 
     /* Header */
-    .header{height:50px;padding:0 12px;background:var(--surface2);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+    .header{height:52px;padding:0 16px;background:var(--surface);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
     .header-left{display:flex;align-items:center;gap:10px}
-    .logo{width:32px;height:32px;background:var(--accent);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px}
-    .title{font-weight:700;font-size:15px}
-    .greeting{font-size:11px;color:var(--muted);margin-left:10px}
+    .logo{width:28px;height:28px;background:var(--accent);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px}
+    .title{font-weight:600;font-size:15px;letter-spacing:-0.3px}
 
-    /* Menu button */
-    .menu-btn{width:36px;height:36px;background:var(--surface);border:1px solid var(--border);border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:16px}
-
-    /* Dropdown menu */
-    .menu-drop{position:absolute;top:50px;right:12px;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:6px;display:none;flex-direction:column;gap:2px;min-width:160px;z-index:100;box-shadow:0 4px 16px rgba(0,0,0,0.3)}
+    /* Menu */
+    .menu-btn{width:32px;height:32px;background:var(--surface2);border:none;border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:15px;color:var(--muted)}
+    .menu-drop{position:absolute;top:52px;right:12px;background:var(--surface2);border-radius:12px;padding:6px;display:none;flex-direction:column;gap:2px;min-width:150px;z-index:100;box-shadow:var(--shadow)}
     .menu-drop.show{display:flex}
-    .menu-item{padding:10px 12px;font-size:13px;border-radius:8px;cursor:pointer;text-align:left;background:none;border:none;color:var(--text);width:100%}
-    .menu-item:hover{background:var(--surface2)}
-
-    /* Tabs */
-    .tabs{height:44px;padding:0 12px;background:var(--surface2);border-bottom:1px solid var(--border);display:flex;gap:4px;flex-shrink:0}
-    .tab{padding:0 14px;font-size:12px;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;display:flex;align-items:center}
-    .tab.active{color:var(--accent);border-bottom-color:var(--accent)}
+    .menu-item{padding:10px 14px;font-size:13px;border-radius:8px;cursor:pointer;text-align:left;background:none;border:none;color:var(--text);width:100%;font-family:inherit}
+    .menu-item:hover{background:var(--surface3)}
 
     /* Messages */
-    .msgs{flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:8px}
-    .msg{max-width:85%;padding:10px 14px;border-radius:14px;font-size:14px;line-height:1.4}
-    .msg.bot{background:var(--surface2);border:1px solid var(--border);align-self:flex-start;border-radius:14px 14px 14px 4px}
-    .msg.user{background:var(--accent);color:#0e0e10;align-self:flex-end;border-radius:14px 14px 4px 14px}
-    .msg img{max-width:100%;border-radius:8px}
+    .msgs{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:6px}
+    .msg{max-width:82%;padding:10px 14px;border-radius:16px;font-size:14px;line-height:1.45}
+    .msg.bot{background:var(--surface2);align-self:flex-start;border-radius:16px 16px 16px 6px}
+    .msg.user{background:var(--accent);color:var(--bg);align-self:flex-end;border-radius:16px 16px 6px 16px;font-weight:500}
+    .msg img{max-width:100%;border-radius:10px}
 
-    /* Input area */
-    .iarea{padding:10px 12px;background:var(--surface2);border-top:1px solid var(--border);display:flex;gap:8px;flex-shrink:0}
-    #ui{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:10px 12px;font-size:14px;color:var(--text);font-family:inherit;resize:none;min-height:40px;max-height:100px;outline:none}
-    #ui:focus{border-color:var(--accent)}
-    .sbtn{width:40px;height:40px;background:var(--accent);border:none;border-radius:10px;color:#0e0e10;font-size:16px;cursor:pointer}
+    /* Input - FIX para celular */
+    .iarea{padding:8px 12px 12px;background:var(--surface);display:flex;gap:8px;flex-shrink:0;align-items:flex-end}
+    #ui{flex:1;background:var(--surface2);border:none;border-radius:12px;padding:10px 14px;font-size:14px;color:var(--text);font-family:inherit;resize:none;min-height:42px;max-height:100px;outline:none;line-height:1.4;-webkit-appearance:none}
+    #ui::placeholder{color:var(--muted)}
+    .sbtn{width:38px;height:38px;background:var(--accent);border:none;border-radius:10px;color:var(--bg);font-size:15px;cursor:pointer;font-weight:600}
+
+    /* Tabs - minimal */
+    .tabs{display:none}
+
+    /* Status - hiding more */
+    .wbar{display:none}
+
+    /* Suggestions - cleaner */
+    .sugs{display:none}
+
+    /* Attach row - unused */
+    .attach-row{display:none}
 
     /* Panel */
     .panel{position:absolute;inset:0;background:var(--surface);z-index:50;display:none;flex-direction:column}
-    .panel-header{height:50px;padding:0 12px;background:var(--surface2);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;flex-shrink:0}
-    .back-btn{width:36px;height:36px;background:var(--surface);border:1px solid var(--border);border-radius:8px;cursor:pointer}
-    .panel-title{font-weight:600;font-size:15px}
-    .panel-content{flex:1;overflow-y:auto;padding:12px}
+    .panel-header{height:52px;padding:0 12px;background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;flex-shrink:0}
+    .back-btn{width:32px;height:32px;background:var(--surface2);border:none;border-radius:8px;cursor:pointer;font-size:16px}
+    .panel-title{font-weight:600;font-size:14px}
+    .panel-content{flex:1;overflow-y:auto;padding:16px}
 
     /* Buttons */
-    .btn{background:var(--accent);color:#0e0e10;border:none;border-radius:8px;padding:12px 16px;font-size:14px;font-weight:600;cursor:pointer}
+    .btn{background:var(--accent);color:var(--bg);border:none;border-radius:10px;padding:12px 18px;font-size:13px;font-weight:600;cursor:pointer}
 
     /* Input setup */
-    .setup-input{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 14px;font-size:15px;color:var(--text);margin-bottom:12px}
+    .setup-input{width:100%;background:var(--surface2);border:none;border-radius:10px;padding:12px 14px;font-size:14px;color:var(--text);margin-bottom:12px}
 
-    /* Cards & items */
-    .card{background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:10px}
-    .item{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:12px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center}
+    /* Cards */
+    .card{background:var(--surface2);border-radius:12px;padding:14px;margin-bottom:10px}
+    .item{background:var(--surface2);border-radius:10px;padding:12px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center}
 
     /* Small buttons */
-    .small-btn{padding:8px 14px;background:var(--surface);border:1px solid var(--border);border-radius:8px;font-size:12px;color:var(--muted);cursor:pointer}
-
-    /* Attach row */
-    .attach-row{display:none;padding:0 12px 8px;gap:8px}
-    .attach-row.show{display:flex}
-
-    /* Suggestions */
-    .sugs{padding:0 12px 8px;display:flex;gap:6px;flex-wrap:wrap}
-    .sug{padding:6px 12px;background:transparent;border:1px solid var(--border);border-radius:20px;font-size:11px;color:var(--muted)}
-
-    /* Status bar */
-    .wbar{padding:6px 12px;background:var(--surface2);border-bottom:1px solid var(--border);font-size:10px;color:var(--muted);display:flex;gap:8px;flex-wrap:wrap}
+    .small-btn{padding:8px 14px;background:var(--surface2);border:none;border-radius:8px;font-size:12px;color:var(--text);cursor:pointer}
 
     /* Player bar */
-    .player-bar{display:none;position:fixed;bottom:60px;left:0;right:0;background:var(--surface2);border-top:1px solid var(--border);padding:8px 12px;gap:10px;align-items:center}
+    .player-bar{display:none;position:fixed;bottom:58px;left:0;right:0;background:var(--surface2);padding:10px 14px;gap:10px;align-items:center}
     .player-bar.show{display:flex}
 
-    /* Calc */
-    .calc-display{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px;font-size:22px;text-align:right;font-weight:700}
+    /* Calc - minimal */
+    .calc-display{background:var(--surface2);border-radius:10px;padding:16px;font-size:24px;text-align:right;font-weight:600}
     .calc-btns{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
-    .calc-btn{padding:14px;font-size:16px;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--text)}
-    .calc-btn.op{background:var(--accent);color:#0e0e10}
+    .calc-btn{padding:16px;font-size:16px;border-radius:10px;border:none;background:var(--surface2);color:var(--text)}
+    .calc-btn.op{background:var(--accent);color:var(--bg)}
 
     /* Video */
     video{width:100%;border-radius:10px;background:#000}
 
     /* Timer */
-    .timer-display{font-size:48px;font-weight:700;color:var(--accent);text-align:center;margin:10px 0}
-    .timer-btns{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+    .timer-display{font-size:52px;font-weight:600;color:var(--accent);text-align:center;margin:20px 0}
+    .timer-btns{display:flex;gap:8px;justify-content:center}
 
     /* PC */
     @media(min-width:600px){
-      body{padding:20px}
-      .app{height:90vh;max-height:700px;border-radius:16px;border:1px solid var(--border)}
-      .header{height:56px;padding:0 16px}
-      .menu-btn{width:40px;height:40px}
-      .menu-drop{right:16px;top:56px}
-      .tabs{height:48px;padding:0 16px}
-      .tab{padding:0 18px;font-size:13px}
-      .msgs{padding:16px}
+      body{padding:24px}
+      .app{height:92vh;max-height:720px;max-width:420px;border-radius:20px;border:1px solid var(--border)}
+      .header{height:56px;padding:0 18px}
+      .menu-btn{width:34px;height:34px}
+      .menu-drop{right:18px;top:56px}
+      .msgs{padding:18px}
       .msg{padding:12px 16px;font-size:15px}
-      .iarea{padding:12px 16px}
-      #ui{padding:12px 14px;font-size:15px}
-      .sbtn{width:44px;height:44px;border-radius:12px}
-      .panel-content{padding:16px}
+      .iarea{padding:10px 16px 14px}
+      #ui{padding:12px 16px;font-size:15px;min-height:44px}
+      .sbtn{width:42px;height:42px;border-radius:12px}
+      .panel-content{padding:18px}
+      .panel-header{height:56px}
     }
   </style>
 </head>
@@ -122,26 +115,25 @@
 
   <!-- Setup Panel -->
   <div class="panel" id="setup-panel" style="display:flex;">
-    <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px;text-align:center;gap:16px;">
-      <div style="font-size:48px;">🍌</div>
-      <div style="font-size:24px;font-weight:700;">Banabna</div>
-      <p style="color:var(--muted);font-size:14px;">¿Cómo te llamas?</p>
-      <input class="setup-input" id="name-input" placeholder="Tu nombre" style="text-align:center;max-width:250px;">
-      <button class="btn" onclick="saveName()" style="width:250px;">Continuar</button>
+    <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px;text-align:center;gap:20px;flex:1">
+      <div style="font-size:56px;">🍌</div>
+      <div style="font-size:26px;font-weight:600;letter-spacing:-0.5px;">Banabna</div>
+      <p style="color:var(--muted);font-size:14px;">Tu asistente personal</p>
+      <input class="setup-input" id="name-input" placeholder="¿Cómo te llamas?" style="text-align:center;">
+      <button class="btn" onclick="saveName()" style="width:100%;">Continuar</button>
     </div>
   </div>
 
   <!-- Menu Dropdown -->
   <div class="menu-drop" id="menu-drop">
-    <button class="menu-item" onclick="openPanel('conv-panel')">💱 Monedas</button>
-    <button class="menu-item" onclick="openCalc()">🧮 Calculadora</button>
-    <button class="menu-item" onclick="openPanel('trans-panel')">🌐 Traductor</button>
-    <button class="menu-item" onclick="openPanel('study-panel')">📚 Estudio</button>
-    <button class="menu-item" onclick="openPanel('cam-panel')">📷 Cámara</button>
-    <button class="menu-item" onclick="openPanel('history-panel')">🕐 Historial</button>
-    <button class="menu-item" onclick="toggleTheme()">🌙 Tema</button>
-    <button class="menu-item" onclick="toggleMusic()">🎵 Lofi</button>
-    <button class="menu-item" onclick="newChat()" style="color:var(--danger);">✏️ Nuevo chat</button>
+    <button class="menu-item" onclick="openPanel('conv-panel');toggleMenu()">Monedas</button>
+    <button class="menu-item" onclick="openCalc();toggleMenu()">Calculadora</button>
+    <button class="menu-item" onclick="openPanel('trans-panel');toggleMenu()">Traductor</button>
+    <button class="menu-item" onclick="openPanel('study-panel');toggleMenu()">Notas</button>
+    <button class="menu-item" onclick="openPanel('cam-panel');toggleMenu()">Cámara</button>
+    <button class="menu-item" onclick="toggleTheme();toggleMenu()">Tema</button>
+    <button class="menu-item" onclick="toggleMusic();toggleMenu()">Música</button>
+    <button class="menu-item" onclick="newChat();toggleMenu()" style="color:var(--accent);">Nuevo chat</button>
   </div>
 
   <!-- History Panel -->
@@ -266,23 +258,8 @@
     <div class="header-left">
       <div class="logo">🍌</div>
       <span class="title">Banabna</span>
-      <span class="greeting" id="greeting"></span>
     </div>
     <button class="menu-btn" onclick="toggleMenu()">☰</button>
-  </div>
-
-  <!-- Status bar -->
-  <div class="wbar">
-    <span>📅 <span id="wdate">--</span></span>
-    <span>🕐 <span id="wtime">--:--</span></span>
-    <span>📻 <span id="pmusic">Lofi</span></span>
-  </div>
-
-  <!-- Tabs -->
-  <div class="tabs">
-    <button class="tab active" onclick="setTab('chat',this)">💬 Chat</button>
-    <button class="tab" onclick="setTab('img',this)">📷</button>
-    <button class="tab" onclick="setTab('doc',this)">📄</button>
   </div>
 
   <!-- Messages -->
@@ -290,49 +267,28 @@
     <div class="msg bot">¡Hola! Soy <strong>Banabna</strong> 🍌 ¿En qué te ayudo?</div>
   </div>
 
-  <!-- Attach -->
-  <div class="attach-row" id="attach-row">
-    <button class="small-btn" onclick="document.getElementById('img-input').click()">📷 Imagen</button>
-    <input type="file" id="img-input" accept="image/*" style="display:none" onchange="handleImage(event)">
-  </div>
-
-  <!-- Suggestions -->
-  <div class="sugs">
-    <button class="sug" onclick="quickSend('Organiza mi día')">Organizar</button>
-    <button class="sug" onclick="quickSend('Consejo')">Consejo</button>
-    <button class="sug" onclick="quickSend('Tareas')">Tareas</button>
-  </div>
-
   <!-- Input -->
   <div class="iarea">
-    <textarea id="ui" placeholder="Escríbele a Banabna..." rows="1"></textarea>
+    <textarea id="ui" placeholder="Escríbele..." rows="1"></textarea>
     <button class="sbtn" onclick="sendMessage()">➤</button>
   </div>
 
   <!-- Player -->
   <div class="player-bar" id="player-bar">
-    <span style="flex:1;font-size:13px;" id="player-title">Lofi</span>
-    <button class="small-btn" onclick="toggleMusic()">▶/⏸</button>
-    <button class="small-btn" onclick="stopMusic()">⏹</button>
+    <span style="flex:1;font-size:13px;">Lofi</span>
+    <button class="small-btn" onclick="toggleMusic()">⏯</button>
   </div>
 
 </div>
 <script>
-let chatHistory=[], userName=localStorage.getItem('banabna_name')||'', isDark=localStorage.getItem('banabna_theme')==='light', currentTab='chat', pendingImage=null, timerSec=25*60, timerRun=false, timerInt=null, player=null, camStream=null, calcExpr='';
-
-const API='/';
+let chatHistory=[], userName=localStorage.getItem('banabna_name')||'', isDark=localStorage.getItem('banabna_theme')==='light', currentTab='chat', pendingImage=null, timerSec=25*60, timerRun=false, timerInt=null, player=null, camStream=null, calcExpr='', API='/';
+const musicIcon='▶';
 
 function init(){
   if(userName){
     document.getElementById('setup-panel').style.display='none';
-    document.getElementById('greeting').textContent=userName;
   }
   applyTheme();
-  setInterval(()=>{
-    const d=new Date();
-    document.getElementById('wtime').textContent=d.toLocaleTimeString('es-CO',{hour:'2-digit',minute:'2-digit'});
-    document.getElementById('wdate').textContent=d.toLocaleDateString('es-CO',{day:'numeric',month:'short'});
-  },1000);
   const sc=localStorage.getItem('banabna_chat');
   if(sc)try{JSON.parse(sc).forEach(m=>addMsg(m.role,m.content));}catch{}
 }
@@ -342,15 +298,19 @@ function saveName(){
   if(!n)return alert('Escribe tu nombre');
   userName=n;localStorage.setItem('banabna_name',n);
   document.getElementById('setup-panel').style.display='none';
-  document.getElementById('greeting').textContent=n;
 }
 
 function applyTheme(){document.documentElement.setAttribute('data-theme',isDark?'dark':'light');}
 function toggleTheme(){isDark=!isDark;localStorage.setItem('banabna_theme',isDark?'light':'dark');applyTheme();}
 
 function toggleMenu(){document.getElementById('menu-drop').classList.toggle('show');}
+document.addEventListener('click',e=>{
+  if(!document.getElementById('menu-drop').contains(e.target)&&!e.target.classList.contains('menu-btn')){
+    document.getElementById('menu-drop').classList.remove('show');
+  }
+});
 
-function openPanel(id){document.getElementById(id).style.display='flex';}
+function openPanel(id){document.getElementById(id).style.display='flex';document.getElementById('menu-drop').classList.remove('show');}
 function closePanel(id){document.getElementById(id).style.display='none';}
 function openCalc(){openPanel('calc-panel');}
 
@@ -358,7 +318,6 @@ function setTab(t,el){
   currentTab=t;
   document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
   el.classList.add('active');
-  document.getElementById('attach-row').classList.toggle('show',t==='img');
 }
 
 function addMsg(role,text){
@@ -369,25 +328,7 @@ function addMsg(role,text){
   document.getElementById('msgs').scrollTop=document.getElementById('msgs').scrollHeight;
 }
 
-function quickSend(t){document.getElementById('ui').value=t;sendMessage();}
-
-async function sendMessage(){
-  const inp=document.getElementById('ui');
-  let txt=inp.value.trim();
-  if(!txt&&!pendingImage)return;
-  inp.value='';
-  addMsg('user',txt+(pendingImage?' 📷':''));
-  chatHistory.push({role:'user',content:txt});
-  const t=addMsg('bot','Escribo...');
-  try{
-    const res=await fetch(API+'chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages:chatHistory,userName,hasImage:!!pendingImage,image:pendingImage})});
-    const d=await res.json();
-    t.innerHTML=d.reply.replace(/\n/g,'<br>');
-    chatHistory.push({role:'assistant',content:d.reply});
-    localStorage.setItem('banabna_chat',JSON.stringify(chatHistory));
-  }catch(e){t.innerHTML='Error: '+e.message;}
-  pendingImage=null;
-}
+function quickSend(t){document.getElementById('ui').value=t;sendMessage();document.getElementById('menu-drop').classList.remove('show');}
 
 function handleImage(e){
   const f=e.target.files[0];
@@ -447,10 +388,9 @@ async function convertCurrency(){
 // Music
 function toggleMusic(){
   const b=document.getElementById('player-bar');
-  if(b.classList.contains('show')){player.pause();b.classList.remove('show');document.getElementById('pmusic').innerText='Lofi';player=null;}
-  else{player=new Audio('https://streams.ilovemusic.de/iloveradio17.mp3');player.loop=true;player.play().catch(()=>{});b.classList.add('show');document.getElementById('pmusic').innerText='▶';}
+  if(b.classList.contains('show')){player.pause();b.classList.remove('show');player=null;}
+  else{player=new Audio('https://streams.ilovemusic.de/iloveradio17.mp3');player.loop=true;player.play().catch(()=>{});b.classList.add('show');}
 }
-function stopMusic(){const b=document.getElementById('player-bar');if(player){player.pause();player=null;}b.classList.remove('show');document.getElementById('pmusic').innerText='Lofi';}
 
 // Translation
 async function doTranslate(){
