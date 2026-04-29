@@ -284,6 +284,64 @@
 let chatHistory=[], userName=localStorage.getItem('banabna_name')||'', isDark=localStorage.getItem('banabna_theme')==='light', currentTab='chat', pendingImage=null, timerSec=25*60, timerRun=false, timerInt=null, player=null, camStream=null, calcExpr='', API='/';
 const musicIcon='▶';
 
+async function sendMessage(){
+  const inp=document.getElementById('ui');
+  let txt=inp.value.trim();
+  if(!txt)return;
+  inp.value='';
+  addMsg('user',txt);
+  chatHistory.push({role:'user',content:txt});
+  const t=addMsg('bot','Escribo...');
+  
+  try{
+    const res=await fetch(API+'chat',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({messages:chatHistory,userName})
+    });
+    const d=await res.json();
+    if(d.error)throw new Error(d.error);
+    t.innerHTML=d.reply.replace(/\n/g,'<br>');
+    chatHistory.push({role:'assistant',content:d.reply});
+    localStorage.setItem('banabna_chat',JSON.stringify(chatHistory));
+  }catch(e){t.innerHTML='Error: '+e.message;}
+}
+
+function quickSend(t){document.getElementById('ui').value=t;sendMessage();document.getElementById('menu-drop').classList.remove('show');}
+
+function handleImage(e){
+
+async function sendMessage(){
+  if(!GROQ_API_KEY){alert('Falta API key. Edita el HTML.');return;}
+  const inp=document.getElementById('ui');
+  let txt=inp.value.trim();
+  if(!txt)return;
+  inp.value='';
+  addMsg('user',txt);
+  chatHistory.push({role:'user',content:txt});
+  const t=addMsg('bot','Escribo...');
+  
+  try{
+    let systemMsg = `Eres Banabna, asistente personal. Responde en español curto.`;
+    if(userName) systemMsg += ` El usuario se llama ${userName}.`;
+    
+    const res=await fetch('https://api.groq.com/openai/v1/chat/completions',{
+      method:'POST',
+      headers:{'Authorization':'Bearer '+GROQ_API_KEY,'Content-Type':'application/json'},
+      body:JSON.stringify({
+        model:'llama-3.1-8b-instant',
+        messages:[{role:'system',content:systemMsg},...chatHistory],
+        max_tokens:300
+      })
+    });
+    const d=await res.json();
+    const reply=d.choices?.[0]?.message?.content||'Error';
+    t.innerHTML=reply.replace(/\n/g,'<br>');
+    chatHistory.push({role:'assistant',content:reply});
+    localStorage.setItem('banabna_chat',JSON.stringify(chatHistory));
+  }catch(e){t.innerHTML='Error: '+e.message;}
+}
+
 function init(){
   if(userName){
     document.getElementById('setup-panel').style.display='none';
@@ -329,39 +387,6 @@ function addMsg(role,text){
 }
 
 function quickSend(t){document.getElementById('ui').value=t;sendMessage();document.getElementById('menu-drop').classList.remove('show');}
-
-async function sendMessage(){
-  const inp=document.getElementById('ui');
-  let txt=inp.value.trim();
-  if(!txt)return;
-  inp.value='';
-  addMsg('user',txt);
-  chatHistory.push({role:'user',content:txt});
-  const t=addMsg('bot','Escribo...');
-  
-  try{
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 15000);
-    
-    const res=await fetch(API+'chat',{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({messages:chatHistory,userName}),
-      signal:controller.signal
-    });
-    clearTimeout(timeout);
-    
-    if(!res.ok)throw new Error('Server: '+res.status);
-    const d=await res.json();
-    if(d.error)throw new Error(d.error);
-    t.innerHTML=d.reply.replace(/\n/g,'<br>');
-    chatHistory.push({role:'assistant',content:d.reply});
-    localStorage.setItem('banabna_chat',JSON.stringify(chatHistory));
-  }catch(e){
-    console.error(e);
-    t.innerHTML='Error: '+e.message;
-  }
-}
 
 function handleImage(e){
   const f=e.target.files[0];

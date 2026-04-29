@@ -12,8 +12,11 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.post('/chat', async (req, res) => {
   const { messages, userName } = req.body;
   
+  console.log('API Key exists:', !!process.env.GROQ_API_KEY);
+  console.log('Key value:', process.env.GROQ_API_KEY ? process.env.GROQ_API_KEY.substring(0,10)+'...' : 'MISSING');
+  
   if (!process.env.GROQ_API_KEY) {
-    return res.status(500).json({ error: 'API key not configured' });
+    return res.status(500).json({ error: 'GROQ_API_KEY no configurada en Vercel. Ve a Settings > Environment Variables.' });
   }
   
   try {
@@ -30,6 +33,7 @@ app.post('/chat', async (req, res) => {
     
     res.json({ reply: completion.choices[0].message.content });
   } catch (err) {
+    console.log('Groq error:', err.message);
     res.status(500).json({ error: err.message });
   }
 });
