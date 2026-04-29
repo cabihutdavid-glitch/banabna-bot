@@ -339,12 +339,17 @@ async function sendMessage(){
   chatHistory.push({role:'user',content:txt});
   const t=addMsg('bot','Escribo...');
   try{
+    console.log('Sending to /chat:', JSON.stringify({messages:chatHistory,userName}).substring(0,100));
     const res=await fetch(API+'chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages:chatHistory,userName})});
+    console.log('Response status:',res.status);
+    if(!res.ok)throw new Error('Server error: '+res.status);
     const d=await res.json();
+    console.log('Response:',d);
+    if(d.error)throw new Error(d.error);
     t.innerHTML=d.reply.replace(/\n/g,'<br>');
     chatHistory.push({role:'assistant',content:d.reply});
     localStorage.setItem('banabna_chat',JSON.stringify(chatHistory));
-  }catch(e){t.innerHTML='Error: '+e.message;}
+  }catch(e){console.error(e);t.innerHTML='Error: '+e.message;}
 }
 
 function handleImage(e){

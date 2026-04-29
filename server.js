@@ -10,38 +10,26 @@ app.use(express.json({ limit: '10mb' }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.post('/chat', async (req, res) => {
-  const { messages, image, userName } = req.body;
+  console.log('Received chat request:', JSON.stringify(req.body).substring(0, 200));
+  const { messages, userName } = req.body;
   try {
     let systemMsg = `Eres Banabna, un asistente personal amigable e inteligente. Responde siempre en español, de forma clara y concisa.`;
     if (userName) systemMsg += ` El usuario se llama ${userName}.`;
 
-    let apiMessages = [{ role: 'system', content: systemMsg }];
-
-    if (image) {
-      apiMessages.push({
-        role: 'user',
-        content: [
-          { type: 'text', text: messages[messages.length - 1]?.content || 'Describe esta imagen' },
-          { type: 'image_url', image_url: { url: `data:${image.type};base64,${image.data}` } }
-        ]
-      });
-      const completion = await groq.chat.completions.create({
-        model: 'llama-3.2-11b-vision-preview',
-        messages: apiMessages,
-        max_tokens: 1000
-      });
-      return res.json({ reply: completion.choices[0].message.content });
-    }
-
-    apiMessages = [...apiMessages, ...messages];
+    const apiMessages = [{ role: 'system', content: systemMsg }, ...messages];
+    
     const completion = await groq.chat.completions.create({
-      model: 'llama-3.3-70b-versatile',
+      model: 'llama-3.1-8b-instant',
       messages: apiMessages,
-      max_tokens: 1000
+      max_tokens: 500
     });
-    res.json({ reply: completion.choices[0].message.content });
+    
+    const reply = completion.choices[0].message.content;
+    console.log('Reply:', reply.substring(0, 100));
+    res.json({ reply });
 
   } catch (err) {
+    console.error('Error:', err.message);
     res.status(500).json({ error: err.message });
   }
 });
