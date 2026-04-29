@@ -330,6 +330,23 @@ function addMsg(role,text){
 
 function quickSend(t){document.getElementById('ui').value=t;sendMessage();document.getElementById('menu-drop').classList.remove('show');}
 
+async function sendMessage(){
+  const inp=document.getElementById('ui');
+  let txt=inp.value.trim();
+  if(!txt)return;
+  inp.value='';
+  addMsg('user',txt);
+  chatHistory.push({role:'user',content:txt});
+  const t=addMsg('bot','Escribo...');
+  try{
+    const res=await fetch(API+'chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages:chatHistory,userName})});
+    const d=await res.json();
+    t.innerHTML=d.reply.replace(/\n/g,'<br>');
+    chatHistory.push({role:'assistant',content:d.reply});
+    localStorage.setItem('banabna_chat',JSON.stringify(chatHistory));
+  }catch(e){t.innerHTML='Error: '+e.message;}
+}
+
 function handleImage(e){
   const f=e.target.files[0];
   if(!f)return;
