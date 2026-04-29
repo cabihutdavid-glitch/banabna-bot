@@ -34,8 +34,8 @@ app.post('/chat', async (req, res) => {
   }
 });
 
-app.get('/test', (req, res) => {
-  res.json({ status: 'ok', key: process.env.GROQ_API_KEY ? 'yes' : 'no' });
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 app.get('/', (req, res) => {
