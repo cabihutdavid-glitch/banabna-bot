@@ -120,7 +120,7 @@
       <div style="font-size:26px;font-weight:600;letter-spacing:-0.5px;">Banabna</div>
       <p style="color:var(--muted);font-size:14px;">Tu asistente personal</p>
       <input class="setup-input" id="name-input" placeholder="¿Cómo te llamas?" style="text-align:center;">
-      <button class="btn" id="continue-btn" style="width:100%;">Continuar</button>
+      <button class="btn" onclick="(function(){var n=document.getElementById('name-input').value.trim();if(!n){alert('Escribe tu nombre');return;}localStorage.setItem('banabna_name',n);var p=document.getElementById('setup-panel');p.style.display='none';p.style.visibility='hidden';})()" style="width:100%;">Continuar</button>
     </div>
   </div>
 
