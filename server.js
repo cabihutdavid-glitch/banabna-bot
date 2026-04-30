@@ -32,6 +32,8 @@ function callGroq(messages, callback) {
     let body = '';
     res.on('data', chunk => body += chunk);
     res.on('end', () => {
+      console.log('Groq status:', res.statusCode);
+      console.log('Groq body:', body.substring(0, 200));
       try {
         const json = JSON.parse(body);
         callback(null, json.choices?.[0]?.message?.content || 'Sin respuesta');
@@ -41,7 +43,8 @@ function callGroq(messages, callback) {
     });
   });
   
-  req.on('error', e => callback(e.message));
+  req.setTimeout(15000, () => { req.destroy(); callback('Timeout'); });
+  req.on('error', e => { console.log('Groq error:', e.message); callback(e.message); });
   req.write(data);
   req.end();
 }
@@ -56,6 +59,7 @@ const server = http.createServer((req, res) => {
   }
   
   if (req.url === '/chat' && req.method === 'POST') {
+    console.log('Chat request received, GROQ_KEY:', GROQ_KEY ? 'yes' : 'NO');
     let body = '';
     req.on('data', chunk => body += chunk);
     req.on('end', () => {
