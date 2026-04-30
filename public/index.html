@@ -120,7 +120,7 @@
       <div style="font-size:26px;font-weight:600;letter-spacing:-0.5px;">Banabna</div>
       <p style="color:var(--muted);font-size:14px;">Tu asistente personal</p>
       <input class="setup-input" id="name-input" placeholder="¿Cómo te llamas?" style="text-align:center;">
-      <button class="btn" onclick="saveName()" style="width:100%;">Continuar</button>
+      <button class="btn" id="continue-btn" style="width:100%;">Continuar</button>
     </div>
   </div>
 
@@ -353,9 +353,15 @@ function init(){
 
 function saveName(){
   const n=document.getElementById('name-input').value.trim();
-  if(!n)return alert('Escribe tu nombre');
-  userName=n;localStorage.setItem('banabna_name',n);
-  document.getElementById('setup-panel').style.display='none';
+  if(!n){alert('Escribe tu nombre');return;}
+  userName=n;
+  localStorage.setItem('banabna_name',n);
+  const panel=document.getElementById('setup-panel');
+  if(panel){
+    panel.style.display='none';
+    panel.style.visibility='hidden';
+    panel.style.pointerEvents='none';
+  }
 }
 
 function applyTheme(){document.documentElement.setAttribute('data-theme',isDark?'dark':'light');}
@@ -458,6 +464,13 @@ async function doTranslate(){
   try{const res=await fetch(API+'chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages:[{role:'user',content:'Translate from '+(document.getElementById('trans-from').value)+' to '+(document.getElementById('trans-to').value)+': '+t}]})});
   const d=await res.json();document.getElementById('trans-output').innerText=d.reply;}catch{document.getElementById('trans-output').innerText='Error';}
 }
+
+// Init button handlers
+document.getElementById('continue-btn').addEventListener('click', saveName);
+document.getElementById('name-input').addEventListener('keypress', e => { if(e.key === 'Enter') saveName(); });
+
+init();
+document.getElementById('ui').addEventListener('keydown', e => { if(e.key === 'Enter') sendMessage(); });
 
 init();
 document.getElementById('ui').addEventListener('keydown',e=>{if(e.key==='Enter')sendMessage();});
