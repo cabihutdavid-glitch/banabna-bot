@@ -465,15 +465,13 @@ async function doTranslate(){
   const d=await res.json();document.getElementById('trans-output').innerText=d.reply;}catch{document.getElementById('trans-output').innerText='Error';}
 }
 
-// Init button handlers
-document.getElementById('continue-btn').addEventListener('click', saveName);
-document.getElementById('name-input').addEventListener('keypress', e => { if(e.key === 'Enter') saveName(); });
+// Setup handlers
+window.saveName = saveName;
+document.getElementById('continue-btn').onclick = saveName;
+document.getElementById('name-input').onkeypress = function(e) { if(e.key === 'Enter') saveName(); };
+document.getElementById('ui').addEventListener('keydown', function(e) { if(e.key === 'Enter') sendMessage(); });
 
 init();
-document.getElementById('ui').addEventListener('keydown', e => { if(e.key === 'Enter') sendMessage(); });
-
-init();
-document.getElementById('ui').addEventListener('keydown',e=>{if(e.key==='Enter')sendMessage();});
 </script>
 </body>
 </html>
