@@ -467,9 +467,9 @@ async function doTranslate(){
 
 // Setup handlers
 window.saveName = saveName;
-document.getElementById('continue-btn').onclick = saveName;
-document.getElementById('name-input').onkeypress = function(e) { if(e.key === 'Enter') saveName(); };
-document.getElementById('ui').addEventListener('keydown', function(e) { if(e.key === 'Enter') sendMessage(); });
+window.sendMessage = sendMessage;
+document.getElementById('name-input').onkeypress = function(e) { if(e.key === 'Enter') window.saveName(); };
+document.getElementById('ui').addEventListener('keydown', function(e) { if(e.key === 'Enter') window.sendMessage(); });
 
 init();
 </script>
