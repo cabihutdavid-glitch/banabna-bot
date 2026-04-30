@@ -310,36 +310,11 @@ async function sendMessage(){
 function quickSend(t){document.getElementById('ui').value=t;sendMessage();document.getElementById('menu-drop').classList.remove('show');}
 
 function handleImage(e){
-
-async function sendMessage(){
-  if(!GROQ_API_KEY){alert('Falta API key. Edita el HTML.');return;}
-  const inp=document.getElementById('ui');
-  let txt=inp.value.trim();
-  if(!txt)return;
-  inp.value='';
-  addMsg('user',txt);
-  chatHistory.push({role:'user',content:txt});
-  const t=addMsg('bot','Escribo...');
-  
-  try{
-    let systemMsg = `Eres Banabna, asistente personal. Responde en español curto.`;
-    if(userName) systemMsg += ` El usuario se llama ${userName}.`;
-    
-    const res=await fetch('https://api.groq.com/openai/v1/chat/completions',{
-      method:'POST',
-      headers:{'Authorization':'Bearer '+GROQ_API_KEY,'Content-Type':'application/json'},
-      body:JSON.stringify({
-        model:'llama-3.1-8b-instant',
-        messages:[{role:'system',content:systemMsg},...chatHistory],
-        max_tokens:300
-      })
-    });
-    const d=await res.json();
-    const reply=d.choices?.[0]?.message?.content||'Error';
-    t.innerHTML=reply.replace(/\n/g,'<br>');
-    chatHistory.push({role:'assistant',content:reply});
-    localStorage.setItem('banabna_chat',JSON.stringify(chatHistory));
-  }catch(e){t.innerHTML='Error: '+e.message;}
+  const f=e.target.files[0];
+  if(!f)return;
+  const r=new FileReader();
+  r.onload=ev=>{pendingImage={data:ev.target.result.split(',')[1],type:f.type};};
+  r.readAsDataURL(f);
 }
 
 function init(){
